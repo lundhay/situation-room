@@ -1,0 +1,365 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  #sr-root{background:#080808;color:#c8c8c8;font-family:'Share Tech Mono',monospace;height:660px;display:flex;flex-direction:column;border:1px solid #222;overflow:hidden;}
+  #sr-header{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;border-bottom:1px solid #1e1e1e;background:#0c0c0c;flex-shrink:0;}
+  #sr-title{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:3px;color:#e8e8e8;}
+  #sr-status{font-size:9px;color:#555;letter-spacing:1px;}
+  #sr-time{font-size:10px;color:#777;letter-spacing:2px;min-width:110px;text-align:right;}
+  #breaking-bar{background:#0e0e0e;border-bottom:1px solid #1e1e1e;display:flex;align-items:stretch;flex-shrink:0;height:28px;overflow:hidden;}
+  #breaking-label{background:#cc2200;color:#fff;font-size:8px;letter-spacing:2px;padding:0 10px;display:flex;align-items:center;flex-shrink:0;font-weight:700;}
+  #ticker-track{flex:1;overflow:hidden;position:relative;}
+  #ticker-inner{display:flex;align-items:center;height:100%;white-space:nowrap;animation:ticker 70s linear infinite;}
+  #ticker-inner:hover{animation-play-state:paused;}
+  @keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-200%)}}
+  .ticker-item{font-size:10px;color:#aaa;padding:0 28px;letter-spacing:.5px;}
+  .ticker-sep{color:#333;font-size:12px;}
+  #tab-bar{display:flex;align-items:stretch;border-bottom:1px solid #1e1e1e;background:#0a0a0a;flex-shrink:0;}
+  .tab-btn{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:8px 18px;cursor:pointer;background:none;border:none;color:#444;border-bottom:2px solid transparent;transition:all .15s;text-transform:uppercase;}
+  .tab-btn:hover{color:#aaa;}
+  .tab-btn.active{color:#e0e0e0;border-bottom:2px solid #e0e0e0;}
+  #tab-map{flex:1;position:relative;overflow:hidden;background:#080808;cursor:grab;}
+  #tab-map:active{cursor:grabbing;}
+  #tab-headlines{flex:1;overflow-y:auto;display:none;background:#080808;}
+  #tab-headlines::-webkit-scrollbar{width:4px;}
+  #tab-headlines::-webkit-scrollbar-track{background:#0a0a0a;}
+  #tab-headlines::-webkit-scrollbar-thumb{background:#2a2a2a;}
+  #map-svg{display:block;width:100%;height:100%;}
+  .country{fill:#111418;stroke:none;}
+  .country:hover{fill:#1a2028;}
+  .borders-countries{fill:none;stroke:#c8c8c8;stroke-width:0.35;pointer-events:none;}
+  .borders-continents{fill:none;stroke:#ffffff;stroke-width:1.4;pointer-events:none;}
+  .graticule{fill:none;stroke:#0d1520;stroke-width:0.4;pointer-events:none;}
+  .sphere{fill:#080e18;stroke:#0d1a2e;stroke-width:0.8;}
+  .pin-group{cursor:pointer;}
+  .pin-dot{transition:r .15s;}
+  .pin-group:hover .pin-dot{r:7;}
+  .pin-ring{animation:pulse 2.2s infinite ease-out;fill:none;stroke-width:1;}
+  @keyframes pulse{0%{r:7;opacity:.7}80%{r:18;opacity:0}100%{r:7;opacity:0}}
+  #zoom-controls{position:absolute;top:12px;left:12px;display:flex;flex-direction:column;gap:2px;z-index:20;}
+  .zoom-btn{background:rgba(8,14,24,0.92);border:1px solid #2a2a2a;color:#777;font-family:'Share Tech Mono',monospace;font-size:14px;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+  .zoom-btn:hover{color:#ddd;border-color:#666;}
+  #filter-bar{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:3px;z-index:20;}
+  .filter-btn{background:rgba(8,14,24,0.92);border:1px solid #2a2a2a;color:#555;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1.5px;padding:5px 10px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
+  .filter-btn:hover,.filter-btn.active{color:#ddd;border-color:#777;background:rgba(20,28,40,0.95);}
+  #legend{position:absolute;bottom:56px;left:12px;background:rgba(6,10,18,0.92);border:1px solid #1a1a1a;padding:7px 11px;z-index:10;font-size:9px;letter-spacing:1px;}
+  .legend-row{display:flex;align-items:center;gap:6px;margin:3px 0;color:#666;}
+  .legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  #tooltip{position:absolute;background:#080e18;border:1px solid #2e3a4e;padding:10px 14px;max-width:230px;pointer-events:none;opacity:0;transition:opacity .12s;z-index:100;}
+  #tooltip.visible{opacity:1;}
+  #tt-region{font-size:9px;color:#445566;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+  #tt-cat{display:inline-block;font-size:8px;padding:2px 6px;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase;}
+  #tt-headline{font-size:11px;color:#d0d0d0;line-height:1.5;margin-bottom:5px;}
+  #tt-source{font-size:9px;color:#384858;}
+  .cat-conflict{background:#2e1010;color:#ff7070;border:1px solid #4e1a1a;}
+  .cat-economy{background:#102010;color:#70ff70;border:1px solid #1a3a1a;}
+  .cat-politics{background:#10102e;color:#7090ff;border:1px solid #1a1a4e;}
+  .cat-climate{background:#102828;color:#70ffff;border:1px solid #1a4040;}
+  .cat-crisis{background:#281808;color:#ffaa40;border:1px solid #442808;}
+  .dot-conflict{fill:#ff7070;}.dot-economy{fill:#70ff70;}.dot-politics{fill:#7090ff;}.dot-climate{fill:#70ffff;}.dot-crisis{fill:#ffaa40;}
+  .ring-conflict{stroke:#ff7070;}.ring-economy{stroke:#70ff70;}.ring-politics{stroke:#7090ff;}.ring-climate{stroke:#70ffff;}.ring-crisis{stroke:#ffaa40;}
+  #detail-panel{flex-shrink:0;background:#0a0e14;border-top:1px solid #1a2030;padding:0 16px;display:flex;align-items:center;gap:14px;height:0;overflow:hidden;transition:height .25s;}
+  #detail-panel.open{height:44px;}
+  #dp-tag{font-size:8px;padding:2px 6px;letter-spacing:1px;text-transform:uppercase;flex-shrink:0;}
+  #dp-region{font-size:9px;color:#3a4a5a;letter-spacing:2px;flex-shrink:0;}
+  #dp-headline{font-size:11px;color:#bbb;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #dp-source{font-size:9px;color:#2e3e4e;flex-shrink:0;}
+  #dp-close{font-size:10px;color:#3a4a5a;cursor:pointer;flex-shrink:0;margin-left:8px;}
+  #dp-close:hover{color:#aaa;}
+
+  /* Headlines tab */
+  #hl-toolbar{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid #141e28;flex-shrink:0;flex-wrap:wrap;}
+  .hl-filter{background:none;border:1px solid #222;color:#444;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1.5px;padding:4px 9px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
+  .hl-filter:hover,.hl-filter.active{color:#ddd;border-color:#666;}
+  #hl-list{padding:0;}
+  .hl-item{display:flex;align-items:flex-start;gap:12px;padding:11px 16px;border-bottom:1px solid #0e1620;cursor:pointer;transition:background .12s;}
+  .hl-item:hover{background:#0c1420;}
+  .hl-item.breaking{border-left:2px solid #cc2200;}
+  .hl-left{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding-top:2px;}
+  .hl-num{font-size:8px;color:#2a3a4a;width:20px;text-align:center;}
+  .hl-dot{width:8px;height:8px;border-radius:50%;}
+  .hl-break-badge{font-size:7px;color:#cc2200;letter-spacing:1px;writing-mode:horizontal-tb;}
+  .hl-body{flex:1;min-width:0;}
+  .hl-meta{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;}
+  .hl-region{font-size:8px;color:#3a5068;letter-spacing:1.5px;text-transform:uppercase;}
+  .hl-cat-badge{font-size:7px;padding:1px 5px;letter-spacing:1px;text-transform:uppercase;}
+  .hl-headline{font-size:11px;color:#c8c8c8;line-height:1.5;margin-bottom:3px;}
+  .hl-source{font-size:9px;color:#2e4050;}
+  #hl-count{font-size:9px;color:#2a3a4a;margin-left:auto;letter-spacing:1px;}
+</style>
+
+<div id="sr-root">
+  <div id="sr-header">
+    <div id="sr-title">Global Situation Room</div>
+    <div id="sr-status">LIVE FEED — 24 INCIDENTS MONITORED</div>
+    <div id="sr-time">--:--:-- UTC</div>
+  </div>
+  <div id="breaking-bar">
+    <div id="breaking-label">BREAKING</div>
+    <div id="ticker-track"><div id="ticker-inner"></div></div>
+  </div>
+  <div id="tab-bar">
+    <button class="tab-btn active" data-tab="map">MAP VIEW</button>
+    <button class="tab-btn" data-tab="headlines">HEADLINES</button>
+  </div>
+
+  <div id="tab-map">
+    <svg id="map-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="tooltip">
+      <div id="tt-region"></div>
+      <div id="tt-cat"></div>
+      <div id="tt-headline"></div>
+      <div id="tt-source"></div>
+    </div>
+    <div id="zoom-controls">
+      <button class="zoom-btn" id="zoom-in">+</button>
+      <button class="zoom-btn" id="zoom-out">−</button>
+      <button class="zoom-btn" id="zoom-reset" style="font-size:10px;">⌂</button>
+    </div>
+    <div id="filter-bar">
+      <button class="filter-btn active" data-cat="all">ALL</button>
+      <button class="filter-btn" data-cat="conflict">CONFLICT</button>
+      <button class="filter-btn" data-cat="economy">ECONOMY</button>
+      <button class="filter-btn" data-cat="politics">POLITICS</button>
+      <button class="filter-btn" data-cat="climate">CLIMATE</button>
+      <button class="filter-btn" data-cat="crisis">CRISIS</button>
+    </div>
+    <div id="legend">
+      <div class="legend-row"><div class="legend-dot" style="background:#ff7070"></div>CONFLICT</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#70ff70"></div>ECONOMY</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#7090ff"></div>POLITICS</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#70ffff"></div>CLIMATE</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#ffaa40"></div>CRISIS</div>
+    </div>
+  </div>
+
+  <div id="tab-headlines">
+    <div id="hl-toolbar">
+      <button class="hl-filter active" data-hcat="all">ALL</button>
+      <button class="hl-filter" data-hcat="conflict">CONFLICT</button>
+      <button class="hl-filter" data-hcat="economy">ECONOMY</button>
+      <button class="hl-filter" data-hcat="politics">POLITICS</button>
+      <button class="hl-filter" data-hcat="climate">CLIMATE</button>
+      <button class="hl-filter" data-hcat="crisis">CRISIS</button>
+      <button class="hl-filter" data-hcat="breaking">BREAKING ONLY</button>
+      <span id="hl-count"></span>
+    </div>
+    <div id="hl-list"></div>
+  </div>
+
+  <div id="detail-panel">
+    <div id="dp-tag"></div>
+    <div id="dp-region"></div>
+    <div id="dp-headline"></div>
+    <div id="dp-source"></div>
+    <div id="dp-close">[ CLOSE ]</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script>
+const events = [
+  {id:1, lat:49,lng:32,cat:'conflict',region:'EASTERN EUROPE',headline:'Ceasefire negotiations stall as shelling reported near disputed border region',source:'Reuters / Kyiv Independent',breaking:true},
+  {id:2, lat:31,lng:35,cat:'conflict',region:'MIDDLE EAST',headline:'Humanitarian corridor agreement reached after weeks of diplomatic pressure',source:'Al Jazeera / Haaretz',breaking:false},
+  {id:3, lat:41,lng:69,cat:'politics',region:'CENTRAL ASIA',headline:'Presidential election results disputed by opposition coalition',source:'RFE/RL',breaking:false},
+  {id:4, lat:28,lng:77,cat:'economy',region:'SOUTH ASIA',headline:'Central bank raises rates amid record inflation surge',source:'The Hindu / Dawn',breaking:false},
+  {id:5, lat:35,lng:105,cat:'politics',region:'EAST ASIA',headline:'Trade delegation talks resume following six-month diplomatic freeze',source:'South China Morning Post',breaking:false},
+  {id:6, lat:36,lng:128,cat:'economy',region:'NORTHEAST ASIA',headline:'Chipmaker announces $40B expansion amid global semiconductor race',source:'Nikkei Asia',breaking:false},
+  {id:7, lat:48,lng:11,cat:'politics',region:'WESTERN EUROPE',headline:'Coalition government collapses ahead of snap election announcement',source:'Le Monde / Der Spiegel',breaking:true},
+  {id:8, lat:30,lng:31,cat:'economy',region:'NORTH AFRICA',headline:'IMF reaches preliminary debt restructuring deal with government',source:'Reuters Africa',breaking:false},
+  {id:9, lat:4,lng:38,cat:'crisis',region:'EAST AFRICA',headline:'UN declares famine emergency as drought enters third consecutive year',source:'The East African',breaking:true},
+  {id:10,lat:-4,lng:23,cat:'conflict',region:'CENTRAL AFRICA',headline:'Rebel advance halted; peacekeeping force mandate extended by Security Council',source:'AFP / RFI',breaking:false},
+  {id:11,lat:9,lng:2,cat:'crisis',region:'WEST AFRICA',headline:'Flooding displaces 200,000 in coastal regions after Category 4 storm',source:'The Guardian Nigeria',breaking:true},
+  {id:12,lat:-26,lng:28,cat:'politics',region:'SOUTHERN AFRICA',headline:'Constitutional court ruling challenges executive branch authority',source:'Daily Maverick',breaking:false},
+  {id:13,lat:-16,lng:-68,cat:'economy',region:'SOUTH AMERICA (N)',headline:'Lithium nationalization bill passes; foreign investors signal concern',source:'El País América',breaking:false},
+  {id:14,lat:-23,lng:-46,cat:'climate',region:'SOUTH AMERICA (S)',headline:'Amazon deforestation rate drops 42% under new environmental enforcement',source:'Folha de S.Paulo',breaking:false},
+  {id:15,lat:15,lng:-90,cat:'conflict',region:'CENTRAL AMERICA',headline:'Cartel violence prompts emergency security summit of regional leaders',source:'El Universal',breaking:false},
+  {id:16,lat:39,lng:-98,cat:'politics',region:'NORTH AMERICA',headline:'Senate vote on border security bill delayed amid party negotiations',source:'AP / Washington Post',breaking:false},
+  {id:17,lat:13,lng:100,cat:'economy',region:'SOUTHEAST ASIA',headline:'ASEAN free trade zone expansion ratified by seven member states',source:'Bangkok Post',breaking:false},
+  {id:18,lat:-2,lng:118,cat:'climate',region:'INDONESIA',headline:'Peatland fire season declared; satellite data shows record smoke plumes',source:'Jakarta Post',breaking:false},
+  {id:19,lat:24,lng:46,cat:'crisis',region:'ARABIAN PENINSULA',headline:'Water scarcity crisis deepens; desalination capacity falls short of demand',source:'Arab News',breaking:true},
+  {id:20,lat:12,lng:20,cat:'climate',region:'SAHEL REGION',headline:'Solar mega-project breaks ground; to power 10 million homes by 2028',source:'AllAfrica',breaking:false},
+  {id:21,lat:55,lng:60,cat:'economy',region:'RUSSIA / CIS',headline:'Energy revenues prop up budget despite western sanctions pressure',source:'Moscow Times / Meduza',breaking:false},
+  {id:22,lat:-25,lng:133,cat:'climate',region:'AUSTRALIA',headline:'Coral bleaching event declared across 65% of Great Barrier Reef',source:'The Australian',breaking:true},
+  {id:23,lat:62,lng:15,cat:'politics',region:'SCANDINAVIA',headline:'NATO northern flank strategy reviewed after Baltic sea incident',source:'Aftenposten / Yle',breaking:false},
+  {id:24,lat:41,lng:45,cat:'conflict',region:'CAUCASUS',headline:'Border demarcation dispute reignites weeks after peace agreement signed',source:'OC Media / Caucasian Knot',breaking:true},
+];
+
+const dotColors = {conflict:'#ff7070',economy:'#70ff70',politics:'#7090ff',climate:'#70ffff',crisis:'#ffaa40'};
+
+// Ticker
+const breaking = events.filter(e=>e.breaking);
+const ti = document.getElementById('ticker-inner');
+breaking.forEach(ev=>{
+  const s=document.createElement('span'); s.className='ticker-item';
+  s.textContent=ev.region+' — '+ev.headline; ti.appendChild(s);
+  const sep=document.createElement('span'); sep.className='ticker-sep'; sep.textContent='◆'; ti.appendChild(sep);
+});
+
+// Headlines tab
+let hlFilter='all';
+function renderHeadlines(){
+  const list=document.getElementById('hl-list');
+  list.innerHTML='';
+  let filtered=hlFilter==='breaking'?events.filter(e=>e.breaking):hlFilter==='all'?events:events.filter(e=>e.cat===hlFilter);
+  // Breaking first
+  filtered=[...filtered.filter(e=>e.breaking),...filtered.filter(e=>!e.breaking)];
+  document.getElementById('hl-count').textContent=filtered.length+' ITEMS';
+  filtered.forEach((ev,i)=>{
+    const div=document.createElement('div');
+    div.className='hl-item'+(ev.breaking?' breaking':'');
+    div.innerHTML=`
+      <div class="hl-left">
+        <div class="hl-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="hl-dot" style="background:${dotColors[ev.cat]}"></div>
+        ${ev.breaking?'<div class="hl-break-badge">BRK</div>':''}
+      </div>
+      <div class="hl-body">
+        <div class="hl-meta">
+          <span class="hl-region">${ev.region}</span>
+          <span class="hl-cat-badge cat-${ev.cat}">${ev.cat}</span>
+        </div>
+        <div class="hl-headline">${ev.headline}</div>
+        <div class="hl-source">SOURCE: ${ev.source}</div>
+      </div>`;
+    div.addEventListener('click',()=>openDetail(ev));
+    list.appendChild(div);
+  });
+}
+document.querySelectorAll('.hl-filter').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.hl-filter').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); hlFilter=btn.dataset.hcat; renderHeadlines();
+  });
+});
+renderHeadlines();
+
+function openDetail(ev){
+  const tag=document.getElementById('dp-tag');
+  tag.textContent=ev.breaking?'● BREAKING':ev.cat;
+  tag.className=ev.breaking?'cat-conflict':'cat-'+ev.cat;
+  document.getElementById('dp-region').textContent=ev.region;
+  document.getElementById('dp-headline').textContent=ev.headline;
+  document.getElementById('dp-source').textContent=ev.source;
+  document.getElementById('detail-panel').classList.add('open');
+}
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const t=btn.dataset.tab;
+    document.getElementById('tab-map').style.display=t==='map'?'block':'none';
+    document.getElementById('tab-headlines').style.display=t==='headlines'?'flex':'none';
+    if(t==='headlines') document.getElementById('tab-headlines').style.flexDirection='column';
+  });
+});
+
+document.getElementById('dp-close').addEventListener('click',()=>{
+  document.getElementById('detail-panel').classList.remove('open');
+});
+
+// Map
+let activeFilter='all', projectionFn, pathFn, pinsLayer, svgSel, zoomBehavior;
+
+async function init(){
+  const container=document.getElementById('tab-map');
+  const W=container.clientWidth||680, H=container.clientHeight||480;
+  svgSel=d3.select('#map-svg').attr('viewBox',`0 0 ${W} ${H}`).attr('preserveAspectRatio','xMidYMid meet');
+  projectionFn=d3.geoNaturalEarth1().scale(W/6.2).translate([W/2,H/2]);
+  pathFn=d3.geoPath().projection(projectionFn);
+
+  const mapGroup=svgSel.append('g').attr('id','map-group');
+
+  // Ocean with subtle blue
+  mapGroup.append('path').datum({type:'Sphere'}).attr('class','sphere').attr('d',pathFn);
+  mapGroup.append('path').datum(d3.geoGraticule().step([20,20])()).attr('class','graticule').attr('d',pathFn);
+
+  let world;
+  try{
+    const res=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+    world=await res.json();
+  }catch(e){
+    svgSel.append('text').attr('x',W/2).attr('y',H/2).attr('text-anchor','middle').attr('fill','#555').attr('font-size','12').text('Map data unavailable');
+    return;
+  }
+
+  const countries=topojson.feature(world,world.objects.countries);
+  const countryBorders=topojson.mesh(world,world.objects.countries,(a,b)=>a!==b);
+  const outerBorders=topojson.mesh(world,world.objects.countries,(a,b)=>a===b);
+
+  mapGroup.selectAll('.country').data(countries.features).join('path').attr('class','country').attr('d',pathFn);
+  // Country borders (thin)
+  mapGroup.append('path').datum(countryBorders).attr('class','borders-countries').attr('d',pathFn);
+  // Continent outlines (outer coastlines — bold white)
+  mapGroup.append('path').datum(outerBorders).attr('class','borders-continents').attr('d',pathFn);
+
+  pinsLayer=mapGroup.append('g').attr('id','pins-layer');
+  renderPins();
+
+  zoomBehavior=d3.zoom().scaleExtent([1,12]).on('zoom',(event)=>{
+    mapGroup.attr('transform',event.transform);
+    const k=event.transform.k;
+    pinsLayer.selectAll('.pin-dot').attr('r',4/Math.sqrt(k));
+  });
+  svgSel.call(zoomBehavior);
+  svgSel.on('dblclick.zoom',null);
+
+  document.getElementById('zoom-in').addEventListener('click',()=>svgSel.transition().duration(300).call(zoomBehavior.scaleBy,1.6));
+  document.getElementById('zoom-out').addEventListener('click',()=>svgSel.transition().duration(300).call(zoomBehavior.scaleBy,0.625));
+  document.getElementById('zoom-reset').addEventListener('click',()=>svgSel.transition().duration(400).call(zoomBehavior.transform,d3.zoomIdentity));
+
+  document.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active'); activeFilter=btn.dataset.cat; renderPins();
+    });
+  });
+}
+
+function renderPins(){
+  if(!pinsLayer)return;
+  pinsLayer.selectAll('*').remove();
+  const filtered=activeFilter==='all'?events:events.filter(e=>e.cat===activeFilter);
+  const container=document.getElementById('tab-map');
+  const tooltip=document.getElementById('tooltip');
+  filtered.forEach(ev=>{
+    const [px,py]=projectionFn([ev.lng,ev.lat]);
+    if(px==null||py==null)return;
+    const g=pinsLayer.append('g').attr('class','pin-group');
+    if(ev.breaking){
+      g.append('circle').attr('cx',px).attr('cy',py).attr('class','pin-ring ring-'+ev.cat).attr('r',10).style('animation-delay',(ev.id*.2)+'s');
+    }
+    g.append('circle').attr('cx',px).attr('cy',py).attr('r',4).attr('class','pin-dot dot-'+ev.cat);
+    if(ev.breaking){
+      g.append('circle').attr('cx',px).attr('cy',py-4).attr('r',2.5).attr('fill','#cc2200');
+    }
+    g.on('mouseenter',function(event){
+      document.getElementById('tt-region').textContent=ev.region;
+      const c=document.getElementById('tt-cat'); c.textContent=ev.breaking?ev.cat+' — BREAKING':ev.cat; c.className='cat-'+ev.cat;
+      document.getElementById('tt-headline').textContent=ev.headline;
+      document.getElementById('tt-source').textContent='SOURCE: '+ev.source;
+      tooltip.classList.add('visible'); positionTooltip(event,container);
+    }).on('mousemove',e=>positionTooltip(e,container)).on('mouseleave',()=>tooltip.classList.remove('visible')).on('click',()=>openDetail(ev));
+  });
+}
+
+function positionTooltip(event,container){
+  const rect=container.getBoundingClientRect();
+  let x=event.clientX-rect.left+14, y=event.clientY-rect.top+14;
+  const tt=document.getElementById('tooltip');
+  if(x+240>rect.width)x=event.clientX-rect.left-244;
+  if(y+140>rect.height)y=event.clientY-rect.top-144;
+  tt.style.left=x+'px'; tt.style.top=y+'px';
+}
+
+function updateClock(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('sr-time').textContent=p(n.getUTCHours())+':'+p(n.getUTCMinutes())+':'+p(n.getUTCSeconds())+' UTC';
+}
+setInterval(updateClock,1000); updateClock();
+init();
+</script>
