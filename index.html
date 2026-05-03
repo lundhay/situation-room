@@ -1,95 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Global Situation Room</title>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet"/>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0;}
-    html,body{height:100%;overflow:hidden;background:#040408;}
-    #sr-root{background:#080808;color:#c8c8c8;font-family:'Share Tech Mono',monospace;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
-    #sr-header{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-bottom:1px solid #1e1e1e;background:#0c0c0c;flex-shrink:0;}
-    #sr-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:3px;color:#e8e8e8;}
-    #sr-status{font-size:9px;color:#555;letter-spacing:1px;}
-    #sr-time{font-size:10px;color:#777;letter-spacing:2px;min-width:120px;text-align:right;}
-    #breaking-bar{background:#0e0e0e;border-bottom:1px solid #1e1e1e;display:flex;align-items:stretch;flex-shrink:0;height:27px;overflow:hidden;}
-    #breaking-label{background:#cc2200;color:#fff;font-size:8px;letter-spacing:2px;padding:0 12px;display:flex;align-items:center;flex-shrink:0;font-weight:700;}
-    #ticker-track{flex:1;overflow:hidden;}
-    #ticker-inner{display:flex;align-items:center;height:100%;white-space:nowrap;animation:ticker 80s linear infinite;}
-    #ticker-inner:hover{animation-play-state:paused;}
-    @keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-200%)}}
-    .ticker-item{font-size:10px;color:#aaa;padding:0 28px;letter-spacing:.5px;}
-    .ticker-sep{color:#333;font-size:12px;}
-    #tab-bar{display:flex;border-bottom:1px solid #1e1e1e;background:#0a0a0a;flex-shrink:0;}
-    .tab-btn{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:8px 20px;cursor:pointer;background:none;border:none;color:#444;border-bottom:2px solid transparent;transition:all .15s;text-transform:uppercase;}
-    .tab-btn:hover{color:#aaa;}
-    .tab-btn.active{color:#e0e0e0;border-bottom:2px solid #e0e0e0;}
-    #tab-map{flex:1;position:relative;overflow:hidden;background:#070d1a;cursor:grab;min-height:0;}
-    #tab-map:active{cursor:grabbing;}
-    #tab-headlines{flex:1;overflow-y:auto;display:none;background:#080808;flex-direction:column;min-height:0;}
-    #tab-headlines::-webkit-scrollbar{width:4px;}
-    #tab-headlines::-webkit-scrollbar-thumb{background:#2a2a2a;}
-    #map-svg{position:absolute;top:0;left:0;width:100%;height:100%;}
-    .country{fill:#111418;stroke:none;}
-    .country:hover{fill:#1c2430;}
-    .borders-countries{fill:none;stroke:#3a4a5a;stroke-width:0.25;pointer-events:none;opacity:0.6;}
-    .borders-continents{fill:none;stroke:#d0e4f0;stroke-width:0.85;pointer-events:none;}
-    .graticule{fill:none;stroke:#090f1c;stroke-width:0.3;pointer-events:none;}
-    .sphere{fill:#060c18;stroke:#0c1828;stroke-width:0.5;}
-    .pin-group{cursor:pointer;}
-    .pin-dot{transition:r .15s;}
-    .pin-group:hover .pin-dot{r:7;}
-    .pin-ring{animation:pulse 2.2s infinite ease-out;fill:none;stroke-width:1;}
-    @keyframes pulse{0%{r:7;opacity:.7}80%{r:18;opacity:0}100%{r:7;opacity:0}}
-    #zoom-controls{position:absolute;top:14px;left:14px;display:flex;flex-direction:column;gap:2px;z-index:20;}
-    .zoom-btn{background:rgba(6,12,24,0.92);border:1px solid #2a3040;color:#667788;font-family:'Share Tech Mono',monospace;font-size:15px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
-    .zoom-btn:hover{color:#cce;border-color:#556688;}
-    #filter-bar{position:absolute;top:14px;right:14px;display:flex;flex-direction:column;gap:3px;z-index:20;}
-    .filter-btn{background:rgba(6,12,24,0.92);border:1px solid #2a3040;color:#556677;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1.5px;padding:5px 11px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
-    .filter-btn:hover,.filter-btn.active{color:#ddeeff;border-color:#7799bb;background:rgba(15,25,45,0.95);}
-    #legend{position:absolute;bottom:14px;left:14px;background:rgba(5,9,18,0.92);border:1px solid #182030;padding:8px 12px;z-index:10;font-size:9px;letter-spacing:1px;}
-    .legend-row{display:flex;align-items:center;gap:7px;margin:3px 0;color:#55667788;}
-    .legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-    #tooltip{position:absolute;background:#060c18;border:1px solid #2a3a50;padding:11px 15px;max-width:250px;pointer-events:none;opacity:0;transition:opacity .12s;z-index:100;}
-    #tooltip.visible{opacity:1;}
-    #tt-region{font-size:9px;color:#44607a;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
-    #tt-cat{display:inline-block;font-size:8px;padding:2px 6px;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase;}
-    #tt-headline{font-size:11px;color:#d0d8e0;line-height:1.55;margin-bottom:5px;}
-    #tt-source{font-size:9px;color:#384858;}
-    .cat-conflict{background:#2e1010;color:#ff7070;border:1px solid #4e1a1a;}
-    .cat-economy{background:#102010;color:#70ff70;border:1px solid #1a3a1a;}
-    .cat-politics{background:#10102e;color:#7090ff;border:1px solid #1a1a4e;}
-    .cat-climate{background:#102828;color:#70ffff;border:1px solid #1a4040;}
-    .cat-crisis{background:#281808;color:#ffaa40;border:1px solid #442808;}
-    .dot-conflict{fill:#ff7070;}.dot-economy{fill:#70ff70;}.dot-politics{fill:#7090ff;}.dot-climate{fill:#70ffff;}.dot-crisis{fill:#ffaa40;}
-    .ring-conflict{stroke:#ff7070;}.ring-economy{stroke:#70ff70;}.ring-politics{stroke:#7090ff;}.ring-climate{stroke:#70ffff;}.ring-crisis{stroke:#ffaa40;}
-    #detail-panel{flex-shrink:0;background:#070d1a;border-top:1px solid #182030;padding:0 20px;display:flex;align-items:center;gap:14px;height:0;overflow:hidden;transition:height .25s;}
-    #detail-panel.open{height:46px;}
-    #dp-tag{font-size:8px;padding:2px 6px;letter-spacing:1px;text-transform:uppercase;flex-shrink:0;}
-    #dp-region{font-size:9px;color:#3a4a5a;letter-spacing:2px;flex-shrink:0;}
-    #dp-headline{font-size:11px;color:#bbb;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    #dp-source{font-size:9px;color:#2e3e4e;flex-shrink:0;}
-    #dp-close{font-size:10px;color:#3a4a5a;cursor:pointer;margin-left:8px;}
-    #dp-close:hover{color:#aaa;}
-    #hl-toolbar{display:flex;align-items:center;gap:8px;padding:12px 20px;border-bottom:1px solid #141e28;flex-shrink:0;flex-wrap:wrap;}
-    .hl-filter{background:none;border:1px solid #1e2a38;color:#445566;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1.5px;padding:4px 10px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
-    .hl-filter:hover,.hl-filter.active{color:#ddeeff;border-color:#5577aa;}
-    #hl-count{font-size:9px;color:#2a3a4a;margin-left:auto;letter-spacing:1px;}
-    .hl-item{display:flex;align-items:flex-start;gap:14px;padding:13px 20px;border-bottom:1px solid #0c1620;cursor:pointer;transition:background .12s;}
-    .hl-item:hover{background:#0a1520;}
-    .hl-item.breaking{border-left:2px solid #cc2200;}
-    .hl-left{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding-top:2px;}
-    .hl-num{font-size:8px;color:#253545;width:22px;text-align:center;}
-    .hl-dot{width:8px;height:8px;border-radius:50%;}
-    .hl-break-badge{font-size:7px;color:#cc2200;letter-spacing:1px;}
-    .hl-body{flex:1;min-width:0;}
-    .hl-meta{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap;}
-    .hl-region{font-size:8px;color:#3a5268;letter-spacing:1.5px;text-transform:uppercase;}
-    .hl-cat-badge{font-size:7px;padding:1px 5px;letter-spacing:1px;text-transform:uppercase;}
-    .hl-headline{font-size:12px;color:#c8d0d8;line-height:1.55;margin-bottom:3px;}
-    .hl-source{font-size:9px;color:#2a3e50;display:flex;align-items:center;gap:8px;}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Global Situation Room</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;background:#040408;}
+#sr-root{background:#080808;color:#c8c8c8;font-family:'Share Tech Mono',monospace;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+#sr-header{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-bottom:1px solid #1e1e1e;background:#0c0c0c;flex-shrink:0;z-index:30;}
+#sr-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:3px;color:#e8e8e8;}
+#sr-status{font-size:9px;color:#555;letter-spacing:1px;}
+#sr-time{font-size:10px;color:#777;letter-spacing:2px;min-width:120px;text-align:right;}
+#breaking-bar{background:#0e0e0e;border-bottom:1px solid #1e1e1e;display:flex;align-items:stretch;flex-shrink:0;height:27px;overflow:hidden;z-index:30;}
+#breaking-label{background:#cc2200;color:#fff;font-size:8px;letter-spacing:2px;padding:0 12px;display:flex;align-items:center;flex-shrink:0;font-weight:700;}
+#ticker-track{flex:1;overflow:hidden;}
+#ticker-inner{display:flex;align-items:center;height:100%;white-space:nowrap;animation:ticker 80s linear infinite;}
+#ticker-inner:hover{animation-play-state:paused;}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-200%)}}
+.ticker-item{font-size:10px;color:#aaa;padding:0 28px;letter-spacing:.5px;}
+.ticker-sep{color:#333;font-size:12px;}
+#tab-bar{display:flex;border-bottom:1px solid #1e1e1e;background:#0a0a0a;flex-shrink:0;z-index:30;}
+.tab-btn{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:8px 20px;cursor:pointer;background:none;border:none;color:#444;border-bottom:2px solid transparent;transition:all .15s;text-transform:uppercase;}
+.tab-btn:hover{color:#aaa;}
+.tab-btn.active{color:#e0e0e0;border-bottom:2px solid #e0e0e0;}
+#map-wrapper{flex:1;position:relative;overflow:hidden;min-height:0;}
+#tab-map{position:absolute;inset:0;overflow:hidden;background:#060c18;cursor:grab;}
+#tab-map:active{cursor:grabbing;}
+#tab-headlines{position:absolute;inset:0;overflow-y:auto;background:#080808;display:none;}
+#tab-headlines::-webkit-scrollbar{width:4px;}
+#tab-headlines::-webkit-scrollbar-thumb{background:#2a2a2a;}
+#map-svg{position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible;}
+.country{fill:#131820;stroke:#d8e8f0;stroke-width:0.45;cursor:pointer;transition:fill .2s;}
+.country:hover{fill:#1e2c3a;}
+.graticule{fill:none;stroke:#0a1220;stroke-width:0.3;pointer-events:none;}
+.sphere{fill:#060c18;stroke:#0d1a2e;stroke-width:0.5;}
+.pin-group{cursor:pointer;}
+.pin-dot{transition:r .15s;}
+.pin-group:hover .pin-dot{r:7;}
+.pin-ring{animation:pulse 2.2s infinite ease-out;fill:none;stroke-width:1;}
+@keyframes pulse{0%{r:7;opacity:.7}80%{r:18;opacity:0}100%{r:7;opacity:0}}
+#zoom-controls{position:absolute;top:14px;left:14px;display:flex;flex-direction:column;gap:2px;z-index:20;}
+.zoom-btn{background:rgba(6,12,24,0.92);border:1px solid #2a3040;color:#667788;font-family:'Share Tech Mono',monospace;font-size:15px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.zoom-btn:hover{color:#cce;border-color:#556688;}
+#filter-bar{position:absolute;top:14px;right:14px;display:flex;flex-direction:column;gap:3px;z-index:20;}
+.filter-btn{background:rgba(6,12,24,0.92);border:1px solid #2a3040;color:#556677;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1.5px;padding:5px 11px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
+.filter-btn:hover,.filter-btn.active{color:#ddeeff;border-color:#7799bb;background:rgba(15,25,45,0.95);}
+#legend{position:absolute;bottom:14px;left:14px;background:rgba(5,9,18,0.92);border:1px solid #182030;padding:8px 12px;z-index:10;font-size:9px;letter-spacing:1px;}
+.legend-row{display:flex;align-items:center;gap:7px;margin:3px 0;color:#55667788;}
+.legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+#tooltip{position:absolute;background:#060c18;border:1px solid #2a3a50;padding:11px 15px;max-width:230px;pointer-events:none;opacity:0;transition:opacity .12s;z-index:50;}
+#tooltip.visible{opacity:1;}
+#tt-region{font-size:9px;color:#44607a;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+#tt-cat{display:inline-block;font-size:8px;padding:2px 6px;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase;}
+#tt-headline{font-size:10px;color:#d0d8e0;line-height:1.5;margin-bottom:4px;}
+#tt-source{font-size:9px;color:#384858;}
+.cat-conflict{background:#2e1010;color:#ff7070;border:1px solid #4e1a1a;}
+.cat-economy{background:#102010;color:#70ff70;border:1px solid #1a3a1a;}
+.cat-politics{background:#10102e;color:#7090ff;border:1px solid #1a1a4e;}
+.cat-climate{background:#102828;color:#70ffff;border:1px solid #1a4040;}
+.cat-crisis{background:#281808;color:#ffaa40;border:1px solid #442808;}
+.dot-conflict{fill:#ff7070;}.dot-economy{fill:#70ff70;}.dot-politics{fill:#7090ff;}.dot-climate{fill:#70ffff;}.dot-crisis{fill:#ffaa40;}
+.ring-conflict{stroke:#ff7070;}.ring-economy{stroke:#70ff70;}.ring-politics{stroke:#7090ff;}.ring-climate{stroke:#70ffff;}.ring-crisis{stroke:#ffaa40;}
+
+/* SIDE PANEL */
+#side-panel{position:absolute;top:0;right:0;width:300px;height:100%;background:#080e18;border-left:1px solid #1e2e40;z-index:40;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
+#side-panel.open{transform:translateX(0);}
+#sp-header{padding:14px 16px 10px;border-bottom:1px solid #1a2a38;flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+#sp-close{font-size:11px;color:#3a5a6a;cursor:pointer;letter-spacing:1px;flex-shrink:0;}
+#sp-close:hover{color:#aaccdd;}
+#sp-region{font-size:9px;color:#3a5a7a;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+#sp-headline{font-size:13px;color:#d8e8f0;line-height:1.6;}
+#sp-body{padding:14px 16px;overflow-y:auto;flex:1;}
+#sp-body::-webkit-scrollbar{width:3px;}
+#sp-body::-webkit-scrollbar-thumb{background:#1e3040;}
+#sp-source-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+#sp-source{font-size:9px;color:#2e4858;letter-spacing:1px;}
+#sp-date{font-size:9px;color:#2a3a4a;letter-spacing:1px;margin-bottom:16px;}
+#sp-divider{border:none;border-top:1px solid #142030;margin:0 0 14px;}
+#sp-related-label{font-size:8px;color:#2a4a5a;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.sp-related-item{padding:10px 0;border-bottom:1px solid #0e1c28;cursor:pointer;}
+.sp-rel-meta{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.sp-rel-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.sp-rel-region{font-size:8px;color:#2a4a5a;letter-spacing:1.5px;text-transform:uppercase;}
+.sp-rel-headline{font-size:11px;color:#8aabb8;line-height:1.45;transition:color .12s;}
+.sp-related-item:hover .sp-rel-headline{color:#d8e8f0;}
+#sp-read-link{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:9px;color:#3a6a8a;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:1px solid #1e3a50;padding:7px 14px;transition:all .15s;text-decoration:none;}
+#sp-read-link:hover{color:#80c0e0;border-color:#3a6a8a;background:rgba(15,40,60,0.5);}
+
+/* COUNTRY PANEL */
+#country-panel{position:absolute;top:0;left:0;width:260px;height:100%;background:#080e18;border-right:1px solid #1e2e40;z-index:40;transform:translateX(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
+#country-panel.open{transform:translateX(0);}
+#cp-header{padding:14px 16px 10px;border-bottom:1px solid #1a2a38;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+#cp-flag{font-size:20px;flex-shrink:0;}
+#cp-name{font-size:11px;color:#c8d8e8;letter-spacing:2px;text-transform:uppercase;flex:1;}
+#cp-close{font-size:11px;color:#3a5a6a;cursor:pointer;letter-spacing:1px;flex-shrink:0;}
+#cp-close:hover{color:#aaccdd;}
+#cp-body{padding:12px 16px;overflow-y:auto;flex:1;}
+#cp-body::-webkit-scrollbar{width:3px;}
+#cp-body::-webkit-scrollbar-thumb{background:#1e3040;}
+#cp-no-news{font-size:10px;color:#2a3a4a;letter-spacing:1px;padding:10px 0;}
+.cp-item{padding:10px 0;border-bottom:1px solid #0e1c28;cursor:pointer;}
+.cp-item:hover .cp-item-headline{color:#d8e8f0;}
+.cp-item-meta{display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap;}
+.cp-item-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.cp-item-cat{font-size:7px;padding:1px 5px;letter-spacing:1px;text-transform:uppercase;}
+.cp-item-headline{font-size:11px;color:#8aabb8;line-height:1.45;transition:color .12s;}
+.cp-item-source{font-size:8px;color:#2a3a4a;margin-top:3px;}
+
+/* HEADLINES TAB */
+#hl-toolbar{display:flex;align-items:center;gap:8px;padding:12px 20px;border-bottom:1px solid #141e28;flex-shrink:0;flex-wrap:wrap;}
+.hl-filter{background:none;border:1px solid #1e2a38;color:#445566;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1.5px;padding:4px 10px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
+.hl-filter:hover,.hl-filter.active{color:#ddeeff;border-color:#5577aa;}
+#hl-count{font-size:9px;color:#2a3a4a;margin-left:auto;letter-spacing:1px;}
+.hl-item{display:flex;align-items:flex-start;gap:14px;padding:13px 20px;border-bottom:1px solid #0c1620;cursor:pointer;transition:background .12s;}
+.hl-item:hover{background:#0a1520;}
+.hl-item.breaking{border-left:2px solid #cc2200;}
+.hl-left{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding-top:2px;}
+.hl-num{font-size:8px;color:#253545;width:22px;text-align:center;}
+.hl-dot{width:8px;height:8px;border-radius:50%;}
+.hl-break-badge{font-size:7px;color:#cc2200;letter-spacing:1px;}
+.hl-body{flex:1;min-width:0;}
+.hl-meta{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap;}
+.hl-region{font-size:8px;color:#3a5268;letter-spacing:1.5px;text-transform:uppercase;}
+.hl-cat-badge{font-size:7px;padding:1px 5px;letter-spacing:1px;text-transform:uppercase;}
+.hl-headline{font-size:12px;color:#c8d0d8;line-height:1.55;margin-bottom:3px;}
+.hl-source{font-size:9px;color:#2a3e50;display:flex;align-items:center;gap:8px;}
+.hl-read-link{font-size:8px;color:#3a5a7a;letter-spacing:1px;text-decoration:none;border:1px solid #1a3040;padding:1px 6px;transition:all .12s;margin-left:auto;}
+.hl-read-link:hover{color:#7ab0d0;border-color:#3a6080;}
+
+/* ADMIN PANEL */
+#admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:none;align-items:center;justify-content:center;}
+#admin-overlay.open{display:flex;}
+#admin-box{background:#080e18;border:1px solid #2a3a50;width:560px;max-width:95vw;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+#admin-header{padding:14px 18px;border-bottom:1px solid #1a2a38;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+#admin-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:#a0c8e0;}
+#admin-close-btn{font-size:10px;color:#3a5a6a;cursor:pointer;letter-spacing:1px;}
+#admin-close-btn:hover{color:#aaccdd;}
+#admin-body{padding:18px;overflow-y:auto;flex:1;}
+#admin-body::-webkit-scrollbar{width:3px;}
+#admin-body::-webkit-scrollbar-thumb{background:#1e3040;}
+.admin-row{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start;}
+.admin-field{display:flex;flex-direction:column;gap:5px;flex:1;}
+.admin-label{font-size:8px;color:#3a5a7a;letter-spacing:2px;text-transform:uppercase;}
+.admin-input,.admin-select,.admin-textarea{background:#0c1828;border:1px solid #1e3040;color:#c8d8e8;font-family:'Share Tech Mono',monospace;font-size:11px;padding:7px 10px;outline:none;transition:border .15s;width:100%;}
+.admin-input:focus,.admin-select:focus,.admin-textarea:focus{border-color:#3a6a8a;}
+.admin-select option{background:#0c1828;}
+.admin-textarea{resize:vertical;min-height:60px;line-height:1.5;}
+.admin-checkbox-row{display:flex;align-items:center;gap:8px;}
+.admin-checkbox-row input{width:14px;height:14px;accent-color:#cc2200;}
+.admin-checkbox-row label{font-size:10px;color:#8aabb8;}
+#admin-generate-btn{background:#0c2030;border:1px solid #2a5a7a;color:#70b0d0;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:9px 18px;cursor:pointer;text-transform:uppercase;transition:all .15s;width:100%;margin-top:6px;}
+#admin-generate-btn:hover{background:#0e2a3a;border-color:#4a8aaa;color:#a0d0f0;}
+#admin-output{margin-top:14px;display:none;}
+#admin-output-label{font-size:8px;color:#3a5a7a;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+#admin-code{background:#040c14;border:1px solid #1a2a38;color:#70c0a0;font-family:'Share Tech Mono',monospace;font-size:10px;padding:12px;line-height:1.7;white-space:pre;overflow-x:auto;}
+#admin-copy-btn{background:#0c2030;border:1px solid #1a4030;color:#50a080;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:7px 14px;cursor:pointer;text-transform:uppercase;transition:all .15s;margin-top:8px;}
+#admin-copy-btn:hover{background:#0e2a20;color:#80d0b0;}
+#admin-hint{font-size:9px;color:#2a4a5a;margin-top:10px;line-height:1.6;}
+#admin-key-hint{position:absolute;bottom:14px;right:14px;font-size:8px;color:#1e2e3a;letter-spacing:1px;z-index:10;}
+</style>
 </head>
 <body>
 <div id="sr-root">
@@ -106,382 +177,326 @@
     <button class="tab-btn active" data-tab="map">MAP VIEW</button>
     <button class="tab-btn" data-tab="headlines">HEADLINES</button>
   </div>
-  <div id="tab-map">
-    <svg id="map-svg" xmlns="http://www.w3.org/2000/svg"></svg>
-    <div id="tooltip">
-      <div id="tt-region"></div><div id="tt-cat"></div>
-      <div id="tt-headline"></div><div id="tt-source"></div>
+  <div id="map-wrapper">
+    <div id="tab-map">
+      <svg id="map-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div id="tooltip"><div id="tt-region"></div><div id="tt-cat"></div><div id="tt-headline"></div><div id="tt-source"></div></div>
+      <div id="zoom-controls">
+        <button class="zoom-btn" id="zoom-in">+</button>
+        <button class="zoom-btn" id="zoom-out">−</button>
+        <button class="zoom-btn" id="zoom-reset" style="font-size:11px;">⌂</button>
+      </div>
+      <div id="filter-bar">
+        <button class="filter-btn active" data-cat="all">ALL</button>
+        <button class="filter-btn" data-cat="conflict">CONFLICT</button>
+        <button class="filter-btn" data-cat="economy">ECONOMY</button>
+        <button class="filter-btn" data-cat="politics">POLITICS</button>
+        <button class="filter-btn" data-cat="climate">CLIMATE</button>
+        <button class="filter-btn" data-cat="crisis">CRISIS</button>
+      </div>
+      <div id="legend">
+        <div class="legend-row"><div class="legend-dot" style="background:#ff7070"></div>CONFLICT</div>
+        <div class="legend-row"><div class="legend-dot" style="background:#70ff70"></div>ECONOMY</div>
+        <div class="legend-row"><div class="legend-dot" style="background:#7090ff"></div>POLITICS</div>
+        <div class="legend-row"><div class="legend-dot" style="background:#70ffff"></div>CLIMATE</div>
+        <div class="legend-row"><div class="legend-dot" style="background:#ffaa40"></div>CRISIS</div>
+      </div>
+      <div id="admin-key-hint">PRESS [ A ] TO ADD NEWS</div>
+      <!-- SIDE PANEL -->
+      <div id="side-panel">
+        <div id="sp-header">
+          <div style="flex:1;min-width:0;"><div id="sp-region"></div><div id="sp-headline"></div></div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;margin-left:10px;">
+            <div id="sp-close">[ CLOSE ]</div><div id="sp-tag"></div>
+          </div>
+        </div>
+        <div id="sp-body">
+          <div id="sp-source-row"><div id="sp-source"></div></div>
+          <div id="sp-date"></div>
+          <hr id="sp-divider"/>
+          <div id="sp-related-label">RELATED EVENTS</div>
+          <div id="sp-related-list"></div>
+          <a id="sp-read-link" target="_blank" rel="noopener">READ FULL STORY →</a>
+        </div>
+      </div>
+      <!-- COUNTRY PANEL -->
+      <div id="country-panel">
+        <div id="cp-header">
+          <div id="cp-flag"></div><div id="cp-name"></div><div id="cp-close">[ CLOSE ]</div>
+        </div>
+        <div id="cp-body"><div id="cp-no-news"></div><div id="cp-list"></div></div>
+      </div>
     </div>
-    <div id="zoom-controls">
-      <button class="zoom-btn" id="zoom-in">+</button>
-      <button class="zoom-btn" id="zoom-out">−</button>
-      <button class="zoom-btn" id="zoom-reset" style="font-size:11px;">⌂</button>
-    </div>
-    <div id="filter-bar">
-      <button class="filter-btn active" data-cat="all">ALL</button>
-      <button class="filter-btn" data-cat="conflict">CONFLICT</button>
-      <button class="filter-btn" data-cat="economy">ECONOMY</button>
-      <button class="filter-btn" data-cat="politics">POLITICS</button>
-      <button class="filter-btn" data-cat="climate">CLIMATE</button>
-      <button class="filter-btn" data-cat="crisis">CRISIS</button>
-    </div>
-    <div id="legend">
-      <div class="legend-row"><div class="legend-dot" style="background:#ff7070"></div>CONFLICT</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#70ff70"></div>ECONOMY</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#7090ff"></div>POLITICS</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#70ffff"></div>CLIMATE</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#ffaa40"></div>CRISIS</div>
+    <!-- HEADLINES TAB -->
+    <div id="tab-headlines">
+      <div id="hl-toolbar">
+        <button class="hl-filter active" data-hcat="all">ALL</button>
+        <button class="hl-filter" data-hcat="conflict">CONFLICT</button>
+        <button class="hl-filter" data-hcat="economy">ECONOMY</button>
+        <button class="hl-filter" data-hcat="politics">POLITICS</button>
+        <button class="hl-filter" data-hcat="climate">CLIMATE</button>
+        <button class="hl-filter" data-hcat="crisis">CRISIS</button>
+        <button class="hl-filter" data-hcat="breaking">BREAKING ONLY</button>
+        <span id="hl-count"></span>
+      </div>
+      <div id="hl-list"></div>
     </div>
   </div>
-  <div id="tab-headlines">
-    <div id="hl-toolbar">
-      <button class="hl-filter active" data-hcat="all">ALL</button>
-      <button class="hl-filter" data-hcat="conflict">CONFLICT</button>
-      <button class="hl-filter" data-hcat="economy">ECONOMY</button>
-      <button class="hl-filter" data-hcat="politics">POLITICS</button>
-      <button class="hl-filter" data-hcat="climate">CLIMATE</button>
-      <button class="hl-filter" data-hcat="crisis">CRISIS</button>
-      <button class="hl-filter" data-hcat="breaking">BREAKING ONLY</button>
-      <span id="hl-count"></span>
+</div>
+
+<!-- ADMIN OVERLAY -->
+<div id="admin-overlay">
+  <div id="admin-box">
+    <div id="admin-header">
+      <div id="admin-title">ADD NEWS EVENT</div>
+      <div id="admin-close-btn">[ ESC ]</div>
     </div>
-    <div id="hl-list"></div>
-  </div>
-  <div id="detail-panel">
-    <div id="dp-tag"></div><div id="dp-region"></div>
-    <div id="dp-headline"></div><div id="dp-source"></div>
-    <div id="dp-close">[ CLOSE ]</div>
+    <div id="admin-body">
+      <div class="admin-row">
+        <div class="admin-field">
+          <div class="admin-label">Country *</div>
+          <input class="admin-input" id="af-country" placeholder="e.g. France" list="country-list"/>
+          <datalist id="country-list"></datalist>
+        </div>
+        <div class="admin-field">
+          <div class="admin-label">Region Label *</div>
+          <input class="admin-input" id="af-region" placeholder="e.g. WESTERN EUROPE"/>
+        </div>
+      </div>
+      <div class="admin-row">
+        <div class="admin-field" style="flex:2;">
+          <div class="admin-label">Headline *</div>
+          <textarea class="admin-textarea" id="af-headline" placeholder="Full news headline here..."></textarea>
+        </div>
+      </div>
+      <div class="admin-row">
+        <div class="admin-field">
+          <div class="admin-label">Source *</div>
+          <input class="admin-input" id="af-source" placeholder="e.g. Le Monde"/>
+        </div>
+        <div class="admin-field">
+          <div class="admin-label">Article URL</div>
+          <input class="admin-input" id="af-url" placeholder="https://..."/>
+        </div>
+      </div>
+      <div class="admin-row">
+        <div class="admin-field">
+          <div class="admin-label">Category *</div>
+          <select class="admin-select" id="af-cat">
+            <option value="conflict">Conflict</option>
+            <option value="economy">Economy</option>
+            <option value="politics">Politics</option>
+            <option value="climate">Climate</option>
+            <option value="crisis">Crisis</option>
+          </select>
+        </div>
+        <div class="admin-field">
+          <div class="admin-label">Date *</div>
+          <input class="admin-input" id="af-date" placeholder="e.g. May 2, 2026"/>
+        </div>
+        <div class="admin-field" style="justify-content:flex-end;padding-bottom:2px;">
+          <div class="admin-label">Breaking News</div>
+          <div class="admin-checkbox-row">
+            <input type="checkbox" id="af-breaking"/>
+            <label for="af-breaking">Mark as BREAKING</label>
+          </div>
+        </div>
+      </div>
+      <button class="admin-generate-btn" id="admin-generate-btn">GENERATE CODE BLOCK →</button>
+      <div id="admin-output">
+        <div id="admin-output-label">PASTE THIS INTO index.html AFTER THE LAST EVENT:</div>
+        <div id="admin-code"></div>
+        <button id="admin-copy-btn">COPY TO CLIPBOARD</button>
+        <div id="admin-hint">
+          Open your index.html on GitHub → click the pencil ✏️ icon → find the line that says<br>
+          <span style="color:#70c0a0;">/* ---- ADD NEW STORIES BELOW ---- */</span><br>
+          and paste the block above it. Then click Commit Changes.
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 <script>
-
 /* ============================================================
-   NEWS DATA — EDIT THIS SECTION TO UPDATE YOUR HEADLINES
-   ============================================================
-
-   Each story is one block between the { } brackets.
-   Fields to fill in:
-
-   id       — just a number, keep them sequential (1, 2, 3...)
-   lat      — latitude  (north/south position, e.g. 48 for Paris)
-   lng      — longitude (east/west position,  e.g. 2 for Paris)
-   cat      — category: 'conflict' | 'economy' | 'politics' | 'climate' | 'crisis'
-   region   — short region label shown on the map popup (ALL CAPS)
-   headline — the actual news headline
-   source   — the news outlet name
-   url      — link to the original article (use '#' if you don't have one)
-   breaking — true if it's breaking news, false if not
-   date     — date string shown in headlines tab, e.g. 'May 2, 2026'
-
-   HOW TO FIND COORDINATES:
-   Go to maps.google.com, right-click any location, and the
-   first line shown is the latitude, longitude.
-   Example: 48.8566, 2.3522 = Paris, France
-
+   COUNTRY DATABASE  —  name, flag, highlight color, center coords
    ============================================================ */
+const COUNTRIES = {
+  4:  {name:'Afghanistan',          flag:'🇦🇫',color:'#3a2a1a',lat:33.93, lng:67.71},
+  8:  {name:'Albania',              flag:'🇦🇱',color:'#3a1a1a',lat:41.15, lng:20.17},
+  12: {name:'Algeria',              flag:'🇩🇿',color:'#1a3a1a',lat:28.03, lng:1.66},
+  24: {name:'Angola',               flag:'🇦🇴',color:'#2a2a1a',lat:-11.20,lng:17.87},
+  32: {name:'Argentina',            flag:'🇦🇷',color:'#1a2a3a',lat:-38.42,lng:-63.62},
+  36: {name:'Australia',            flag:'🇦🇺',color:'#1a2a3a',lat:-25.27,lng:133.78},
+  40: {name:'Austria',              flag:'🇦🇹',color:'#2a1a1a',lat:47.52, lng:14.55},
+  50: {name:'Bangladesh',           flag:'🇧🇩',color:'#1a3a2a',lat:23.68, lng:90.36},
+  56: {name:'Belgium',              flag:'🇧🇪',color:'#2a2a1a',lat:50.50, lng:4.47},
+  68: {name:'Bolivia',              flag:'🇧🇴',color:'#2a3a1a',lat:-16.29,lng:-63.59},
+  76: {name:'Brazil',               flag:'🇧🇷',color:'#1a3a1a',lat:-14.24,lng:-51.93},
+  100:{name:'Bulgaria',             flag:'🇧🇬',color:'#2a1a1a',lat:42.73, lng:25.49},
+  104:{name:'Myanmar',              flag:'🇲🇲',color:'#2a2a1a',lat:21.92, lng:95.96},
+  116:{name:'Cambodia',             flag:'🇰🇭',color:'#2a1a1a',lat:12.57, lng:104.99},
+  120:{name:'Cameroon',             flag:'🇨🇲',color:'#1a2a1a',lat:3.85,  lng:11.50},
+  124:{name:'Canada',               flag:'🇨🇦',color:'#2a1a1a',lat:56.13, lng:-106.35},
+  140:{name:'Central African Rep.', flag:'🇨🇫',color:'#2a1a1a',lat:6.61,  lng:20.94},
+  152:{name:'Chile',                flag:'🇨🇱',color:'#1a2a3a',lat:-35.68,lng:-71.54},
+  156:{name:'China',                flag:'🇨🇳',color:'#6a1a1a',lat:35.86, lng:104.20},
+  170:{name:'Colombia',             flag:'🇨🇴',color:'#2a3a1a',lat:4.57,  lng:-74.30},
+  180:{name:'DR Congo',             flag:'🇨🇩',color:'#2a2a1a',lat:-4.04, lng:21.76},
+  188:{name:'Costa Rica',           flag:'🇨🇷',color:'#1a2a1a',lat:9.75,  lng:-83.75},
+  191:{name:'Croatia',              flag:'🇭🇷',color:'#2a1a1a',lat:45.10, lng:15.20},
+  192:{name:'Cuba',                 flag:'🇨🇺',color:'#2a1a1a',lat:21.52, lng:-77.78},
+  203:{name:'Czech Republic',       flag:'🇨🇿',color:'#1a1a3a',lat:49.82, lng:15.47},
+  208:{name:'Denmark',              flag:'🇩🇰',color:'#2a1a1a',lat:56.26, lng:9.50},
+  218:{name:'Ecuador',              flag:'🇪🇨',color:'#2a3a1a',lat:-1.83, lng:-78.18},
+  818:{name:'Egypt',                flag:'🇪🇬',color:'#3a2a1a',lat:26.82, lng:30.80},
+  231:{name:'Ethiopia',             flag:'🇪🇹',color:'#2a3a1a',lat:9.15,  lng:40.49},
+  246:{name:'Finland',              flag:'🇫🇮',color:'#1a2a3a',lat:61.92, lng:25.75},
+  250:{name:'France',               flag:'🇫🇷',color:'#2a2a6a',lat:46.23, lng:2.21},
+  276:{name:'Germany',              flag:'🇩🇪',color:'#1a3a2a',lat:51.17, lng:10.45},
+  288:{name:'Ghana',                flag:'🇬🇭',color:'#1a2a1a',lat:7.95,  lng:-1.02},
+  300:{name:'Greece',               flag:'🇬🇷',color:'#1a1a3a',lat:39.07, lng:21.82},
+  320:{name:'Guatemala',            flag:'🇬🇹',color:'#1a3a1a',lat:15.78, lng:-90.23},
+  340:{name:'Honduras',             flag:'🇭🇳',color:'#1a2a3a',lat:15.20, lng:-86.24},
+  348:{name:'Hungary',              flag:'🇭🇺',color:'#2a1a1a',lat:47.16, lng:19.50},
+  356:{name:'India',                flag:'🇮🇳',color:'#4a2a1a',lat:20.59, lng:78.96},
+  360:{name:'Indonesia',            flag:'🇮🇩',color:'#3a1a1a',lat:-0.79, lng:113.92},
+  364:{name:'Iran',                 flag:'🇮🇷',color:'#3a1a1a',lat:32.43, lng:53.69},
+  368:{name:'Iraq',                 flag:'🇮🇶',color:'#3a2a1a',lat:33.22, lng:43.68},
+  372:{name:'Ireland',              flag:'🇮🇪',color:'#1a3a1a',lat:53.41, lng:-8.24},
+  376:{name:'Israel',               flag:'🇮🇱',color:'#3a3a1a',lat:31.05, lng:34.85},
+  380:{name:'Italy',                flag:'🇮🇹',color:'#1a3a1a',lat:41.87, lng:12.57},
+  392:{name:'Japan',                flag:'🇯🇵',color:'#5a1a1a',lat:36.20, lng:138.25},
+  400:{name:'Jordan',               flag:'🇯🇴',color:'#2a2a1a',lat:30.59, lng:36.24},
+  398:{name:'Kazakhstan',           flag:'🇰🇿',color:'#2a3a1a',lat:48.02, lng:66.92},
+  404:{name:'Kenya',                flag:'🇰🇪',color:'#2a2a1a',lat:-0.02, lng:37.91},
+  408:{name:'North Korea',          flag:'🇰🇵',color:'#3a1a1a',lat:40.34, lng:127.51},
+  410:{name:'South Korea',          flag:'🇰🇷',color:'#1a2a5a',lat:35.91, lng:127.77},
+  418:{name:'Laos',                 flag:'🇱🇦',color:'#2a1a1a',lat:19.86, lng:102.50},
+  422:{name:'Lebanon',              flag:'🇱🇧',color:'#2a1a1a',lat:33.85, lng:35.86},
+  434:{name:'Libya',                flag:'🇱🇾',color:'#2a2a1a',lat:26.34, lng:17.23},
+  450:{name:'Madagascar',           flag:'🇲🇬',color:'#1a2a1a',lat:-18.77,lng:46.87},
+  458:{name:'Malaysia',             flag:'🇲🇾',color:'#1a2a3a',lat:4.21,  lng:108.96},
+  484:{name:'Mexico',               flag:'🇲🇽',color:'#1a3a1a',lat:23.63, lng:-102.55},
+  504:{name:'Morocco',              flag:'🇲🇦',color:'#2a1a1a',lat:31.79, lng:-7.09},
+  516:{name:'Namibia',              flag:'🇳🇦',color:'#2a2a1a',lat:-22.96,lng:18.49},
+  524:{name:'Nepal',                flag:'🇳🇵',color:'#3a1a1a',lat:28.39, lng:84.12},
+  528:{name:'Netherlands',          flag:'🇳🇱',color:'#2a1a1a',lat:52.13, lng:5.29},
+  554:{name:'New Zealand',          flag:'🇳🇿',color:'#1a2a3a',lat:-40.90,lng:174.89},
+  562:{name:'Niger',                flag:'🇳🇪',color:'#2a2a1a',lat:17.61, lng:8.08},
+  566:{name:'Nigeria',              flag:'🇳🇬',color:'#1a3a1a',lat:9.08,  lng:8.68},
+  578:{name:'Norway',               flag:'🇳🇴',color:'#1a2a3a',lat:60.47, lng:8.47},
+  586:{name:'Pakistan',             flag:'🇵🇰',color:'#1a3a1a',lat:30.38, lng:69.35},
+  604:{name:'Peru',                 flag:'🇵🇪',color:'#2a1a1a',lat:-9.19, lng:-75.02},
+  608:{name:'Philippines',          flag:'🇵🇭',color:'#1a2a3a',lat:12.88, lng:121.77},
+  616:{name:'Poland',               flag:'🇵🇱',color:'#2a1a1a',lat:51.92, lng:19.15},
+  620:{name:'Portugal',             flag:'🇵🇹',color:'#1a2a1a',lat:39.40, lng:-8.22},
+  634:{name:'Qatar',                flag:'🇶🇦',color:'#2a1a1a',lat:25.35, lng:51.18},
+  642:{name:'Romania',              flag:'🇷🇴',color:'#2a1a1a',lat:45.94, lng:24.97},
+  643:{name:'Russia',               flag:'🇷🇺',color:'#4a2a6a',lat:61.52, lng:105.32},
+  682:{name:'Saudi Arabia',         flag:'🇸🇦',color:'#3a1a1a',lat:23.89, lng:45.08},
+  686:{name:'Senegal',              flag:'🇸🇳',color:'#1a3a1a',lat:14.50, lng:-14.45},
+  706:{name:'Somalia',              flag:'🇸🇴',color:'#2a2a1a',lat:5.15,  lng:46.20},
+  710:{name:'South Africa',         flag:'🇿🇦',color:'#1a4a1a',lat:-30.56,lng:22.94},
+  729:{name:'Sudan',                flag:'🇸🇩',color:'#2a2a1a',lat:12.86, lng:30.22},
+  724:{name:'Spain',                flag:'🇪🇸',color:'#2a1a1a',lat:40.46, lng:-3.75},
+  752:{name:'Sweden',               flag:'🇸🇪',color:'#1a2a4a',lat:60.13, lng:18.64},
+  756:{name:'Switzerland',          flag:'🇨🇭',color:'#2a1a1a',lat:46.82, lng:8.23},
+  760:{name:'Syria',                flag:'🇸🇾',color:'#3a1a1a',lat:34.80, lng:38.10},
+  764:{name:'Thailand',             flag:'🇹🇭',color:'#2a1a3a',lat:15.87, lng:100.99},
+  788:{name:'Tunisia',              flag:'🇹🇳',color:'#2a1a1a',lat:33.89, lng:9.54},
+  792:{name:'Turkey',               flag:'🇹🇷',color:'#3a1a1a',lat:38.96, lng:35.24},
+  800:{name:'Uganda',               flag:'🇺🇬',color:'#1a2a1a',lat:1.37,  lng:32.29},
+  804:{name:'Ukraine',              flag:'🇺🇦',color:'#1a3a5a',lat:48.38, lng:31.17},
+  784:{name:'UAE',                  flag:'🇦🇪',color:'#1a2a2a',lat:23.42, lng:53.85},
+  826:{name:'United Kingdom',       flag:'🇬🇧',color:'#2a1a4a',lat:55.38, lng:-3.44},
+  840:{name:'United States',        flag:'🇺🇸',color:'#1a3a6a',lat:37.09, lng:-95.71},
+  858:{name:'Uruguay',              flag:'🇺🇾',color:'#1a2a3a',lat:-32.52,lng:-55.77},
+  862:{name:'Venezuela',            flag:'🇻🇪',color:'#2a2a1a',lat:6.42,  lng:-66.59},
+  704:{name:'Vietnam',              flag:'🇻🇳',color:'#3a1a1a',lat:14.06, lng:108.28},
+  887:{name:'Yemen',                flag:'🇾🇪',color:'#2a1a1a',lat:15.55, lng:48.52},
+  894:{name:'Zambia',               flag:'🇿🇲',color:'#1a2a1a',lat:-13.13,lng:27.85},
+  716:{name:'Zimbabwe',             flag:'🇿🇼',color:'#1a3a1a',lat:-19.02,lng:29.15},
+  268:{name:'Georgia',              flag:'🇬🇪',color:'#3a1a1a',lat:42.31, lng:43.36},
+  646:{name:'Rwanda',               flag:'🇷🇼',color:'#1a2a1a',lat:-1.94, lng:29.87},
+};
 
-const events = [
-
-  {
-    id: 1,
-    lat: 49, lng: 32,
-    cat: 'conflict',
-    region: 'EASTERN EUROPE',
-    headline: 'Ceasefire negotiations stall as shelling reported near disputed border region',
-    source: 'Reuters / Kyiv Independent',
-    url: 'https://kyivindependent.com',
-    breaking: true,
-    date: 'May 2, 2026'
-  },
-  {
-    id: 2,
-    lat: 31, lng: 35,
-    cat: 'conflict',
-    region: 'MIDDLE EAST',
-    headline: 'Humanitarian corridor agreement reached after weeks of diplomatic pressure',
-    source: 'Al Jazeera',
-    url: 'https://aljazeera.com',
-    breaking: false,
-    date: 'May 2, 2026'
-  },
-  {
-    id: 3,
-    lat: 41, lng: 69,
-    cat: 'politics',
-    region: 'CENTRAL ASIA',
-    headline: 'Presidential election results disputed by opposition coalition',
-    source: 'RFE/RL',
-    url: 'https://rferl.org',
-    breaking: false,
-    date: 'May 1, 2026'
-  },
-  {
-    id: 4,
-    lat: 28, lng: 77,
-    cat: 'economy',
-    region: 'SOUTH ASIA',
-    headline: 'Central bank raises rates amid record inflation surge',
-    source: 'The Hindu',
-    url: 'https://thehindu.com',
-    breaking: false,
-    date: 'May 1, 2026'
-  },
-  {
-    id: 5,
-    lat: 35, lng: 105,
-    cat: 'politics',
-    region: 'EAST ASIA',
-    headline: 'Trade delegation talks resume following six-month diplomatic freeze',
-    source: 'South China Morning Post',
-    url: 'https://scmp.com',
-    breaking: false,
-    date: 'May 2, 2026'
-  },
-  {
-    id: 6,
-    lat: 36, lng: 128,
-    cat: 'economy',
-    region: 'NORTHEAST ASIA',
-    headline: 'Chipmaker announces $40B expansion amid global semiconductor race',
-    source: 'Nikkei Asia',
-    url: 'https://asia.nikkei.com',
-    breaking: false,
-    date: 'Apr 30, 2026'
-  },
-  {
-    id: 7,
-    lat: 48, lng: 11,
-    cat: 'politics',
-    region: 'WESTERN EUROPE',
-    headline: 'US to cut troop levels in Germany by 5,000 amid Trump spat with Merz',
-    source: 'BBC',
-    url: 'https://www.bbc.com/news/articles/c0729d374mxo',
-    breaking: false,
-    date: 'May 2, 2026'
-  },
-  {
-    id: 8,
-    lat: 30, lng: 31,
-    cat: 'economy',
-    region: 'NORTH AFRICA',
-    headline: 'IMF reaches preliminary debt restructuring deal with government',
-    source: 'Reuters Africa',
-    url: 'https://reuters.com',
-    breaking: false,
-    date: 'May 1, 2026'
-  },
-  {
-    id: 9,
-    lat: 4, lng: 38,
-    cat: 'crisis',
-    region: 'EAST AFRICA',
-    headline: 'UN declares famine emergency as drought enters third consecutive year',
-    source: 'The East African',
-    url: 'https://theeastafrican.co.ke',
-    breaking: true,
-    date: 'May 2, 2026'
-  },
-  {
-    id: 10,
-    lat: -4, lng: 23,
-    cat: 'conflict',
-    region: 'CENTRAL AFRICA',
-    headline: 'Rebel advance halted; peacekeeping force mandate extended by Security Council',
-    source: 'AFP / RFI',
-    url: 'https://rfi.fr',
-    breaking: false,
-    date: 'Apr 29, 2026'
-  },
-  {
-    id: 11,
-    lat: 9, lng: 2,
-    cat: 'crisis',
-    region: 'WEST AFRICA',
-    headline: 'Flooding displaces 200,000 in coastal regions after Category 4 storm',
-    source: 'The Guardian Nigeria',
-    url: 'https://guardian.ng',
-    breaking: true,
-    date: 'May 2, 2026'
-  },
-  {
-    id: 12,
-    lat: -26, lng: 28,
-    cat: 'politics',
-    region: 'SOUTHERN AFRICA',
-    headline: 'Constitutional court ruling challenges executive branch authority',
-    source: 'Daily Maverick',
-    url: 'https://dailymaverick.co.za',
-    breaking: false,
-    date: 'May 1, 2026'
-  },
-  {
-    id: 13,
-    lat: -16, lng: -68,
-    cat: 'economy',
-    region: 'SOUTH AMERICA (N)',
-    headline: 'Lithium nationalization bill passes; foreign investors signal concern',
-    source: 'El País América',
-    url: 'https://elpais.com',
-    breaking: false,
-    date: 'Apr 30, 2026'
-  },
-  {
-    id: 14,
-    lat: -23, lng: -46,
-    cat: 'climate',
-    region: 'SOUTH AMERICA (S)',
-    headline: 'Amazon deforestation rate drops 42% under new environmental enforcement',
-    source: 'Folha de S.Paulo',
-    url: 'https://folha.uol.com.br',
-    breaking: false,
-    date: 'May 1, 2026'
-  },
-  {
-    id: 15,
-    lat: 15, lng: -90,
-    cat: 'conflict',
-    region: 'CENTRAL AMERICA',
-    headline: 'Cartel violence prompts emergency security summit of regional leaders',
-    source: 'El Universal',
-    url: 'https://eluniversal.com.mx',
-    breaking: false,
-    date: 'Apr 30, 2026'
-  },
-  {
-    id: 16,
-    lat: 39, lng: -98,
-    cat: 'politics',
-    region: 'NORTH AMERICA',
-    headline: 'Senate vote on border security bill delayed amid party negotiations',
-    source: 'AP / Washington Post',
-    url: 'https://washingtonpost.com',
-    breaking: false,
-    date: 'May 2, 2026'
-  },
-  {
-    id: 17,
-    lat: 13, lng: 100,
-    cat: 'economy',
-    region: 'SOUTHEAST ASIA',
-    headline: 'ASEAN free trade zone expansion ratified by seven member states',
-    source: 'Bangkok Post',
-    url: 'https://bangkokpost.com',
-    breaking: false,
-    date: 'Apr 29, 2026'
-  },
-  {
-    id: 18,
-    lat: -2, lng: 118,
-    cat: 'climate',
-    region: 'INDONESIA',
-    headline: 'Peatland fire season declared; satellite data shows record smoke plumes',
-    source: 'Jakarta Post',
-    url: 'https://thejakartapost.com',
-    breaking: false,
-    date: 'May 1, 2026'
-  },
-  {
-    id: 19,
-    lat: 24, lng: 46,
-    cat: 'crisis',
-    region: 'ARABIAN PENINSULA',
-    headline: 'Water scarcity crisis deepens; desalination capacity falls short of demand',
-    source: 'Arab News',
-    url: 'https://arabnews.com',
-    breaking: true,
-    date: 'May 2, 2026'
-  },
-  {
-    id: 20,
-    lat: 12, lng: 20,
-    cat: 'climate',
-    region: 'SAHEL REGION',
-    headline: 'Solar mega-project breaks ground; to power 10 million homes by 2028',
-    source: 'AllAfrica',
-    url: 'https://allafrica.com',
-    breaking: false,
-    date: 'Apr 28, 2026'
-  },
-  {
-    id: 21,
-    lat: 55, lng: 60,
-    cat: 'economy',
-    region: 'RUSSIA / CIS',
-    headline: 'Energy revenues prop up budget despite western sanctions pressure',
-    source: 'Moscow Times / Meduza',
-    url: 'https://meduza.io',
-    breaking: false,
-    date: 'Apr 30, 2026'
-  },
-  {
-    id: 22,
-    lat: -25, lng: 133,
-    cat: 'climate',
-    region: 'AUSTRALIA',
-    headline: 'Coral bleaching event declared across 65% of Great Barrier Reef',
-    source: 'The Australian',
-    url: 'https://theaustralian.com.au',
-    breaking: true,
-    date: 'May 2, 2026'
-  },
-  {
-    id: 23,
-    lat: 62, lng: 15,
-    cat: 'politics',
-    region: 'SCANDINAVIA',
-    headline: 'NATO northern flank strategy reviewed after Baltic sea incident',
-    source: 'Aftenposten / Yle',
-    url: 'https://aftenposten.no',
-    breaking: false,
-    date: 'May 1, 2026'
-  },
-  {
-    id: 24,
-    lat: 41, lng: 45,
-    cat: 'conflict',
-    region: 'CAUCASUS',
-    headline: 'Border demarcation dispute reignites weeks after peace agreement signed',
-    source: 'OC Media / Caucasian Knot',
-    url: 'https://oc-media.org',
-    breaking: true,
-    date: 'May 2, 2026'
-  },
-
-  /* ---- ADD NEW STORIES BELOW THIS LINE ----
-
-  {
-    id: 25,
-    lat: 48.8566, lng: 2.3522,
-    cat: 'politics',
-    region: 'FRANCE',
-    headline: 'Your headline here',
-    source: 'Source name here',
-    url: 'https://link-to-article.com',
-    breaking: false,
-    date: 'May 2, 2026'
-  },
-
-  ---- END OF EXAMPLE ---- */
-
-];
-
-/* ============================================================
-   END OF NEWS DATA — DO NOT EDIT BELOW THIS LINE
-   ============================================================ */
+// Name→ID lookup
+const NAME_TO_ID = {};
+Object.entries(COUNTRIES).forEach(([id,c])=>{ NAME_TO_ID[c.name.toLowerCase()]=parseInt(id); });
+function coordsForCountry(name){
+  const id=NAME_TO_ID[(name||'').toLowerCase()];
+  if(!id) return null;
+  const c=COUNTRIES[id];
+  return c?{lat:c.lat,lng:c.lng,id}:null;
+}
 
 const dotColors={conflict:'#ff7070',economy:'#70ff70',politics:'#7090ff',climate:'#70ffff',crisis:'#ffaa40'};
 
+/* ============================================================
+   NEWS DATA — EDIT THIS SECTION TO UPDATE YOUR HEADLINES
+   Use  country: 'Country Name'  — coordinates are auto-set.
+   ============================================================ */
+const rawEvents = [
+  {id:1,  country:'Ukraine',      cat:'conflict', region:'EASTERN EUROPE',    headline:'Ceasefire negotiations stall as shelling reported near disputed border region',    source:'Reuters / Kyiv Independent', url:'https://kyivindependent.com',   breaking:true,  date:'May 2, 2026'},
+  {id:2,  country:'Israel',       cat:'conflict', region:'MIDDLE EAST',       headline:'Humanitarian corridor agreement reached after weeks of diplomatic pressure',       source:'Al Jazeera / Haaretz',       url:'https://aljazeera.com',          breaking:false, date:'May 2, 2026'},
+  {id:3,  country:'Kazakhstan',   cat:'politics', region:'CENTRAL ASIA',      headline:'Presidential election results disputed by opposition coalition',                    source:'RFE/RL',                     url:'https://rferl.org',              breaking:false, date:'May 1, 2026'},
+  {id:4,  country:'India',        cat:'economy',  region:'SOUTH ASIA',        headline:'Central bank raises rates amid record inflation surge',                            source:'The Hindu',                  url:'https://thehindu.com',           breaking:false, date:'May 1, 2026'},
+  {id:5,  country:'China',        cat:'politics', region:'EAST ASIA',         headline:'Trade delegation talks resume following six-month diplomatic freeze',               source:'South China Morning Post',   url:'https://scmp.com',               breaking:false, date:'May 2, 2026'},
+  {id:6,  country:'South Korea',  cat:'economy',  region:'NORTHEAST ASIA',    headline:'Chipmaker announces $40B expansion amid global semiconductor race',                source:'Nikkei Asia',                url:'https://asia.nikkei.com',        breaking:false, date:'Apr 30, 2026'},
+  {id:7,  country:'Germany',      cat:'politics', region:'WESTERN EUROPE',    headline:'Coalition government collapses ahead of snap election announcement',               source:'Le Monde / Der Spiegel',     url:'https://lemonde.fr',             breaking:true,  date:'May 2, 2026'},
+  {id:8,  country:'Egypt',        cat:'economy',  region:'NORTH AFRICA',      headline:'IMF reaches preliminary debt restructuring deal with government',                  source:'Reuters Africa',             url:'https://reuters.com',            breaking:false, date:'May 1, 2026'},
+  {id:9,  country:'Ethiopia',     cat:'crisis',   region:'EAST AFRICA',       headline:'UN declares famine emergency as drought enters third consecutive year',             source:'The East African',           url:'https://theeastafrican.co.ke',   breaking:true,  date:'May 2, 2026'},
+  {id:10, country:'DR Congo',     cat:'conflict', region:'CENTRAL AFRICA',    headline:'Rebel advance halted; peacekeeping force mandate extended by Security Council',    source:'AFP / RFI',                  url:'https://rfi.fr',                 breaking:false, date:'Apr 29, 2026'},
+  {id:11, country:'Nigeria',      cat:'crisis',   region:'WEST AFRICA',       headline:'Flooding displaces 200,000 in coastal regions after Category 4 storm',             source:'The Guardian Nigeria',       url:'https://guardian.ng',            breaking:true,  date:'May 2, 2026'},
+  {id:12, country:'South Africa', cat:'politics', region:'SOUTHERN AFRICA',   headline:'Constitutional court ruling challenges executive branch authority',                 source:'Daily Maverick',             url:'https://dailymaverick.co.za',    breaking:false, date:'May 1, 2026'},
+  {id:13, country:'Bolivia',      cat:'economy',  region:'SOUTH AMERICA',     headline:'Lithium nationalization bill passes; foreign investors signal concern',             source:'El País América',            url:'https://elpais.com',             breaking:false, date:'Apr 30, 2026'},
+  {id:14, country:'Brazil',       cat:'climate',  region:'SOUTH AMERICA',     headline:'Amazon deforestation rate drops 42% under new environmental enforcement',          source:'Folha de S.Paulo',           url:'https://folha.uol.com.br',       breaking:false, date:'May 1, 2026'},
+  {id:15, country:'Mexico',       cat:'conflict', region:'CENTRAL AMERICA',   headline:'Cartel violence prompts emergency security summit of regional leaders',             source:'El Universal',               url:'https://eluniversal.com.mx',     breaking:false, date:'Apr 30, 2026'},
+  {id:16, country:'United States',cat:'politics', region:'NORTH AMERICA',     headline:'Senate vote on border security bill delayed amid party negotiations',               source:'AP / Washington Post',       url:'https://washingtonpost.com',     breaking:false, date:'May 2, 2026'},
+  {id:17, country:'Thailand',     cat:'economy',  region:'SOUTHEAST ASIA',    headline:'ASEAN free trade zone expansion ratified by seven member states',                  source:'Bangkok Post',               url:'https://bangkokpost.com',        breaking:false, date:'Apr 29, 2026'},
+  {id:18, country:'Indonesia',    cat:'climate',  region:'INDONESIA',         headline:'Peatland fire season declared; satellite data shows record smoke plumes',          source:'Jakarta Post',               url:'https://thejakartapost.com',     breaking:false, date:'May 1, 2026'},
+  {id:19, country:'Saudi Arabia', cat:'crisis',   region:'ARABIAN PENINSULA', headline:'Water scarcity crisis deepens; desalination capacity falls short of demand',       source:'Arab News',                  url:'https://arabnews.com',           breaking:true,  date:'May 2, 2026'},
+  {id:20, country:'Senegal',      cat:'climate',  region:'SAHEL REGION',      headline:'Solar mega-project breaks ground; to power 10 million homes by 2028',              source:'AllAfrica',                  url:'https://allafrica.com',          breaking:false, date:'Apr 28, 2026'},
+  {id:21, country:'Russia',       cat:'economy',  region:'RUSSIA / CIS',      headline:'Energy revenues prop up budget despite western sanctions pressure',                 source:'Moscow Times / Meduza',      url:'https://meduza.io',              breaking:false, date:'Apr 30, 2026'},
+  {id:22, country:'Australia',    cat:'climate',  region:'AUSTRALIA',         headline:'Coral bleaching event declared across 65% of Great Barrier Reef',                  source:'The Australian',             url:'https://theaustralian.com.au',   breaking:true,  date:'May 2, 2026'},
+  {id:23, country:'Sweden',       cat:'politics', region:'SCANDINAVIA',       headline:'NATO northern flank strategy reviewed after Baltic sea incident',                   source:'Aftenposten / Yle',          url:'https://aftenposten.no',         breaking:false, date:'May 1, 2026'},
+  {id:24, country:'Georgia',      cat:'conflict', region:'CAUCASUS',          headline:'Border demarcation dispute reignites weeks after peace agreement signed',           source:'OC Media / Caucasian Knot',  url:'https://oc-media.org',           breaking:true,  date:'May 2, 2026'},
+
+  /* ---- ADD NEW STORIES BELOW THIS LINE ----
+  {
+    id: 25,
+    country: 'France',
+    cat: 'politics',
+    region: 'WESTERN EUROPE',
+    headline: 'Your headline here',
+    source: 'Le Monde',
+    url: 'https://lemonde.fr/your-article',
+    breaking: false,
+    date: 'May 2, 2026'
+  },
+  ---- END EXAMPLE ---- */
+];
+
+// Auto-resolve coordinates
+const events = rawEvents.map(ev=>{
+  const r=coordsForCountry(ev.country);
+  return {...ev, lat:r?r.lat:0, lng:r?r.lng:0, countryId:r?r.id:null};
+});
+
+// Update header
 document.getElementById('sr-status').textContent='LIVE FEED — '+events.length+' INCIDENTS MONITORED';
 
+// Ticker
 const ti=document.getElementById('ticker-inner');
 events.filter(e=>e.breaking).forEach(ev=>{
-  const s=document.createElement('span');s.className='ticker-item';
-  s.textContent=ev.region+' — '+ev.headline;ti.appendChild(s);
+  const s=document.createElement('span');s.className='ticker-item';s.textContent=ev.region+' — '+ev.headline;ti.appendChild(s);
   const sep=document.createElement('span');sep.className='ticker-sep';sep.textContent='◆';ti.appendChild(sep);
 });
 
+// Headlines tab
 let hlFilter='all';
 function renderHeadlines(){
   const list=document.getElementById('hl-list');list.innerHTML='';
@@ -489,141 +504,295 @@ function renderHeadlines(){
   f=[...f.filter(e=>e.breaking),...f.filter(e=>!e.breaking)];
   document.getElementById('hl-count').textContent=f.length+' ITEMS';
   f.forEach((ev,i)=>{
-    const div=document.createElement('div');
-    div.className='hl-item'+(ev.breaking?' breaking':'');
-    const linkHTML=ev.url&&ev.url!=='#'
-      ?`<a href="${ev.url}" target="_blank" style="color:#3a5a7a;font-size:9px;text-decoration:none;letter-spacing:1px;" onclick="event.stopPropagation()">READ →</a>`:'';
-    div.innerHTML=`
-      <div class="hl-left">
-        <div class="hl-num">${String(i+1).padStart(2,'0')}</div>
-        <div class="hl-dot" style="background:${dotColors[ev.cat]}"></div>
-        ${ev.breaking?'<div class="hl-break-badge">BRK</div>':''}
-      </div>
-      <div class="hl-body">
-        <div class="hl-meta">
-          <span class="hl-region">${ev.region}</span>
-          <span class="hl-cat-badge cat-${ev.cat}">${ev.cat}</span>
-          <span style="font-size:8px;color:#2a3a4a;margin-left:auto;">${ev.date||''}</span>
-        </div>
-        <div class="hl-headline">${ev.headline}</div>
-        <div class="hl-source">SOURCE: ${ev.source} ${linkHTML}</div>
-      </div>`;
-    div.addEventListener('click',()=>openDetail(ev));
+    const div=document.createElement('div');div.className='hl-item'+(ev.breaking?' breaking':'');
+    const linkHTML=ev.url&&ev.url!=='#'?`<a class="hl-read-link" href="${ev.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">READ →</a>`:'';
+    div.innerHTML=`<div class="hl-left"><div class="hl-num">${String(i+1).padStart(2,'0')}</div><div class="hl-dot" style="background:${dotColors[ev.cat]}"></div>${ev.breaking?'<div class="hl-break-badge">BRK</div>':''}</div><div class="hl-body"><div class="hl-meta"><span class="hl-region">${ev.region}</span><span class="hl-cat-badge cat-${ev.cat}">${ev.cat}</span><span style="font-size:8px;color:#2a3a4a;margin-left:auto;">${ev.date}</span></div><div class="hl-headline">${ev.headline}</div><div class="hl-source">SOURCE: ${ev.source}${linkHTML}</div></div>`;
+    div.addEventListener('click',()=>openPinPanel(ev));
     list.appendChild(div);
   });
 }
-document.querySelectorAll('.hl-filter').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.hl-filter').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');hlFilter=btn.dataset.hcat;renderHeadlines();
-  });
-});
+document.querySelectorAll('.hl-filter').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.hl-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');hlFilter=b.dataset.hcat;renderHeadlines();
+}));
 renderHeadlines();
 
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const t=btn.dataset.tab;
-    document.getElementById('tab-map').style.display=t==='map'?'block':'none';
-    const hl=document.getElementById('tab-headlines');
-    hl.style.display=t==='headlines'?'flex':'none';
-    if(t==='headlines')hl.style.flexDirection='column';
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  const t=b.dataset.tab;
+  document.getElementById('tab-map').style.display=t==='map'?'block':'none';
+  document.getElementById('tab-headlines').style.display=t==='headlines'?'block':'none';
+}));
+
+// Side panel
+let currentPinEvent=null;
+function openPinPanel(ev){
+  currentPinEvent=ev; closeCountryPanel();
+  document.getElementById('sp-region').textContent=ev.region;
+  document.getElementById('sp-headline').textContent=ev.headline;
+  const tag=document.getElementById('sp-tag');tag.textContent=ev.breaking?'● BREAKING':ev.cat;tag.className=ev.breaking?'cat-conflict':'cat-'+ev.cat;
+  document.getElementById('sp-source').textContent='SOURCE: '+ev.source;
+  document.getElementById('sp-date').textContent=ev.date;
+  const link=document.getElementById('sp-read-link');
+  if(ev.url&&ev.url!=='#'){link.href=ev.url;link.style.display='inline-flex';}
+  else{link.href='#';link.style.display='none';}
+  const rel=events.filter(e=>e.id!==ev.id&&e.cat===ev.cat).slice(0,3);
+  const rl=document.getElementById('sp-related-list');rl.innerHTML='';
+  rel.forEach(r=>{
+    const d=document.createElement('div');d.className='sp-related-item';
+    d.innerHTML=`<div class="sp-rel-meta"><div class="sp-rel-dot" style="background:${dotColors[r.cat]}"></div><span class="sp-rel-region">${r.region}</span></div><div class="sp-rel-headline">${r.headline}</div>`;
+    d.addEventListener('click',()=>openPinPanel(r));rl.appendChild(d);
   });
-});
-
-function openDetail(ev){
-  const tag=document.getElementById('dp-tag');
-  tag.textContent=ev.breaking?'● BREAKING':ev.cat;
-  tag.className=ev.breaking?'cat-conflict':'cat-'+ev.cat;
-  document.getElementById('dp-region').textContent=ev.region;
-  document.getElementById('dp-headline').textContent=ev.headline;
-  document.getElementById('dp-source').textContent=ev.source;
-  document.getElementById('detail-panel').classList.add('open');
+  document.getElementById('side-panel').classList.add('open');
 }
-document.getElementById('dp-close').addEventListener('click',()=>{
-  document.getElementById('detail-panel').classList.remove('open');
+document.getElementById('sp-close').addEventListener('click',()=>{
+  document.getElementById('side-panel').classList.remove('open');currentPinEvent=null;
 });
 
-let activeFilter='all',projectionFn,pathFn,pinsLayer,svgSel,zoomBehavior;
+// Country panel — highlight management using D3 datum id
+let selectedCountryId=null;
+
+function clearHighlight(){
+  if(selectedCountryId===null) return;
+  // Reset ALL copies of this country across tiled map groups
+  d3.selectAll('.country').filter(d=>parseInt(d.id)===selectedCountryId).style('fill',null);
+  selectedCountryId=null;
+}
+
+function openCountryPanel(feature){
+  const id=parseInt(feature.id);
+  // If same country clicked again → close
+  if(selectedCountryId===id){ closeCountryPanel(); return; }
+  // Clear previous
+  clearHighlight();
+  closePinPanel();
+  selectedCountryId=id;
+  // Highlight all copies
+  const info=COUNTRIES[id];
+  d3.selectAll('.country').filter(d=>parseInt(d.id)===id).style('fill',info?info.color:'#1a2a3a');
+
+  document.getElementById('cp-flag').textContent=info?info.flag:'';
+  document.getElementById('cp-name').textContent=info?info.name:('Country '+id);
+  const related=events.filter(e=>e.countryId===id);
+  const list=document.getElementById('cp-list');list.innerHTML='';
+  document.getElementById('cp-no-news').textContent=related.length===0?'NO MONITORED EVENTS':'';
+  related.forEach(ev=>{
+    const d=document.createElement('div');d.className='cp-item';
+    d.innerHTML=`<div class="cp-item-meta"><div class="cp-item-dot" style="background:${dotColors[ev.cat]}"></div><span class="cp-item-cat cat-${ev.cat}">${ev.cat}</span>${ev.breaking?'<span style="font-size:7px;color:#cc2200;margin-left:4px;">● BRK</span>':''}</div><div class="cp-item-headline">${ev.headline}</div><div class="cp-item-source">${ev.source} · ${ev.date}</div>`;
+    d.addEventListener('click',()=>openPinPanel(ev));list.appendChild(d);
+  });
+  document.getElementById('country-panel').classList.add('open');
+}
+
+function closeCountryPanel(){
+  clearHighlight();
+  document.getElementById('country-panel').classList.remove('open');
+}
+function closePinPanel(){
+  document.getElementById('side-panel').classList.remove('open');currentPinEvent=null;
+}
+document.getElementById('cp-close').addEventListener('click',closeCountryPanel);
+
+// MAP
+let activeFilter='all', projectionFn, pathFn, pinsLayer, svgSel, zoomBehavior;
+let worldPxWidth=0;
+let initT;
 
 async function init(){
   const container=document.getElementById('tab-map');
-  const W=container.clientWidth||900;
-  const H=container.clientHeight||540;
+  const W=container.clientWidth||900, H=container.clientHeight||520;
+
   svgSel=d3.select('#map-svg').attr('viewBox',`0 0 ${W} ${H}`).attr('preserveAspectRatio','xMidYMid meet');
-  projectionFn=d3.geoNaturalEarth1().scale(W/5.9).translate([W/2,H/2]);
+
+  // Clip to viewport
+  svgSel.append('defs').append('clipPath').attr('id','vp-clip')
+    .append('rect').attr('width',W).attr('height',H);
+
+  const clippedG=svgSel.append('g').attr('clip-path','url(#vp-clip)');
+  const zoomG=clippedG.append('g').attr('id','zoom-g');
+
+  projectionFn=d3.geoNaturalEarth1().scale(W/4.9).translate([W/2,H/2]);
   pathFn=d3.geoPath().projection(projectionFn);
-  const mapGroup=svgSel.append('g').attr('id','map-group');
-  mapGroup.append('path').datum({type:'Sphere'}).attr('class','sphere').attr('d',pathFn);
-  mapGroup.append('path').datum(d3.geoGraticule().step([20,20])()).attr('class','graticule').attr('d',pathFn);
+  worldPxWidth=projectionFn([180,0])[0]-projectionFn([-180,0])[0];
+
+  function buildBase(parent,offsetX){
+    const g=parent.append('g').attr('transform',`translate(${offsetX},0)`);
+    g.append('path').datum({type:'Sphere'}).attr('class','sphere').attr('d',pathFn);
+    g.append('path').datum(d3.geoGraticule().step([20,20])()).attr('class','graticule').attr('d',pathFn);
+    return g;
+  }
+
   let world;
   try{
     const res=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json');
     world=await res.json();
-  }catch(e){
-    svgSel.append('text').attr('x',W/2).attr('y',H/2).attr('text-anchor','middle').attr('fill','#445').attr('font-size','13').text('Map data unavailable');
-    return;
-  }
+  }catch(e){return;}
+
   const countries=topojson.feature(world,world.objects.countries);
-  const countryBorders=topojson.mesh(world,world.objects.countries,(a,b)=>a!==b);
-  const coastlines=topojson.mesh(world,world.objects.countries,(a,b)=>a===b);
-  mapGroup.selectAll('.country').data(countries.features).join('path').attr('class','country').attr('d',pathFn);
-  mapGroup.append('path').datum(countryBorders).attr('class','borders-countries').attr('d',pathFn);
-  mapGroup.append('path').datum(coastlines).attr('class','borders-continents').attr('d',pathFn);
-  pinsLayer=mapGroup.append('g').attr('id','pins-layer');
-  renderPins();
-  zoomBehavior=d3.zoom().scaleExtent([1,14]).on('zoom',(event)=>{
-    mapGroup.attr('transform',event.transform);
-    pinsLayer.selectAll('.pin-dot').attr('r',4/Math.sqrt(event.transform.k));
+
+  // Draw 3 tiled copies
+  [-1,0,1].forEach(copy=>{
+    const g=buildBase(zoomG,copy*worldPxWidth);
+    g.selectAll('.country')
+      .data(countries.features)
+      .join('path')
+      .attr('class','country')
+      .attr('d',pathFn)
+      .on('click',function(event,d){
+        event.stopPropagation();
+        openCountryPanel(d);
+      });
   });
-  svgSel.call(zoomBehavior);
+
+  pinsLayer=zoomG.append('g').attr('id','pins-layer');
+  renderPins();
+
+  // Initial zoom: 1.35× centred
+  initT=d3.zoomIdentity.translate(W*(1-1.35)/2, H*(1-1.35)/2).scale(1.35);
+
+  // North-south clamp values (in un-zoomed projection space)
+  const yTop = projectionFn([0,78])[1];   // ~top of map
+  const yBot = projectionFn([0,-78])[1];  // ~bottom of map
+
+  zoomBehavior=d3.zoom()
+    .scaleExtent([0.9,14])
+    .on('zoom',(event)=>{
+      let t=event.transform;
+      const k=t.k;
+      // Clamp vertical pan so poles stay on screen
+      const mapH = (yBot - yTop) * k;
+      const minY = H - yBot*k;
+      const maxY = -yTop*k;
+      const clampedY = Math.max(minY, Math.min(maxY, t.y));
+      if(clampedY !== t.y){
+        t = d3.zoomIdentity.translate(t.x, clampedY).scale(k);
+        // Silently update stored transform without re-triggering
+      }
+      zoomG.attr('transform',t);
+      pinsLayer.selectAll('.pin-dot').attr('r',4/Math.sqrt(k));
+    });
+
+  svgSel.call(zoomBehavior).call(zoomBehavior.transform,initT);
   svgSel.on('dblclick.zoom',null);
+
+  // Click ocean → close all panels
+  svgSel.on('click',()=>{ closeCountryPanel(); closePinPanel(); });
+
   document.getElementById('zoom-in').addEventListener('click',()=>svgSel.transition().duration(300).call(zoomBehavior.scaleBy,1.6));
   document.getElementById('zoom-out').addEventListener('click',()=>svgSel.transition().duration(300).call(zoomBehavior.scaleBy,0.625));
-  document.getElementById('zoom-reset').addEventListener('click',()=>svgSel.transition().duration(400).call(zoomBehavior.transform,d3.zoomIdentity));
-  document.querySelectorAll('.filter-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');activeFilter=btn.dataset.cat;renderPins();
-    });
-  });
+  document.getElementById('zoom-reset').addEventListener('click',()=>svgSel.transition().duration(400).call(zoomBehavior.transform,initT));
+
+  document.querySelectorAll('.filter-btn').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');activeFilter=b.dataset.cat;renderPins();
+  }));
 }
 
 function renderPins(){
-  if(!pinsLayer)return;
+  if(!pinsLayer) return;
   pinsLayer.selectAll('*').remove();
   const filtered=activeFilter==='all'?events:events.filter(e=>e.cat===activeFilter);
   const container=document.getElementById('tab-map');
   const tooltip=document.getElementById('tooltip');
+
   filtered.forEach(ev=>{
-    const[px,py]=projectionFn([ev.lng,ev.lat]);
-    if(px==null||py==null)return;
-    const g=pinsLayer.append('g').attr('class','pin-group');
-    if(ev.breaking)g.append('circle').attr('cx',px).attr('cy',py).attr('class','pin-ring ring-'+ev.cat).attr('r',10).style('animation-delay',(ev.id*.2)+'s');
-    g.append('circle').attr('cx',px).attr('cy',py).attr('r',4).attr('class','pin-dot dot-'+ev.cat);
-    if(ev.breaking)g.append('circle').attr('cx',px).attr('cy',py-4).attr('r',2.5).attr('fill','#cc2200');
-    g.on('mouseenter',function(event){
-      document.getElementById('tt-region').textContent=ev.region;
-      const c=document.getElementById('tt-cat');
-      c.textContent=ev.breaking?ev.cat+' — BREAKING':ev.cat;c.className='cat-'+ev.cat;
-      document.getElementById('tt-headline').textContent=ev.headline;
-      document.getElementById('tt-source').textContent='SOURCE: '+ev.source+' · '+ev.date;
-      tooltip.classList.add('visible');positionTooltip(event,container);
-    }).on('mousemove',e=>positionTooltip(e,container))
-      .on('mouseleave',()=>tooltip.classList.remove('visible'))
-      .on('click',()=>openDetail(ev));
+    [-1,0,1].forEach(copy=>{
+      const base=projectionFn([ev.lng,ev.lat]);
+      if(!base) return;
+      const px=base[0]+copy*worldPxWidth, py=base[1];
+      const g=pinsLayer.append('g').attr('class','pin-group');
+      if(ev.breaking) g.append('circle').attr('cx',px).attr('cy',py).attr('class','pin-ring ring-'+ev.cat).attr('r',10).style('animation-delay',(ev.id*.2)+'s');
+      g.append('circle').attr('cx',px).attr('cy',py).attr('r',4).attr('class','pin-dot dot-'+ev.cat);
+      if(ev.breaking) g.append('circle').attr('cx',px).attr('cy',py-4).attr('r',2.5).attr('fill','#cc2200');
+      g.on('mouseenter',function(event){
+        document.getElementById('tt-region').textContent=ev.region;
+        const c=document.getElementById('tt-cat');c.textContent=ev.breaking?ev.cat+' — BREAKING':ev.cat;c.className='cat-'+ev.cat;
+        document.getElementById('tt-headline').textContent=ev.headline;
+        document.getElementById('tt-source').textContent='SOURCE: '+ev.source+' · '+ev.date;
+        tooltip.classList.add('visible');positionTooltip(event,container);
+      }).on('mousemove',e=>positionTooltip(e,container))
+        .on('mouseleave',()=>tooltip.classList.remove('visible'))
+        .on('click',function(event){event.stopPropagation();tooltip.classList.remove('visible');openPinPanel(ev);});
+    });
   });
 }
 
 function positionTooltip(event,container){
   const rect=container.getBoundingClientRect();
-  let x=event.clientX-rect.left+14,y=event.clientY-rect.top+14;
+  let x=event.clientX-rect.left+14, y=event.clientY-rect.top+14;
   const tt=document.getElementById('tooltip');
-  if(x+255>rect.width)x=event.clientX-rect.left-260;
-  if(y+145>rect.height)y=event.clientY-rect.top-150;
-  tt.style.left=x+'px';tt.style.top=y+'px';
+  if(x+230>rect.width-310) x=event.clientX-rect.left-235;
+  if(y+130>rect.height) y=event.clientY-rect.top-135;
+  tt.style.left=x+'px'; tt.style.top=y+'px';
 }
+
+/* ============================================================
+   ADMIN PANEL
+   ============================================================ */
+// Populate datalist for country autocomplete
+const dl=document.getElementById('country-list');
+Object.values(COUNTRIES).sort((a,b)=>a.name.localeCompare(b.name)).forEach(c=>{
+  const opt=document.createElement('option');opt.value=c.name;dl.appendChild(opt);
+});
+
+function openAdmin(){ document.getElementById('admin-overlay').classList.add('open'); }
+function closeAdmin(){ document.getElementById('admin-overlay').classList.remove('open'); }
+document.getElementById('admin-close-btn').addEventListener('click',closeAdmin);
+document.getElementById('admin-overlay').addEventListener('click',function(e){ if(e.target===this) closeAdmin(); });
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='a'||e.key==='A'){
+    const active=document.activeElement;
+    if(active&&(active.tagName==='INPUT'||active.tagName==='TEXTAREA'||active.tagName==='SELECT')) return;
+    openAdmin();
+  }
+  if(e.key==='Escape') closeAdmin();
+});
+
+document.getElementById('admin-generate-btn').addEventListener('click',()=>{
+  const country=(document.getElementById('af-country').value||'').trim();
+  const region=(document.getElementById('af-region').value||'').trim().toUpperCase();
+  const headline=(document.getElementById('af-headline').value||'').trim();
+  const source=(document.getElementById('af-source').value||'').trim();
+  const url=(document.getElementById('af-url').value||'').trim()||'#';
+  const cat=document.getElementById('af-cat').value;
+  const date=(document.getElementById('af-date').value||'').trim();
+  const breaking=document.getElementById('af-breaking').checked;
+
+  if(!country||!headline||!source||!date){
+    alert('Please fill in Country, Headline, Source, and Date.');return;
+  }
+  if(!coordsForCountry(country)){
+    alert(`"${country}" not found in the country database. Check the spelling matches exactly.`);return;
+  }
+
+  // Find next id
+  const maxId=Math.max(...events.map(e=>e.id),0);
+  const nextId=maxId+1;
+
+  const block=`  {
+    id: ${nextId},
+    country: '${country}',
+    cat: '${cat}',
+    region: '${region||country.toUpperCase()}',
+    headline: '${headline.replace(/'/g,"\\'")}',
+    source: '${source.replace(/'/g,"\\'")}',
+    url: '${url}',
+    breaking: ${breaking},
+    date: '${date}'
+  },`;
+
+  document.getElementById('admin-code').textContent=block;
+  document.getElementById('admin-output').style.display='block';
+});
+
+document.getElementById('admin-copy-btn').addEventListener('click',()=>{
+  const code=document.getElementById('admin-code').textContent;
+  navigator.clipboard.writeText(code).then(()=>{
+    const btn=document.getElementById('admin-copy-btn');
+    btn.textContent='COPIED ✓';
+    setTimeout(()=>btn.textContent='COPY TO CLIPBOARD',2000);
+  });
+});
 
 function updateClock(){
   const n=new Date(),p=v=>String(v).padStart(2,'0');
