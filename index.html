@@ -4,19 +4,15 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Global Strategic Post</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;background:#040408;}
 #sr-root{background:#080808;color:#c8c8c8;font-family:'Share Tech Mono',monospace;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
-
-/* ── HEADER (larger) ── */
 #sr-header{display:flex;align-items:center;justify-content:space-between;padding:14px 26px;border-bottom:1px solid #1e1e1e;background:#0c0c0c;flex-shrink:0;z-index:30;}
 #sr-title{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;letter-spacing:4px;color:#e8e8e8;}
 #sr-status{font-size:10px;color:#555;letter-spacing:1px;}
 #sr-time{font-size:12px;color:#777;letter-spacing:2px;min-width:130px;text-align:right;}
-
-/* ── BREAKING TICKER (larger) ── */
 #breaking-bar{background:#0e0e0e;border-bottom:1px solid #1e1e1e;display:flex;align-items:stretch;flex-shrink:0;height:32px;overflow:hidden;z-index:30;}
 #breaking-label{background:#cc2200;color:#fff;font-size:10px;letter-spacing:2px;padding:0 16px;display:flex;align-items:center;flex-shrink:0;font-weight:700;}
 #ticker-track{flex:1;overflow:hidden;}
@@ -25,14 +21,11 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 @keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-200%)}}
 .ticker-item{font-size:11px;color:#aaa;padding:0 32px;letter-spacing:.5px;}
 .ticker-sep{color:#333;font-size:14px;}
-
-/* ── TAB BAR (larger) ── */
-#tab-bar{display:flex;border-bottom:1px solid #1e1e1e;background:#0a0a0a;flex-shrink:0;z-index:30;}
-.tab-btn{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:12px 22px;cursor:pointer;background:none;border:none;color:#444;border-bottom:2px solid transparent;transition:all .15s;text-transform:uppercase;white-space:nowrap;}
+#tab-bar{display:flex;border-bottom:1px solid #1e1e1e;background:#0a0a0a;flex-shrink:0;z-index:30;overflow-x:auto;}
+#tab-bar::-webkit-scrollbar{height:0;}
+.tab-btn{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:12px 20px;cursor:pointer;background:none;border:none;color:#444;border-bottom:2px solid transparent;transition:all .15s;text-transform:uppercase;white-space:nowrap;}
 .tab-btn:hover{color:#aaa;}
 .tab-btn.active{color:#e0e0e0;border-bottom:2px solid #e0e0e0;}
-
-/* ── MAP WRAPPER ── */
 #map-wrapper{flex:1;position:relative;overflow:hidden;min-height:0;}
 #tab-map{position:absolute;inset:0;overflow:hidden;background:#060c18;cursor:grab;}
 #tab-map:active{cursor:grabbing;}
@@ -41,13 +34,18 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 .country:hover{fill:#1e2c3a;}
 .graticule{fill:none;stroke:#0a1220;stroke-width:0.3;pointer-events:none;}
 .sphere{fill:#060c18;stroke:#0d1a2e;stroke-width:0.5;}
+/* ── REVISED PINS ── */
 .pin-group{cursor:pointer;}
 .pin-dot{transition:r .15s;}
 .pin-group:hover .pin-dot{r:7;}
-.pin-ring{animation:pulse 2.2s infinite ease-out;fill:none;stroke-width:1;}
-@keyframes pulse{0%{r:7;opacity:.7}80%{r:18;opacity:0}100%{r:7;opacity:0}}
-
-/* MAP UI */
+/* Standard pulse ring */
+.pin-ring{animation:pulse 2.4s infinite ease-out;fill:none;stroke-width:0.8;}
+@keyframes pulse{0%{r:6;opacity:0.6}80%{r:16;opacity:0}100%{r:6;opacity:0}}
+/* Breaking: diamond shape + glow ring, no red cap */
+.pin-breaking-ring{animation:brk-pulse 1.6s infinite ease-out;fill:none;stroke-width:1.2;}
+@keyframes brk-pulse{0%{r:8;opacity:0.9}70%{r:20;opacity:0}100%{r:8;opacity:0}}
+/* Region label on map */
+.region-label{font-family:'Share Tech Mono',monospace;font-size:7px;fill:#3a5a6a;letter-spacing:1px;text-transform:uppercase;pointer-events:none;text-anchor:middle;}
 #zoom-controls{position:absolute;top:14px;left:14px;display:flex;flex-direction:column;gap:2px;z-index:20;}
 .zoom-btn{background:rgba(6,12,24,0.92);border:1px solid #2a3040;color:#667788;font-family:'Share Tech Mono',monospace;font-size:16px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .zoom-btn:hover{color:#cce;border-color:#556688;}
@@ -57,25 +55,22 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 #legend{position:absolute;bottom:14px;left:14px;background:rgba(5,9,18,0.92);border:1px solid #182030;padding:9px 13px;z-index:10;font-size:10px;letter-spacing:1px;}
 .legend-row{display:flex;align-items:center;gap:8px;margin:4px 0;color:#55667788;}
 .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.legend-diamond{width:9px;height:9px;transform:rotate(45deg);flex-shrink:0;}
 #admin-key-hint{position:absolute;bottom:14px;right:14px;font-size:9px;color:#1a2a38;letter-spacing:1px;z-index:10;}
-
-/* TOOLTIP */
-#tooltip{position:absolute;background:#060c18;border:1px solid #2a3a50;padding:12px 16px;max-width:250px;pointer-events:none;opacity:0;transition:opacity .12s;z-index:50;}
+#tooltip{position:absolute;background:#060c18;border:1px solid #2a3a50;padding:12px 16px;max-width:260px;pointer-events:none;opacity:0;transition:opacity .12s;z-index:50;}
 #tooltip.visible{opacity:1;}
 #tt-region{font-size:10px;color:#44607a;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
 #tt-cat{display:inline-block;font-size:9px;padding:2px 7px;margin-bottom:7px;letter-spacing:1px;text-transform:uppercase;}
 #tt-headline{font-size:12px;color:#d0d8e0;line-height:1.55;margin-bottom:5px;}
 #tt-source{font-size:10px;color:#384858;}
-
-/* CATEGORY BADGES */
 .cat-conflict{background:#2e1010;color:#ff7070;border:1px solid #4e1a1a;}
 .cat-economy{background:#102010;color:#70ff70;border:1px solid #1a3a1a;}
 .cat-politics{background:#10102e;color:#7090ff;border:1px solid #1a1a4e;}
 .cat-climate{background:#102828;color:#70ffff;border:1px solid #1a4040;}
 .cat-crisis{background:#281808;color:#ffaa40;border:1px solid #442808;}
+.cat-field{background:#1a1030;color:#cc88ff;border:1px solid #3a1a5a;}
 .dot-conflict{fill:#ff7070;}.dot-economy{fill:#70ff70;}.dot-politics{fill:#7090ff;}.dot-climate{fill:#70ffff;}.dot-crisis{fill:#ffaa40;}
 .ring-conflict{stroke:#ff7070;}.ring-economy{stroke:#70ff70;}.ring-politics{stroke:#7090ff;}.ring-climate{stroke:#70ffff;}.ring-crisis{stroke:#ffaa40;}
-
 /* SIDE PANEL */
 #side-panel{position:absolute;top:0;right:0;width:320px;height:100%;background:#080e18;border-left:1px solid #1e2e40;z-index:40;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
 #side-panel.open{transform:translateX(0);}
@@ -99,7 +94,22 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 .sp-related-item:hover .sp-rel-headline{color:#d8e8f0;}
 #sp-read-link{display:inline-flex;align-items:center;margin-top:18px;font-size:10px;color:#3a6a8a;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:1px solid #1e3a50;padding:8px 16px;transition:all .15s;text-decoration:none;}
 #sp-read-link:hover{color:#80c0e0;border-color:#3a6a8a;background:rgba(15,40,60,0.5);}
-
+/* FIELD REPORT SIDE PANEL */
+#field-panel{position:absolute;top:0;right:0;width:340px;height:100%;background:#0a0818;border-left:1px solid #2a1a4a;z-index:41;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
+#field-panel.open{transform:translateX(0);}
+#fp-header{padding:16px 18px 12px;border-bottom:1px solid #1e1230;flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;}
+#fp-close{font-size:11px;color:#5a3a7a;cursor:pointer;letter-spacing:1px;}
+#fp-close:hover{color:#ccaaee;}
+#fp-type{font-size:9px;color:#5a3a7a;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+#fp-caption{font-size:14px;color:#d0c0e8;line-height:1.6;}
+#fp-body{padding:14px 18px;overflow-y:auto;flex:1;}
+#fp-body::-webkit-scrollbar{width:3px;}
+#fp-body::-webkit-scrollbar-thumb{background:#2a1a4a;}
+#fp-media{width:100%;max-height:200px;object-fit:cover;border:1px solid #2a1a4a;margin-bottom:12px;background:#0c0818;}
+#fp-media-placeholder{width:100%;height:160px;background:#0c0818;border:1px solid #2a1a4a;display:flex;align-items:center;justify-content:center;font-size:10px;color:#3a2a5a;letter-spacing:1px;margin-bottom:12px;}
+#fp-submitter{font-size:9px;color:#3a2a5a;letter-spacing:1px;margin-bottom:4px;}
+#fp-location{font-size:10px;color:#5a4a7a;letter-spacing:1px;margin-bottom:16px;}
+#fp-note{font-size:12px;color:#9a8ab0;line-height:1.65;font-family:'EB Garamond',serif;}
 /* COUNTRY PANEL */
 #country-panel{position:absolute;top:0;left:0;width:270px;height:100%;background:#080e18;border-right:1px solid #1e2e40;z-index:40;transform:translateX(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
 #country-panel.open{transform:translateX(0);}
@@ -119,36 +129,62 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 .cp-item-cat{font-size:8px;padding:1px 6px;letter-spacing:1px;text-transform:uppercase;}
 .cp-item-headline{font-size:12px;color:#8aabb8;line-height:1.5;transition:color .12s;}
 .cp-item-source{font-size:9px;color:#2a3a4a;margin-top:4px;}
-
-/* ── CONTENT TABS ── */
+/* CONTENT TABS */
 .content-tab{position:absolute;inset:0;overflow-y:auto;display:none;background:#080808;}
 .content-tab::-webkit-scrollbar{width:5px;}
 .content-tab::-webkit-scrollbar-thumb{background:#1e2a38;}
 
-/* ── HEADLINES ── */
-#hl-toolbar{display:flex;align-items:center;gap:9px;padding:16px 24px;border-bottom:1px solid #141e28;flex-wrap:wrap;position:sticky;top:0;background:#080808;z-index:5;}
-.hl-filter{background:none;border:1px solid #1e2a38;color:#445566;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1.5px;padding:6px 12px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
+/* ── HEADLINES — EDITORIAL LAYOUT ── */
+#hl-toolbar{display:flex;align-items:center;gap:9px;padding:14px 24px;border-bottom:1px solid #141e28;flex-wrap:wrap;position:sticky;top:0;background:#080808;z-index:5;}
+.hl-filter{background:none;border:1px solid #1e2a38;color:#445566;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1.5px;padding:5px 11px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
 .hl-filter:hover,.hl-filter.active{color:#ddeeff;border-color:#5577aa;}
 #hl-count{font-size:10px;color:#2a3a4a;margin-left:auto;letter-spacing:1px;}
-.hl-item{display:flex;align-items:flex-start;gap:18px;padding:18px 24px;border-bottom:1px solid #0c1620;cursor:pointer;transition:background .12s;}
-.hl-item:hover{background:#0a1520;}
-.hl-item.breaking{border-left:3px solid #cc2200;}
-.hl-left{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:3px;}
-.hl-num{font-size:10px;color:#253545;width:26px;text-align:center;}
-.hl-dot{width:10px;height:10px;border-radius:50%;}
-.hl-break-badge{font-size:8px;color:#cc2200;letter-spacing:1px;}
-.hl-body{flex:1;min-width:0;}
-.hl-meta{display:flex;align-items:center;gap:10px;margin-bottom:7px;flex-wrap:wrap;}
-.hl-region{font-size:10px;color:#3a5268;letter-spacing:1.5px;text-transform:uppercase;}
-.hl-cat-badge{font-size:9px;padding:2px 8px;letter-spacing:1px;text-transform:uppercase;}
-.hl-date{font-size:9px;color:#2a3a4a;margin-left:auto;}
-.hl-headline{font-size:15px;color:#c8d0d8;line-height:1.6;margin-bottom:6px;}
-.hl-source-row{display:flex;align-items:center;gap:10px;}
-.hl-source{font-size:11px;color:#2a3e50;}
-.hl-read-link{font-size:9px;color:#3a5a7a;letter-spacing:1px;text-decoration:none;border:1px solid #1a3040;padding:2px 9px;transition:all .12s;margin-left:auto;white-space:nowrap;}
-.hl-read-link:hover{color:#7ab0d0;border-color:#3a6080;}
+/* Editorial grid */
+#hl-grid{padding:0;}
+/* LEAD STORY */
+.hl-lead{display:flex;flex-direction:column;border-bottom:1px solid #141e28;cursor:pointer;transition:background .12s;background:#090f18;}
+.hl-lead:hover{background:#0c1420;}
+.hl-lead-img{width:100%;height:220px;object-fit:cover;display:block;background:#0c1420;}
+.hl-lead-img-placeholder{width:100%;height:220px;background:linear-gradient(135deg,#0c1828 0%,#0a1520 50%,#0c1828 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;}
+.hl-lead-img-placeholder-icon{font-size:32px;opacity:.25;}
+.hl-lead-img-placeholder-label{font-size:9px;color:#2a3a4a;letter-spacing:2px;}
+.hl-lead-body{padding:20px 24px 22px;}
+.hl-lead-meta{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.hl-lead-cat{font-size:9px;padding:3px 9px;letter-spacing:1px;text-transform:uppercase;}
+.hl-lead-region{font-size:10px;color:#3a5268;letter-spacing:1.5px;text-transform:uppercase;}
+.hl-lead-breaking{font-size:9px;color:#cc2200;letter-spacing:1.5px;}
+.hl-lead-date{font-size:9px;color:#2a3a4a;margin-left:auto;}
+.hl-lead-headline{font-family:'EB Garamond',serif;font-size:26px;color:#d8e8f0;line-height:1.4;margin-bottom:10px;}
+.hl-lead-source{font-size:11px;color:#2a3e50;}
+.hl-lead-read{display:inline-block;margin-top:10px;font-size:9px;color:#3a5a7a;letter-spacing:1.5px;text-decoration:none;border:1px solid #1a3040;padding:4px 12px;transition:all .12s;}
+.hl-lead-read:hover{color:#7ab0d0;border-color:#3a6080;}
+/* SECONDARY STRIP */
+.hl-secondary-strip{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid #141e28;}
+.hl-secondary{padding:18px 20px;border-right:1px solid #141e28;cursor:pointer;transition:background .12s;}
+.hl-secondary:last-child{border-right:none;}
+.hl-secondary:hover{background:#0a1520;}
+.hl-secondary-meta{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.hl-secondary-cat{font-size:8px;padding:2px 7px;letter-spacing:1px;text-transform:uppercase;}
+.hl-secondary-region{font-size:9px;color:#3a5268;letter-spacing:1px;text-transform:uppercase;}
+.hl-secondary-headline{font-family:'EB Garamond',serif;font-size:16px;color:#c0d0dc;line-height:1.5;margin-bottom:7px;}
+.hl-secondary-source{font-size:10px;color:#2a3e50;}
+/* TERTIARY LIST */
+.hl-tertiary{display:flex;align-items:flex-start;gap:14px;padding:14px 24px;border-bottom:1px solid #0c1620;cursor:pointer;transition:background .12s;}
+.hl-tertiary:hover{background:#0a1520;}
+.hl-tertiary.breaking{border-left:3px solid #cc2200;}
+.hl-t-dot-wrap{flex-shrink:0;padding-top:4px;}
+.hl-t-dot{width:8px;height:8px;border-radius:50%;}
+.hl-t-body{flex:1;min-width:0;}
+.hl-t-meta{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap;}
+.hl-t-region{font-size:9px;color:#3a5268;letter-spacing:1.5px;text-transform:uppercase;}
+.hl-t-cat{font-size:8px;padding:1px 6px;letter-spacing:1px;text-transform:uppercase;}
+.hl-t-date{font-size:9px;color:#2a3a4a;margin-left:auto;}
+.hl-t-headline{font-size:14px;color:#b8c8d4;line-height:1.55;margin-bottom:4px;}
+.hl-t-source{font-size:10px;color:#2a3e50;}
+.hl-t-read{font-size:9px;color:#3a5a7a;letter-spacing:1px;text-decoration:none;border:1px solid #1a3040;padding:1px 8px;margin-left:auto;flex-shrink:0;white-space:nowrap;}
+.hl-t-read:hover{color:#7ab0d0;}
 
-/* ── OUR ARTICLES ── */
+/* OUR ARTICLES */
 #art-toolbar{display:flex;align-items:center;gap:10px;padding:16px 24px;border-bottom:1px solid #141e28;flex-wrap:wrap;position:sticky;top:0;background:#080808;z-index:5;}
 #art-toolbar-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:#8aabb8;}
 #art-count{font-size:10px;color:#2a3a4a;margin-left:auto;letter-spacing:1px;}
@@ -164,8 +200,6 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 .art-read-more{font-size:10px;color:#3a6a8a;letter-spacing:1.5px;text-transform:uppercase;border:1px solid #1e3a50;padding:5px 12px;}
 .art-tag{font-size:9px;color:#2a3a4a;letter-spacing:1px;border:1px solid #182030;padding:2px 8px;}
 #art-empty{padding:32px 24px;font-size:13px;color:#2a3a4a;letter-spacing:1px;line-height:1.8;}
-
-/* ARTICLE READER */
 #art-reader{position:absolute;inset:0;background:#080808;z-index:60;display:none;flex-direction:column;overflow:hidden;}
 #art-reader.open{display:flex;}
 #art-reader-bar{padding:13px 24px;border-bottom:1px solid #141e28;display:flex;align-items:center;gap:14px;flex-shrink:0;background:#0c0c0c;}
@@ -185,18 +219,17 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 #ar-body h2{font-size:24px;color:#d8e8f0;margin:2em 0 0.8em;font-weight:600;}
 #ar-body blockquote{border-left:2px solid #2a4a6a;padding-left:22px;color:#7a9ab0;font-style:italic;margin:1.5em 0;}
 
-/* ── ARCHIVE TAB ── */
+/* ARCHIVE */
 #archive-toolbar{display:flex;align-items:center;gap:12px;padding:16px 24px;border-bottom:1px solid #141e28;flex-wrap:wrap;position:sticky;top:0;background:#080808;z-index:5;}
 #archive-toolbar-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:#5a7a8a;}
 #archive-search-wrap{flex:1;max-width:420px;position:relative;}
-#archive-search{background:#0c1828;border:1px solid #1e3040;color:#c8d8e8;font-family:'Share Tech Mono',monospace;font-size:11px;padding:8px 14px 8px 36px;outline:none;width:100%;transition:border .15s;letter-spacing:.5px;}
+#archive-search{background:#0c1828;border:1px solid #1e3040;color:#c8d8e8;font-family:'Share Tech Mono',monospace;font-size:11px;padding:8px 14px 8px 36px;outline:none;width:100%;transition:border .15s;}
 #archive-search:focus{border-color:#3a6a8a;}
 #archive-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:12px;color:#3a5a6a;pointer-events:none;}
 #archive-filter-wrap{display:flex;gap:6px;flex-wrap:wrap;}
 .arch-filter{background:none;border:1px solid #1e2a38;color:#445566;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1.5px;padding:5px 10px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
 .arch-filter:hover,.arch-filter.active{color:#ddeeff;border-color:#5577aa;}
 #archive-count{font-size:10px;color:#2a3a4a;letter-spacing:1px;white-space:nowrap;}
-#archive-list{padding:0;}
 .archive-item{display:flex;align-items:flex-start;gap:16px;padding:16px 24px;border-bottom:1px solid #0c1620;cursor:pointer;transition:background .12s;}
 .archive-item:hover{background:#0a1520;}
 .archive-item-left{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:3px;}
@@ -208,14 +241,63 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 .archive-item-cat{font-size:8px;padding:1px 7px;letter-spacing:1px;text-transform:uppercase;}
 .archive-item-date{font-size:9px;color:#1e2e3e;margin-left:auto;}
 .archive-item-headline{font-size:14px;color:#7a9aaa;line-height:1.55;margin-bottom:5px;}
-.archive-item-source{display:flex;align-items:center;gap:10px;}
+.archive-item-src-row{display:flex;align-items:center;}
 .archive-item-src{font-size:10px;color:#1e2e3e;}
-.archive-item-link{font-size:9px;color:#2a4a6a;letter-spacing:1px;text-decoration:none;border:1px solid #142030;padding:2px 8px;margin-left:auto;}
-.archive-item-link:hover{color:#6a9ab0;border-color:#2a4a6a;}
-#archive-empty{padding:32px 24px;font-size:13px;color:#2a3a4a;letter-spacing:1px;line-height:1.8;}
+.archive-item-link{font-size:9px;color:#2a4a6a;text-decoration:none;border:1px solid #142030;padding:2px 8px;margin-left:auto;}
+.archive-item-link:hover{color:#6a9ab0;}
 #archive-no-results{padding:24px;font-size:12px;color:#2a3a4a;letter-spacing:1px;display:none;}
+#archive-empty{padding:32px 24px;font-size:13px;color:#2a3a4a;letter-spacing:1px;line-height:1.8;}
 
-/* ── ABOUT ── */
+/* ── FIELD REPORTS TAB ── */
+#field-toolbar{display:flex;align-items:center;gap:12px;padding:14px 24px;border-bottom:1px solid #141e28;flex-wrap:wrap;position:sticky;top:0;background:#080808;z-index:5;}
+#field-toolbar-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:#7a5a9a;}
+#field-submit-btn{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:6px 14px;background:#1a0a2a;border:1px solid #4a2a6a;color:#9a6acc;cursor:pointer;text-transform:uppercase;transition:all .15s;margin-left:auto;}
+#field-submit-btn:hover{background:#220e38;color:#ccaaee;border-color:#7a4aaa;}
+#field-count{font-size:10px;color:#2a1a3a;letter-spacing:1px;}
+#field-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0;padding:0;}
+.field-card{border:1px solid #141828;border-top:none;border-left:none;cursor:pointer;transition:background .12s;overflow:hidden;display:flex;flex-direction:column;}
+.field-card:hover{background:#0c0818;}
+.field-card-media{width:100%;height:160px;object-fit:cover;display:block;background:#0c0818;}
+.field-card-media-placeholder{width:100%;height:160px;background:#0a0618;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;}
+.field-card-media-icon{font-size:28px;opacity:.3;}
+.field-card-media-type{font-size:8px;color:#3a2a5a;letter-spacing:2px;text-transform:uppercase;}
+.field-card-body{padding:14px 16px;flex:1;}
+.field-card-meta{display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap;}
+.field-card-type{font-size:8px;padding:2px 7px;letter-spacing:1px;text-transform:uppercase;}
+.field-card-location{font-size:9px;color:#5a4a7a;letter-spacing:1px;}
+.field-card-date{font-size:9px;color:#2a1a3a;margin-left:auto;}
+.field-card-caption{font-family:'EB Garamond',serif;font-size:14px;color:#b0a0c8;line-height:1.5;margin-bottom:6px;}
+.field-card-submitter{font-size:9px;color:#3a2a5a;}
+#field-empty{padding:32px 24px;font-size:13px;color:#2a1a3a;letter-spacing:1px;line-height:1.8;}
+/* SUBMIT FORM */
+#field-submit-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:150;display:none;align-items:center;justify-content:center;}
+#field-submit-overlay.open{display:flex;}
+#field-submit-box{background:#080818;border:1px solid #3a1a5a;width:520px;max-width:95vw;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+#fs-header{padding:14px 18px;border-bottom:1px solid #1a0a2a;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+#fs-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:#aa80cc;}
+#fs-close{font-size:11px;color:#5a3a7a;cursor:pointer;letter-spacing:1px;}
+#fs-close:hover{color:#ccaaee;}
+#fs-body{padding:20px;overflow-y:auto;flex:1;}
+#fs-body::-webkit-scrollbar{width:3px;}
+#fs-body::-webkit-scrollbar-thumb{background:#2a1a4a;}
+.fs-row{display:flex;gap:12px;margin-bottom:13px;align-items:flex-start;}
+.fs-field{display:flex;flex-direction:column;gap:5px;flex:1;}
+.fs-label{font-size:8px;color:#5a3a7a;letter-spacing:2px;text-transform:uppercase;}
+.fs-input,.fs-select,.fs-textarea{background:#0c0818;border:1px solid #2a1a3a;color:#c0a8e0;font-family:'Share Tech Mono',monospace;font-size:11px;padding:8px 11px;outline:none;transition:border .15s;width:100%;}
+.fs-input:focus,.fs-select:focus,.fs-textarea:focus{border-color:#6a3a9a;}
+.fs-select option{background:#0c0818;}
+.fs-textarea{resize:vertical;min-height:70px;line-height:1.6;}
+.fs-note{font-size:9px;color:#3a2a5a;line-height:1.6;padding:8px 10px;background:#06040e;border:1px solid #1a0a2a;margin-bottom:12px;}
+.fs-btn{background:#140828;border:1px solid #4a2a7a;color:#9a6acc;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:10px 18px;cursor:pointer;text-transform:uppercase;transition:all .15s;width:100%;margin-top:4px;}
+.fs-btn:hover{background:#1c0a38;border-color:#7a4aaa;color:#ccaaee;}
+.fs-output{margin-top:14px;display:none;}
+.fs-output-label{font-size:8px;color:#5a3a7a;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.fs-code{background:#04020c;border:1px solid #1a0a2a;color:#a070c0;font-family:'Share Tech Mono',monospace;font-size:10px;padding:12px;line-height:1.7;white-space:pre-wrap;overflow-x:auto;max-height:160px;overflow-y:auto;}
+.fs-copy-btn{background:#0c0820;border:1px solid #2a1a4a;color:#7a50a0;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:7px 14px;cursor:pointer;text-transform:uppercase;transition:all .15s;margin-top:9px;}
+.fs-copy-btn:hover{color:#ccaaee;}
+.fs-hint{font-size:9px;color:#2a1a3a;margin-top:10px;line-height:1.7;}
+
+/* ABOUT */
 #about-body{padding:50px 70px;max-width:800px;margin:0 auto;width:100%;}
 #about-masthead{font-family:'Orbitron',monospace;font-size:12px;letter-spacing:4px;color:#3a6a8a;text-transform:uppercase;margin-bottom:20px;}
 #about-title{font-family:'EB Garamond',serif;font-size:38px;color:#d8e8f0;line-height:1.3;margin-bottom:26px;}
@@ -226,18 +308,18 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 #about-text strong{color:#c0d8e8;}
 #about-meta{margin-top:44px;padding-top:22px;border-top:1px solid #142030;font-size:11px;color:#2a3a4a;letter-spacing:1px;line-height:1.8;}
 
-/* ── ADMIN OVERLAY ── */
+/* ADMIN */
 #admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;display:none;align-items:center;justify-content:center;}
 #admin-overlay.open{display:flex;}
-#admin-box{background:#080e18;border:1px solid #2a3a50;width:600px;max-width:95vw;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
-#admin-header{padding:14px 20px;border-bottom:1px solid #1a2a38;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:16px;}
-#admin-title{font-family:'Orbitron',monospace;font-size:12px;letter-spacing:2px;color:#a0c8e0;}
-#admin-tabs-bar{display:flex;gap:0;border:1px solid #1a2a38;}
-.admin-tab{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1.5px;padding:5px 13px;cursor:pointer;color:#446677;background:none;border:none;text-transform:uppercase;transition:all .15s;}
+#admin-box{background:#080e18;border:1px solid #2a3a50;width:620px;max-width:95vw;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+#admin-header{padding:14px 20px;border-bottom:1px solid #1a2a38;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
+#admin-title{font-family:'Orbitron',monospace;font-size:12px;letter-spacing:2px;color:#a0c8e0;flex-shrink:0;}
+#admin-tabs-bar{display:flex;border:1px solid #1a2a38;flex-wrap:wrap;}
+.admin-tab{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1.5px;padding:5px 11px;cursor:pointer;color:#446677;background:none;border:none;text-transform:uppercase;transition:all .15s;}
 .admin-tab.active{color:#a0d0f0;background:#0c1828;}
 #admin-close-btn{font-size:11px;color:#3a5a6a;cursor:pointer;letter-spacing:1px;flex-shrink:0;}
 #admin-close-btn:hover{color:#aaccdd;}
-#admin-body{padding:20px;overflow-y:auto;flex:1;}
+#admin-body{padding:18px;overflow-y:auto;flex:1;}
 #admin-body::-webkit-scrollbar{width:3px;}
 #admin-body::-webkit-scrollbar-thumb{background:#1e3040;}
 .admin-pane{display:none;}
@@ -256,14 +338,12 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 .admin-btn:hover{background:#0e2a3a;border-color:#4a8aaa;color:#a0d0f0;}
 .admin-output{margin-top:16px;display:none;}
 .admin-output-label{font-size:9px;color:#3a5a7a;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;}
-.admin-code{background:#040c14;border:1px solid #1a2a38;color:#70c0a0;font-family:'Share Tech Mono',monospace;font-size:10px;padding:13px;line-height:1.7;white-space:pre-wrap;overflow-x:auto;max-height:200px;overflow-y:auto;}
+.admin-code{background:#040c14;border:1px solid #1a2a38;color:#70c0a0;font-family:'Share Tech Mono',monospace;font-size:10px;padding:13px;line-height:1.7;white-space:pre-wrap;overflow-x:auto;max-height:180px;overflow-y:auto;}
 .admin-copy-btn{background:#0c2030;border:1px solid #1a4030;color:#50a080;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:7px 14px;cursor:pointer;text-transform:uppercase;transition:all .15s;margin-top:9px;}
-.admin-copy-btn:hover{background:#0e2a20;color:#80d0b0;}
+.admin-copy-btn:hover{color:#80d0b0;}
 .admin-hint{font-size:9px;color:#2a4a5a;margin-top:11px;line-height:1.7;}
-/* Archive flag in admin */
-.admin-archive-note{font-size:9px;color:#3a5a6a;letter-spacing:1px;padding:8px 10px;background:#060e18;border:1px solid #152030;margin-top:6px;line-height:1.6;}
-
-/* ── LOGIN ── */
+.admin-note{font-size:9px;color:#3a5a6a;padding:8px 10px;background:#060e18;border:1px solid #152030;margin-bottom:12px;line-height:1.6;}
+/* LOGIN */
 #login-overlay{position:fixed;inset:0;background:rgba(4,4,8,0.97);z-index:300;display:flex;align-items:center;justify-content:center;}
 #login-box{background:#080e18;border:1px solid #2a3a50;width:340px;padding:30px;}
 #login-title{font-family:'Orbitron',monospace;font-size:12px;letter-spacing:2px;color:#a0c8e0;margin-bottom:7px;}
@@ -292,10 +372,10 @@ html,body{height:100%;overflow:hidden;background:#040408;}
     <button class="tab-btn active" data-tab="map">MAP VIEW</button>
     <button class="tab-btn" data-tab="headlines">HEADLINES</button>
     <button class="tab-btn" data-tab="articles">OUR ANALYSIS</button>
+    <button class="tab-btn" data-tab="field">FIELD REPORTS</button>
     <button class="tab-btn" data-tab="archive">ARCHIVE</button>
     <button class="tab-btn" data-tab="about">ABOUT</button>
   </div>
-
   <div id="map-wrapper">
 
     <!-- MAP -->
@@ -321,8 +401,11 @@ html,body{height:100%;overflow:hidden;background:#040408;}
         <div class="legend-row"><div class="legend-dot" style="background:#7090ff"></div>POLITICS</div>
         <div class="legend-row"><div class="legend-dot" style="background:#70ffff"></div>CLIMATE</div>
         <div class="legend-row"><div class="legend-dot" style="background:#ffaa40"></div>CRISIS</div>
+        <div style="margin-top:6px;padding-top:6px;border-top:1px solid #182030;" class="legend-row"><div class="legend-diamond" style="background:#cc4444;"></div>BREAKING</div>
+        <div class="legend-row"><div class="legend-dot" style="background:#cc88ff"></div>FIELD REPORT</div>
       </div>
       <div id="admin-key-hint">PRESS [ A ] TO MANAGE CONTENT</div>
+      <!-- SIDE PANEL -->
       <div id="side-panel">
         <div id="sp-header">
           <div style="flex:1;min-width:0;"><div id="sp-region"></div><div id="sp-headline"></div></div>
@@ -338,6 +421,21 @@ html,body{height:100%;overflow:hidden;background:#040408;}
           <a id="sp-read-link" target="_blank" rel="noopener">READ FULL STORY →</a>
         </div>
       </div>
+      <!-- FIELD PANEL -->
+      <div id="field-panel">
+        <div id="fp-header">
+          <div style="flex:1;min-width:0;"><div id="fp-type"></div><div id="fp-caption"></div></div>
+          <div id="fp-close">[ CLOSE ]</div>
+        </div>
+        <div id="fp-body">
+          <div id="fp-media-placeholder"><span class="field-card-media-icon">📷</span><span style="font-size:9px;color:#3a2a5a;letter-spacing:2px;">FIELD MEDIA</span></div>
+          <img id="fp-media" style="display:none;" alt="Field report media"/>
+          <div id="fp-submitter"></div>
+          <div id="fp-location"></div>
+          <div id="fp-note"></div>
+        </div>
+      </div>
+      <!-- COUNTRY PANEL -->
       <div id="country-panel">
         <div id="cp-header"><div id="cp-flag"></div><div id="cp-name"></div><div id="cp-close">[ CLOSE ]</div></div>
         <div id="cp-body"><div id="cp-no-news"></div><div id="cp-list"></div></div>
@@ -356,37 +454,35 @@ html,body{height:100%;overflow:hidden;background:#040408;}
         <button class="hl-filter" data-hcat="breaking">BREAKING ONLY</button>
         <span id="hl-count"></span>
       </div>
-      <div id="hl-list"></div>
+      <div id="hl-grid"></div>
     </div>
 
     <!-- OUR ARTICLES -->
     <div id="tab-articles" class="content-tab">
-      <div id="art-toolbar">
-        <div id="art-toolbar-title">OUR ANALYSIS</div>
-        <span id="art-count"></span>
-      </div>
-      <div id="art-list"><div id="art-empty">No articles published yet. Use the admin panel to write and publish your first piece.</div></div>
+      <div id="art-toolbar"><div id="art-toolbar-title">OUR ANALYSIS</div><span id="art-count"></span></div>
+      <div id="art-list"><div id="art-empty">No articles published yet.</div></div>
       <div id="art-reader">
-        <div id="art-reader-bar">
-          <div id="art-reader-back">← BACK TO ANALYSIS</div>
-          <div id="art-reader-label">GLOBAL STRATEGIC POST</div>
-        </div>
-        <div id="art-reader-body">
-          <div id="ar-cat"></div><div id="ar-title"></div>
-          <div id="ar-meta"><span id="ar-author"></span><span id="ar-date"></span></div>
-          <div id="ar-body"></div>
-        </div>
+        <div id="art-reader-bar"><div id="art-reader-back">← BACK TO ANALYSIS</div><div id="art-reader-label">GLOBAL STRATEGIC POST</div></div>
+        <div id="art-reader-body"><div id="ar-cat"></div><div id="ar-title"></div><div id="ar-meta"><span id="ar-author"></span><span id="ar-date"></span></div><div id="ar-body"></div></div>
       </div>
+    </div>
+
+    <!-- FIELD REPORTS -->
+    <div id="tab-field" class="content-tab">
+      <div id="field-toolbar">
+        <div id="field-toolbar-title">FIELD REPORTS</div>
+        <span id="field-count"></span>
+        <button id="field-submit-btn">+ SUBMIT REPORT</button>
+      </div>
+      <div id="field-grid"></div>
+      <div id="field-empty">No field reports yet. Be the first to submit a photo, video, or eyewitness account from the ground.</div>
     </div>
 
     <!-- ARCHIVE -->
     <div id="tab-archive" class="content-tab">
       <div id="archive-toolbar">
         <div id="archive-toolbar-title">ARCHIVE</div>
-        <div id="archive-search-wrap">
-          <span id="archive-search-icon">🔍</span>
-          <input id="archive-search" type="text" placeholder="Search headlines, regions, sources..." autocomplete="off"/>
-        </div>
+        <div id="archive-search-wrap"><span id="archive-search-icon">🔍</span><input id="archive-search" type="text" placeholder="Search headlines, regions, sources..." autocomplete="off"/></div>
         <div id="archive-filter-wrap">
           <button class="arch-filter active" data-acat="all">ALL</button>
           <button class="arch-filter" data-acat="conflict">CONFLICT</button>
@@ -399,7 +495,7 @@ html,body{height:100%;overflow:hidden;background:#040408;}
       </div>
       <div id="archive-no-results">No results match your search.</div>
       <div id="archive-list"></div>
-      <div id="archive-empty">No archived items yet. Use the admin panel to add stories to the archive.</div>
+      <div id="archive-empty">No archived items yet.</div>
     </div>
 
     <!-- ABOUT -->
@@ -409,17 +505,17 @@ html,body{height:100%;overflow:hidden;background:#040408;}
         <div id="about-title">Understanding the World,<br>Geographically.</div>
         <hr id="about-divider"/>
         <div id="about-text">
-          <!-- EDIT YOUR ABOUT TEXT BELOW -->
           <p>Welcome to the <strong>Global Strategic Post</strong> — an interactive intelligence platform designed to make global geopolitics legible at a glance.</p>
           <h2>What We Do</h2>
           <p>We monitor news from credible local and international outlets across every region of the world and place each story geographically on a live map. Our goal is simple: to give you a clear, uncluttered picture of where events are happening and how they connect.</p>
           <h2>How It Works</h2>
-          <p>Every pin on the map represents a monitored event — conflict, economic development, political shift, climate crisis, or humanitarian emergency. Pins are color-coded by category and updated regularly by our editorial team. Click any pin to read the headline, or click a country to see all monitored events within its borders.</p>
+          <p>Every pin on the map represents a monitored event. Pins are color-coded by category and updated regularly by our editorial team. Click any pin to read the headline, or click a country to see all monitored events within its borders.</p>
+          <h2>Field Reports</h2>
+          <p>Our Field Reports tab accepts photos, videos, and eyewitness accounts submitted by people on the ground. All submissions are reviewed before appearing on the map.</p>
           <h2>Our Analysis</h2>
-          <p>In addition to curated headlines from third-party outlets, our team publishes original analysis under the <strong>Our Analysis</strong> tab. These pieces are written by our editorial staff and represent our independent assessment of global events.</p>
+          <p>In addition to curated headlines, our team publishes original analysis under the <strong>Our Analysis</strong> tab.</p>
           <h2>Editorial Standards</h2>
-          <p>We source only from credible, established news organizations. We do not amplify misinformation or unverified claims. Our editorial team reviews every entry before it is published on the map.</p>
-          <!-- END ABOUT TEXT -->
+          <p>We source only from credible, established news organizations and do not amplify unverified claims.</p>
         </div>
         <div id="about-meta">Global Strategic Post &nbsp;·&nbsp; Est. 2026 &nbsp;·&nbsp; All rights reserved</div>
       </div>
@@ -428,91 +524,133 @@ html,body{height:100%;overflow:hidden;background:#040408;}
   </div>
 </div>
 
+<!-- FIELD SUBMIT FORM -->
+<div id="field-submit-overlay">
+  <div id="field-submit-box">
+    <div id="fs-header"><div id="fs-title">SUBMIT FIELD REPORT</div><div id="fs-close">[ ESC ]</div></div>
+    <div id="fs-body">
+      <div class="fs-note">Reports are reviewed before publication. Do not submit content that endangers yourself or others. By submitting you grant GSP permission to publish your content.</div>
+      <div class="fs-row">
+        <div class="fs-field"><div class="fs-label">Location / Region *</div><input class="fs-input" id="fr-location" placeholder="e.g. Strait of Hormuz, Iran"/></div>
+        <div class="fs-field"><div class="fs-label">Type *</div>
+          <select class="fs-select" id="fr-type">
+            <option value="photo">Photo</option>
+            <option value="video">Video</option>
+            <option value="eyewitness">Eyewitness Account</option>
+            <option value="document">Document / Screenshot</option>
+          </select>
+        </div>
+      </div>
+      <div class="fs-row"><div class="fs-field"><div class="fs-label">Caption / Description *</div><textarea class="fs-textarea" id="fr-caption" placeholder="Describe what you witnessed or what this media shows..."></textarea></div></div>
+      <div class="fs-row">
+        <div class="fs-field"><div class="fs-label">Media URL (photo/video link)</div><input class="fs-input" id="fr-media" placeholder="https://..."/></div>
+        <div class="fs-field"><div class="fs-label">Your Name / Handle *</div><input class="fs-input" id="fr-submitter" placeholder="e.g. @reporter or Anonymous"/></div>
+      </div>
+      <div class="fs-row">
+        <div class="fs-field"><div class="fs-label">Approx. Latitude</div><input class="fs-input" id="fr-lat" placeholder="e.g. 26.5"/></div>
+        <div class="fs-field"><div class="fs-label">Approx. Longitude</div><input class="fs-input" id="fr-lng" placeholder="e.g. 56.5"/></div>
+        <div class="fs-field"><div class="fs-label">Date *</div><input class="fs-input" id="fr-date" placeholder="e.g. May 2, 2026"/></div>
+      </div>
+      <button class="fs-btn" id="fr-submit-btn">GENERATE SUBMISSION CODE →</button>
+      <div class="fs-output" id="fr-output">
+        <div class="fs-output-label">SEND THIS CODE TO YOUR EDITOR TO PUBLISH:</div>
+        <div class="fs-code" id="fr-code"></div>
+        <button class="fs-copy-btn" id="fr-copy-btn">COPY TO CLIPBOARD</button>
+        <div class="fs-hint">Your editor will paste this into index.html inside the <span style="color:#a070c0;">fieldReports</span> array and commit the change to publish your report.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ADMIN PANEL -->
 <div id="admin-overlay">
   <div id="admin-box">
     <div id="admin-header">
-      <div id="admin-title">ADMIN — GLOBAL STRATEGIC POST</div>
+      <div id="admin-title">ADMIN</div>
       <div id="admin-tabs-bar">
         <button class="admin-tab active" data-pane="news">ADD NEWS</button>
-        <button class="admin-tab" data-pane="archive">ADD TO ARCHIVE</button>
-        <button class="admin-tab" data-pane="article">WRITE ARTICLE</button>
+        <button class="admin-tab" data-pane="archive">ARCHIVE</button>
+        <button class="admin-tab" data-pane="article">ARTICLE</button>
+        <button class="admin-tab" data-pane="region">REGION</button>
       </div>
       <div id="admin-close-btn">[ ESC ]</div>
     </div>
     <div id="admin-body">
-
-      <!-- NEWS PANE -->
+      <!-- NEWS -->
       <div class="admin-pane active" id="pane-news">
         <div class="admin-row">
           <div class="admin-field"><div class="admin-label">Country *</div><input class="admin-input" id="af-country" placeholder="e.g. France" list="country-list"/><datalist id="country-list"></datalist></div>
-          <div class="admin-field"><div class="admin-label">Region Label *</div><input class="admin-input" id="af-region" placeholder="e.g. WESTERN EUROPE"/></div>
+          <div class="admin-field"><div class="admin-label">Region Label</div><input class="admin-input" id="af-region" placeholder="e.g. WESTERN EUROPE"/></div>
+        </div>
+        <div class="admin-note">To pin a story to a waterway or border region, leave Country blank and use a Strategic Region (see REGION tab to get coordinates).</div>
+        <div class="admin-row">
+          <div class="admin-field"><div class="admin-label">Manual Lat (if no country)</div><input class="admin-input" id="af-lat" placeholder="e.g. 26.5"/></div>
+          <div class="admin-field"><div class="admin-label">Manual Lng (if no country)</div><input class="admin-input" id="af-lng" placeholder="e.g. 56.5"/></div>
         </div>
         <div class="admin-row"><div class="admin-field"><div class="admin-label">Headline *</div><textarea class="admin-textarea" id="af-headline" placeholder="Full news headline..."></textarea></div></div>
         <div class="admin-row">
-          <div class="admin-field"><div class="admin-label">Source *</div><input class="admin-input" id="af-source" placeholder="e.g. Le Monde"/></div>
-          <div class="admin-field"><div class="admin-label">Article URL</div><input class="admin-input" id="af-url" placeholder="https://..."/></div>
+          <div class="admin-field"><div class="admin-label">Source *</div><input class="admin-input" id="af-source" placeholder="e.g. Reuters"/></div>
+          <div class="admin-field"><div class="admin-label">URL</div><input class="admin-input" id="af-url" placeholder="https://..."/></div>
         </div>
         <div class="admin-row">
           <div class="admin-field"><div class="admin-label">Category *</div><select class="admin-select" id="af-cat"><option value="conflict">Conflict</option><option value="economy">Economy</option><option value="politics" selected>Politics</option><option value="climate">Climate</option><option value="crisis">Crisis</option></select></div>
           <div class="admin-field"><div class="admin-label">Date *</div><input class="admin-input" id="af-date" placeholder="e.g. May 2, 2026"/></div>
-          <div class="admin-field" style="justify-content:flex-end;"><div class="admin-label">Breaking</div><div class="admin-checkbox-row"><input type="checkbox" id="af-breaking"/><label for="af-breaking">Mark as BREAKING</label></div></div>
+          <div class="admin-field" style="justify-content:flex-end;"><div class="admin-label">Breaking</div><div class="admin-checkbox-row"><input type="checkbox" id="af-breaking"/><label for="af-breaking">BREAKING</label></div></div>
         </div>
-        <button class="admin-btn" id="admin-generate-btn">GENERATE CODE BLOCK →</button>
+        <button class="admin-btn" id="admin-generate-btn">GENERATE CODE →</button>
         <div class="admin-output" id="news-output">
-          <div class="admin-output-label">PASTE INSIDE rawEvents ARRAY — BEFORE THE LAST COMMENT LINE:</div>
+          <div class="admin-output-label">PASTE INSIDE rawEvents ARRAY:</div>
           <div class="admin-code" id="admin-code"></div>
-          <button class="admin-copy-btn" id="admin-copy-btn">COPY TO CLIPBOARD</button>
-          <div class="admin-hint">GitHub → index.html → ✏️ → find <span style="color:#70c0a0;">/* ---- ADD NEW STORIES BELOW THIS LINE ---- */</span> → paste above it → Commit Changes.</div>
+          <button class="admin-copy-btn" id="admin-copy-btn">COPY</button>
+          <div class="admin-hint">GitHub → index.html → ✏️ → find <span style="color:#70c0a0;">/* ---- ADD NEW STORIES BELOW THIS LINE ---- */</span> → paste above it.</div>
         </div>
       </div>
-
-      <!-- ARCHIVE PANE -->
+      <!-- ARCHIVE -->
       <div class="admin-pane" id="pane-archive">
-        <div class="admin-archive-note">Archive items appear in the ARCHIVE tab only — no map pin, no headline feed. Use this for older stories you want to preserve for reference.</div>
-        <div style="margin-top:14px;">
-          <div class="admin-row">
-            <div class="admin-field"><div class="admin-label">Region / Area *</div><input class="admin-input" id="aa-region" placeholder="e.g. EASTERN EUROPE"/></div>
-            <div class="admin-field"><div class="admin-label">Category *</div><select class="admin-select" id="aa-cat"><option value="conflict">Conflict</option><option value="economy">Economy</option><option value="politics" selected>Politics</option><option value="climate">Climate</option><option value="crisis">Crisis</option></select></div>
-          </div>
-          <div class="admin-row"><div class="admin-field"><div class="admin-label">Headline *</div><textarea class="admin-textarea" id="aa-headline" placeholder="Archived headline..."></textarea></div></div>
-          <div class="admin-row">
-            <div class="admin-field"><div class="admin-label">Source *</div><input class="admin-input" id="aa-source" placeholder="e.g. Reuters"/></div>
-            <div class="admin-field"><div class="admin-label">URL</div><input class="admin-input" id="aa-url" placeholder="https://..."/></div>
-          </div>
-          <div class="admin-row"><div class="admin-field"><div class="admin-label">Date *</div><input class="admin-input" id="aa-date" placeholder="e.g. Jan 15, 2026"/></div></div>
-          <button class="admin-btn" id="archive-generate-btn">GENERATE ARCHIVE CODE →</button>
-          <div class="admin-output" id="archive-output">
-            <div class="admin-output-label">PASTE INSIDE archivedEvents ARRAY:</div>
-            <div class="admin-code" id="archive-code"></div>
-            <button class="admin-copy-btn" id="archive-copy-btn">COPY TO CLIPBOARD</button>
-            <div class="admin-hint">GitHub → index.html → ✏️ → find <span style="color:#70c0a0;">/* ---- ADD ARCHIVE ITEMS BELOW ---- */</span> → paste above it → Commit Changes.</div>
-          </div>
+        <div class="admin-row">
+          <div class="admin-field"><div class="admin-label">Region *</div><input class="admin-input" id="aa-region" placeholder="e.g. EASTERN EUROPE"/></div>
+          <div class="admin-field"><div class="admin-label">Category *</div><select class="admin-select" id="aa-cat"><option value="conflict">Conflict</option><option value="economy">Economy</option><option value="politics" selected>Politics</option><option value="climate">Climate</option><option value="crisis">Crisis</option></select></div>
+        </div>
+        <div class="admin-row"><div class="admin-field"><div class="admin-label">Headline *</div><textarea class="admin-textarea" id="aa-headline" placeholder="Archived headline..."></textarea></div></div>
+        <div class="admin-row">
+          <div class="admin-field"><div class="admin-label">Source *</div><input class="admin-input" id="aa-source" placeholder="e.g. Reuters"/></div>
+          <div class="admin-field"><div class="admin-label">URL</div><input class="admin-input" id="aa-url" placeholder="https://..."/></div>
+        </div>
+        <div class="admin-row"><div class="admin-field"><div class="admin-label">Date *</div><input class="admin-input" id="aa-date" placeholder="e.g. Jan 15, 2026"/></div></div>
+        <button class="admin-btn" id="archive-generate-btn">GENERATE CODE →</button>
+        <div class="admin-output" id="archive-output">
+          <div class="admin-output-label">PASTE INSIDE archivedEvents ARRAY:</div>
+          <div class="admin-code" id="archive-code"></div>
+          <button class="admin-copy-btn" id="archive-copy-btn">COPY</button>
+          <div class="admin-hint">Find <span style="color:#70c0a0;">/* ---- ADD ARCHIVE ITEMS BELOW ---- */</span></div>
         </div>
       </div>
-
-      <!-- ARTICLE WRITER -->
+      <!-- ARTICLE -->
       <div class="admin-pane" id="pane-article">
         <div class="admin-row">
-          <div class="admin-field" style="flex:2;"><div class="admin-label">Article Title *</div><input class="admin-input" id="aw-title" placeholder="Your article title..."/></div>
+          <div class="admin-field" style="flex:2;"><div class="admin-label">Title *</div><input class="admin-input" id="aw-title" placeholder="Article title..."/></div>
           <div class="admin-field"><div class="admin-label">Category *</div><select class="admin-select" id="aw-cat"><option value="conflict">Conflict</option><option value="economy">Economy</option><option value="politics" selected>Politics</option><option value="climate">Climate</option><option value="crisis">Crisis</option></select></div>
         </div>
         <div class="admin-row">
-          <div class="admin-field"><div class="admin-label">Author *</div><input class="admin-input" id="aw-author" placeholder="e.g. GSP Editorial Team"/></div>
-          <div class="admin-field"><div class="admin-label">Date *</div><input class="admin-input" id="aw-date" placeholder="e.g. May 2, 2026"/></div>
+          <div class="admin-field"><div class="admin-label">Author *</div><input class="admin-input" id="aw-author" placeholder="GSP Editorial Team"/></div>
+          <div class="admin-field"><div class="admin-label">Date *</div><input class="admin-input" id="aw-date" placeholder="May 2, 2026"/></div>
         </div>
-        <div class="admin-row"><div class="admin-field"><div class="admin-label">Summary (shown on card) *</div><textarea class="admin-textarea" id="aw-summary" placeholder="One or two sentence summary..."></textarea></div></div>
-        <div class="admin-row"><div class="admin-field"><div class="admin-label">Article Body * — blank lines = paragraphs · ## = heading · > = blockquote</div><textarea class="admin-textarea" id="aw-body" style="min-height:160px;" placeholder="Write your full article here...&#10;&#10;Use blank lines between paragraphs.&#10;## Start a line with ## for a heading.&#10;> Start a line with > for a blockquote."></textarea></div></div>
-        <div class="admin-row"><div class="admin-field"><div class="admin-label">Tags (comma separated)</div><input class="admin-input" id="aw-tags" placeholder="e.g. NATO, Europe, Security"/></div></div>
-        <button class="admin-btn" id="article-generate-btn">GENERATE ARTICLE CODE →</button>
+        <div class="admin-row"><div class="admin-field"><div class="admin-label">Summary *</div><textarea class="admin-textarea" id="aw-summary" placeholder="Two sentence summary..."></textarea></div></div>
+        <div class="admin-row"><div class="admin-field"><div class="admin-label">Body * — blank lines=paragraphs, ## heading, > blockquote</div><textarea class="admin-textarea" id="aw-body" style="min-height:140px;" placeholder="Write article body..."></textarea></div></div>
+        <div class="admin-row"><div class="admin-field"><div class="admin-label">Tags (comma separated)</div><input class="admin-input" id="aw-tags" placeholder="NATO, Europe, Security"/></div></div>
+        <button class="admin-btn" id="article-generate-btn">GENERATE CODE →</button>
         <div class="admin-output" id="article-output">
           <div class="admin-output-label">PASTE INSIDE articles ARRAY:</div>
           <div class="admin-code" id="article-code"></div>
-          <button class="admin-copy-btn" id="article-copy-btn">COPY TO CLIPBOARD</button>
-          <div class="admin-hint">GitHub → index.html → ✏️ → find <span style="color:#70c0a0;">/* ---- ADD ARTICLES BELOW ---- */</span> → paste above it → Commit Changes.</div>
+          <button class="admin-copy-btn" id="article-copy-btn">COPY</button>
+          <div class="admin-hint">Find <span style="color:#70c0a0;">/* ---- ADD ARTICLES BELOW ---- */</span></div>
         </div>
       </div>
-
+      <!-- REGION LOOKUP -->
+      <div class="admin-pane" id="pane-region">
+        <div class="admin-note">Use these coordinates to pin stories to strategic waterways, straits, borders, and international zones — not tied to any single country.</div>
+        <div id="region-lookup-list" style="font-size:10px;line-height:2;color:#6a9ab0;letter-spacing:.5px;"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -532,19 +670,56 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 <script>
-
 /* ============================================================
-   ADMIN PASSWORD  —  change this to your own password
+   ADMIN PASSWORD
    ============================================================ */
 const ADMIN_PASSWORD = 'gsp-admin-2026';
+
+/* ============================================================
+   STRATEGIC REGIONS — waterways, straits, borders, zones
+   Use these lat/lng when pinning stories not tied to a country.
+   ============================================================ */
+const STRATEGIC_REGIONS = {
+  'Strait of Hormuz':         {lat:26.5,  lng:56.5},
+  'Strait of Malacca':        {lat:2.5,   lng:101.5},
+  'Suez Canal':               {lat:30.5,  lng:32.3},
+  'Bab-el-Mandeb Strait':     {lat:12.6,  lng:43.4},
+  'Taiwan Strait':            {lat:24.5,  lng:119.5},
+  'South China Sea':          {lat:12.0,  lng:113.0},
+  'Black Sea':                {lat:43.0,  lng:34.0},
+  'Strait of Gibraltar':      {lat:35.9,  lng:-5.5},
+  'Panama Canal':             {lat:9.1,   lng:-79.7},
+  'Arctic Ocean':             {lat:82.0,  lng:0.0},
+  'Persian Gulf':             {lat:27.0,  lng:51.0},
+  'Red Sea':                  {lat:20.0,  lng:38.0},
+  'Eastern Mediterranean':    {lat:34.0,  lng:30.0},
+  'Baltic Sea':               {lat:58.0,  lng:19.0},
+  'North Korea–South Korea Border': {lat:38.0, lng:127.0},
+  'Ukraine–Russia Border':    {lat:49.5,  lng:36.5},
+  'India–Pakistan Border (Kashmir)': {lat:34.5, lng:76.5},
+  'Israel–Lebanon Border':    {lat:33.1,  lng:35.4},
+  'Ethiopia–Eritrea Border':  {lat:15.5,  lng:38.0},
+  'Donbas Region':            {lat:48.0,  lng:38.0},
+  'Sahel Region':             {lat:14.0,  lng:5.0},
+  'Horn of Africa':           {lat:8.0,   lng:46.0},
+  'Gulf of Aden':             {lat:12.5,  lng:46.5},
+  'Caspian Sea':              {lat:41.5,  lng:51.5},
+  'Kosovo–Serbia Border':     {lat:43.2,  lng:21.0},
+};
 
 /* ============================================================
    COUNTRY DATABASE
    ============================================================ */
 const COUNTRIES={4:{name:'Afghanistan',flag:'🇦🇫',color:'#3a2a1a',lat:33.93,lng:67.71},8:{name:'Albania',flag:'🇦🇱',color:'#3a1a1a',lat:41.15,lng:20.17},12:{name:'Algeria',flag:'🇩🇿',color:'#1a3a1a',lat:28.03,lng:1.66},24:{name:'Angola',flag:'🇦🇴',color:'#2a2a1a',lat:-11.20,lng:17.87},32:{name:'Argentina',flag:'🇦🇷',color:'#1a2a3a',lat:-38.42,lng:-63.62},36:{name:'Australia',flag:'🇦🇺',color:'#1a2a3a',lat:-25.27,lng:133.78},40:{name:'Austria',flag:'🇦🇹',color:'#2a1a1a',lat:47.52,lng:14.55},50:{name:'Bangladesh',flag:'🇧🇩',color:'#1a3a2a',lat:23.68,lng:90.36},56:{name:'Belgium',flag:'🇧🇪',color:'#2a2a1a',lat:50.50,lng:4.47},68:{name:'Bolivia',flag:'🇧🇴',color:'#2a3a1a',lat:-16.29,lng:-63.59},76:{name:'Brazil',flag:'🇧🇷',color:'#1a3a1a',lat:-14.24,lng:-51.93},100:{name:'Bulgaria',flag:'🇧🇬',color:'#2a1a1a',lat:42.73,lng:25.49},104:{name:'Myanmar',flag:'🇲🇲',color:'#2a2a1a',lat:21.92,lng:95.96},116:{name:'Cambodia',flag:'🇰🇭',color:'#2a1a1a',lat:12.57,lng:104.99},120:{name:'Cameroon',flag:'🇨🇲',color:'#1a2a1a',lat:3.85,lng:11.50},124:{name:'Canada',flag:'🇨🇦',color:'#2a1a1a',lat:56.13,lng:-106.35},140:{name:'Central African Rep.',flag:'🇨🇫',color:'#2a1a1a',lat:6.61,lng:20.94},152:{name:'Chile',flag:'🇨🇱',color:'#1a2a3a',lat:-35.68,lng:-71.54},156:{name:'China',flag:'🇨🇳',color:'#6a1a1a',lat:35.86,lng:104.20},170:{name:'Colombia',flag:'🇨🇴',color:'#2a3a1a',lat:4.57,lng:-74.30},180:{name:'DR Congo',flag:'🇨🇩',color:'#2a2a1a',lat:-4.04,lng:21.76},188:{name:'Costa Rica',flag:'🇨🇷',color:'#1a2a1a',lat:9.75,lng:-83.75},191:{name:'Croatia',flag:'🇭🇷',color:'#2a1a1a',lat:45.10,lng:15.20},192:{name:'Cuba',flag:'🇨🇺',color:'#2a1a1a',lat:21.52,lng:-77.78},203:{name:'Czech Republic',flag:'🇨🇿',color:'#1a1a3a',lat:49.82,lng:15.47},208:{name:'Denmark',flag:'🇩🇰',color:'#2a1a1a',lat:56.26,lng:9.50},218:{name:'Ecuador',flag:'🇪🇨',color:'#2a3a1a',lat:-1.83,lng:-78.18},818:{name:'Egypt',flag:'🇪🇬',color:'#3a2a1a',lat:26.82,lng:30.80},231:{name:'Ethiopia',flag:'🇪🇹',color:'#2a3a1a',lat:9.15,lng:40.49},246:{name:'Finland',flag:'🇫🇮',color:'#1a2a3a',lat:61.92,lng:25.75},250:{name:'France',flag:'🇫🇷',color:'#2a2a6a',lat:46.23,lng:2.21},276:{name:'Germany',flag:'🇩🇪',color:'#1a3a2a',lat:51.17,lng:10.45},288:{name:'Ghana',flag:'🇬🇭',color:'#1a2a1a',lat:7.95,lng:-1.02},300:{name:'Greece',flag:'🇬🇷',color:'#1a1a3a',lat:39.07,lng:21.82},320:{name:'Guatemala',flag:'🇬🇹',color:'#1a3a1a',lat:15.78,lng:-90.23},340:{name:'Honduras',flag:'🇭🇳',color:'#1a2a3a',lat:15.20,lng:-86.24},348:{name:'Hungary',flag:'🇭🇺',color:'#2a1a1a',lat:47.16,lng:19.50},356:{name:'India',flag:'🇮🇳',color:'#4a2a1a',lat:20.59,lng:78.96},360:{name:'Indonesia',flag:'🇮🇩',color:'#3a1a1a',lat:-0.79,lng:113.92},364:{name:'Iran',flag:'🇮🇷',color:'#3a1a1a',lat:32.43,lng:53.69},368:{name:'Iraq',flag:'🇮🇶',color:'#3a2a1a',lat:33.22,lng:43.68},372:{name:'Ireland',flag:'🇮🇪',color:'#1a3a1a',lat:53.41,lng:-8.24},376:{name:'Israel',flag:'🇮🇱',color:'#3a3a1a',lat:31.05,lng:34.85},380:{name:'Italy',flag:'🇮🇹',color:'#1a3a1a',lat:41.87,lng:12.57},392:{name:'Japan',flag:'🇯🇵',color:'#5a1a1a',lat:36.20,lng:138.25},400:{name:'Jordan',flag:'🇯🇴',color:'#2a2a1a',lat:30.59,lng:36.24},398:{name:'Kazakhstan',flag:'🇰🇿',color:'#2a3a1a',lat:48.02,lng:66.92},404:{name:'Kenya',flag:'🇰🇪',color:'#2a2a1a',lat:-0.02,lng:37.91},408:{name:'North Korea',flag:'🇰🇵',color:'#3a1a1a',lat:40.34,lng:127.51},410:{name:'South Korea',flag:'🇰🇷',color:'#1a2a5a',lat:35.91,lng:127.77},418:{name:'Laos',flag:'🇱🇦',color:'#2a1a1a',lat:19.86,lng:102.50},422:{name:'Lebanon',flag:'🇱🇧',color:'#2a1a1a',lat:33.85,lng:35.86},434:{name:'Libya',flag:'🇱🇾',color:'#2a2a1a',lat:26.34,lng:17.23},450:{name:'Madagascar',flag:'🇲🇬',color:'#1a2a1a',lat:-18.77,lng:46.87},458:{name:'Malaysia',flag:'🇲🇾',color:'#1a2a3a',lat:4.21,lng:108.96},484:{name:'Mexico',flag:'🇲🇽',color:'#1a3a1a',lat:23.63,lng:-102.55},504:{name:'Morocco',flag:'🇲🇦',color:'#2a1a1a',lat:31.79,lng:-7.09},516:{name:'Namibia',flag:'🇳🇦',color:'#2a2a1a',lat:-22.96,lng:18.49},524:{name:'Nepal',flag:'🇳🇵',color:'#3a1a1a',lat:28.39,lng:84.12},528:{name:'Netherlands',flag:'🇳🇱',color:'#2a1a1a',lat:52.13,lng:5.29},554:{name:'New Zealand',flag:'🇳🇿',color:'#1a2a3a',lat:-40.90,lng:174.89},562:{name:'Niger',flag:'🇳🇪',color:'#2a2a1a',lat:17.61,lng:8.08},566:{name:'Nigeria',flag:'🇳🇬',color:'#1a3a1a',lat:9.08,lng:8.68},578:{name:'Norway',flag:'🇳🇴',color:'#1a2a3a',lat:60.47,lng:8.47},586:{name:'Pakistan',flag:'🇵🇰',color:'#1a3a1a',lat:30.38,lng:69.35},604:{name:'Peru',flag:'🇵🇪',color:'#2a1a1a',lat:-9.19,lng:-75.02},608:{name:'Philippines',flag:'🇵🇭',color:'#1a2a3a',lat:12.88,lng:121.77},616:{name:'Poland',flag:'🇵🇱',color:'#2a1a1a',lat:51.92,lng:19.15},620:{name:'Portugal',flag:'🇵🇹',color:'#1a2a1a',lat:39.40,lng:-8.22},634:{name:'Qatar',flag:'🇶🇦',color:'#2a1a1a',lat:25.35,lng:51.18},642:{name:'Romania',flag:'🇷🇴',color:'#2a1a1a',lat:45.94,lng:24.97},643:{name:'Russia',flag:'🇷🇺',color:'#4a2a6a',lat:61.52,lng:105.32},682:{name:'Saudi Arabia',flag:'🇸🇦',color:'#3a1a1a',lat:23.89,lng:45.08},686:{name:'Senegal',flag:'🇸🇳',color:'#1a3a1a',lat:14.50,lng:-14.45},706:{name:'Somalia',flag:'🇸🇴',color:'#2a2a1a',lat:5.15,lng:46.20},710:{name:'South Africa',flag:'🇿🇦',color:'#1a4a1a',lat:-30.56,lng:22.94},729:{name:'Sudan',flag:'🇸🇩',color:'#2a2a1a',lat:12.86,lng:30.22},724:{name:'Spain',flag:'🇪🇸',color:'#2a1a1a',lat:40.46,lng:-3.75},752:{name:'Sweden',flag:'🇸🇪',color:'#1a2a4a',lat:60.13,lng:18.64},756:{name:'Switzerland',flag:'🇨🇭',color:'#2a1a1a',lat:46.82,lng:8.23},760:{name:'Syria',flag:'🇸🇾',color:'#3a1a1a',lat:34.80,lng:38.10},764:{name:'Thailand',flag:'🇹🇭',color:'#2a1a3a',lat:15.87,lng:100.99},788:{name:'Tunisia',flag:'🇹🇳',color:'#2a1a1a',lat:33.89,lng:9.54},792:{name:'Turkey',flag:'🇹🇷',color:'#3a1a1a',lat:38.96,lng:35.24},800:{name:'Uganda',flag:'🇺🇬',color:'#1a2a1a',lat:1.37,lng:32.29},804:{name:'Ukraine',flag:'🇺🇦',color:'#1a3a5a',lat:48.38,lng:31.17},784:{name:'UAE',flag:'🇦🇪',color:'#1a2a2a',lat:23.42,lng:53.85},826:{name:'United Kingdom',flag:'🇬🇧',color:'#2a1a4a',lat:55.38,lng:-3.44},840:{name:'United States',flag:'🇺🇸',color:'#1a3a6a',lat:37.09,lng:-95.71},858:{name:'Uruguay',flag:'🇺🇾',color:'#1a2a3a',lat:-32.52,lng:-55.77},862:{name:'Venezuela',flag:'🇻🇪',color:'#2a2a1a',lat:6.42,lng:-66.59},704:{name:'Vietnam',flag:'🇻🇳',color:'#3a1a1a',lat:14.06,lng:108.28},887:{name:'Yemen',flag:'🇾🇪',color:'#2a1a1a',lat:15.55,lng:48.52},894:{name:'Zambia',flag:'🇿🇲',color:'#1a2a1a',lat:-13.13,lng:27.85},716:{name:'Zimbabwe',flag:'🇿🇼',color:'#1a3a1a',lat:-19.02,lng:29.15},268:{name:'Georgia',flag:'🇬🇪',color:'#3a1a1a',lat:42.31,lng:43.36},646:{name:'Rwanda',flag:'🇷🇼',color:'#1a2a1a',lat:-1.94,lng:29.87}};
 const NAME_TO_ID={};Object.entries(COUNTRIES).forEach(([id,c])=>{NAME_TO_ID[c.name.toLowerCase()]=parseInt(id);});
-function coordsForCountry(n){const id=NAME_TO_ID[(n||'').toLowerCase()];if(!id)return null;const c=COUNTRIES[id];return c?{lat:c.lat,lng:c.lng,id}:null;}
-const dotColors={conflict:'#ff7070',economy:'#70ff70',politics:'#7090ff',climate:'#70ffff',crisis:'#ffaa40'};
+function coordsForCountry(n){
+  if(!n)return null;
+  // Check strategic regions first
+  const sr=STRATEGIC_REGIONS[n];if(sr)return{lat:sr.lat,lng:sr.lng,id:null};
+  const id=NAME_TO_ID[n.toLowerCase()];if(!id)return null;
+  const c=COUNTRIES[id];return c?{lat:c.lat,lng:c.lng,id}:null;
+}
+const dotColors={conflict:'#ff7070',economy:'#70ff70',politics:'#7090ff',climate:'#70ffff',crisis:'#ffaa40',field:'#cc88ff'};
 
 /* ============================================================
    NEWS EVENTS
@@ -568,17 +743,18 @@ const rawEvents=[
   {id:16,country:'United States',cat:'politics',region:'NORTH AMERICA',headline:'Senate vote on border security bill delayed amid party negotiations',source:'AP / Washington Post',url:'https://washingtonpost.com',breaking:false,date:'May 2, 2026'},
   {id:17,country:'Thailand',cat:'economy',region:'SOUTHEAST ASIA',headline:'ASEAN free trade zone expansion ratified by seven member states',source:'Bangkok Post',url:'https://bangkokpost.com',breaking:false,date:'Apr 29, 2026'},
   {id:18,country:'Indonesia',cat:'climate',region:'INDONESIA',headline:'Peatland fire season declared; satellite data shows record smoke plumes',source:'Jakarta Post',url:'https://thejakartapost.com',breaking:false,date:'May 1, 2026'},
-  {id:19,country:'Saudi Arabia',cat:'crisis',region:'ARABIAN PENINSULA',headline:'Water scarcity crisis deepens; desalination capacity falls short of demand',source:'Arab News',url:'https://arabnews.com',breaking:true,date:'May 2, 2026'},
+  {id:19,country:'Strait of Hormuz',cat:'crisis',region:'STRAIT OF HORMUZ',headline:'Naval vessels from multiple nations shadow Iranian patrol boats near critical shipping lane',source:'Reuters / AP',url:'https://reuters.com',breaking:true,date:'May 2, 2026'},
   {id:20,country:'Senegal',cat:'climate',region:'SAHEL REGION',headline:'Solar mega-project breaks ground; to power 10 million homes by 2028',source:'AllAfrica',url:'https://allafrica.com',breaking:false,date:'Apr 28, 2026'},
   {id:21,country:'Russia',cat:'economy',region:'RUSSIA / CIS',headline:'Energy revenues prop up budget despite western sanctions pressure',source:'Moscow Times / Meduza',url:'https://meduza.io',breaking:false,date:'Apr 30, 2026'},
   {id:22,country:'Australia',cat:'climate',region:'AUSTRALIA',headline:'Coral bleaching event declared across 65% of Great Barrier Reef',source:'The Australian',url:'https://theaustralian.com.au',breaking:true,date:'May 2, 2026'},
   {id:23,country:'Sweden',cat:'politics',region:'SCANDINAVIA',headline:'NATO northern flank strategy reviewed after Baltic sea incident',source:'Aftenposten / Yle',url:'https://aftenposten.no',breaking:false,date:'May 1, 2026'},
   {id:24,country:'Georgia',cat:'conflict',region:'CAUCASUS',headline:'Border demarcation dispute reignites weeks after peace agreement signed',source:'OC Media / Caucasian Knot',url:'https://oc-media.org',breaking:true,date:'May 2, 2026'},
+  {id:25,country:'South China Sea',cat:'conflict',region:'SOUTH CHINA SEA',headline:'China coast guard intercepts Philippine resupply vessel in disputed waters',source:'Reuters / Philippine Daily Inquirer',url:'https://reuters.com',breaking:false,date:'May 1, 2026'},
   /* ---- ADD NEW STORIES BELOW THIS LINE ---- */
 ];
 
 /* ============================================================
-   ARCHIVED EVENTS  —  no map pin, searchable in Archive tab
+   ARCHIVED EVENTS
    ============================================================ */
 const archivedEvents=[
   /* ---- ADD ARCHIVE ITEMS BELOW ---- */
@@ -591,8 +767,24 @@ const articles=[
   /* ---- ADD ARTICLES BELOW ---- */
 ];
 
-// Resolve coordinates
-const events=rawEvents.map(ev=>{const r=coordsForCountry(ev.country);return{...ev,lat:r?r.lat:0,lng:r?r.lng:0,countryId:r?r.id:null};});
+/* ============================================================
+   FIELD REPORTS  —  photos, videos, eyewitness accounts
+   Fields: id, type (photo/video/eyewitness/document),
+           location, lat, lng, caption, submitter, date,
+           mediaUrl (optional — link to image/video),
+           note (optional — longer eyewitness text)
+   ============================================================ */
+const fieldReports=[
+  /* ---- ADD FIELD REPORTS BELOW ---- */
+];
+
+// Resolve coordinates — supports countries AND strategic regions
+const events=rawEvents.map(ev=>{
+  const r=coordsForCountry(ev.country);
+  // Also support manual lat/lng overrides
+  return{...ev,lat:ev.lat||(r?r.lat:0),lng:ev.lng||(r?r.lng:0),countryId:r?r.id:null};
+});
+
 document.getElementById('sr-status').textContent='LIVE FEED — '+events.length+' INCIDENTS MONITORED';
 
 // Ticker
@@ -607,23 +799,64 @@ document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>
   document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
   const t=b.dataset.tab;
   document.getElementById('tab-map').style.display=t==='map'?'block':'none';
-  ['tab-headlines','tab-articles','tab-archive','tab-about'].forEach(id=>{
-    document.getElementById(id).style.display=(id==='tab-'+t&&t!=='map')?'block':'none';
+  ['headlines','articles','field','archive','about'].forEach(id=>{
+    document.getElementById('tab-'+id).style.display=(id===t)?'block':'none';
   });
 }));
 
-// ── HEADLINES ─────────────────────────────────────────────────────────────
+// ── HEADLINES — EDITORIAL LAYOUT ──────────────────────────────────────────
 let hlFilter='all';
 function renderHeadlines(){
-  const list=document.getElementById('hl-list');list.innerHTML='';
+  const grid=document.getElementById('hl-grid');grid.innerHTML='';
   let f=hlFilter==='breaking'?events.filter(e=>e.breaking):hlFilter==='all'?[...events]:events.filter(e=>e.cat===hlFilter);
   f=[...f.filter(e=>e.breaking),...f.filter(e=>!e.breaking)];
   document.getElementById('hl-count').textContent=f.length+' ITEMS';
-  f.forEach((ev,i)=>{
-    const div=document.createElement('div');div.className='hl-item'+(ev.breaking?' breaking':'');
-    const lnk=ev.url&&ev.url!=='#'?`<a class="hl-read-link" href="${ev.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">READ →</a>`:'';
-    div.innerHTML=`<div class="hl-left"><div class="hl-num">${String(i+1).padStart(2,'0')}</div><div class="hl-dot" style="background:${dotColors[ev.cat]}"></div>${ev.breaking?'<div class="hl-break-badge">BRK</div>':''}</div><div class="hl-body"><div class="hl-meta"><span class="hl-region">${ev.region}</span><span class="hl-cat-badge cat-${ev.cat}">${ev.cat}</span><span class="hl-date">${ev.date}</span></div><div class="hl-headline">${ev.headline}</div><div class="hl-source-row"><span class="hl-source">SOURCE: ${ev.source}</span>${lnk}</div></div>`;
-    div.addEventListener('click',()=>openPinPanel(ev));list.appendChild(div);
+  if(f.length===0)return;
+
+  // LEAD — first (most urgent) story
+  const lead=f[0];
+  const leadDiv=document.createElement('div');leadDiv.className='hl-lead';
+  const leadLnk=lead.url&&lead.url!=='#'?`<a class="hl-lead-read" href="${lead.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">READ FULL STORY →</a>`:'';
+  leadDiv.innerHTML=`
+    <div class="hl-lead-img-placeholder">
+      <div class="hl-lead-img-placeholder-icon">🌐</div>
+      <div class="hl-lead-img-placeholder-label">${lead.region}</div>
+    </div>
+    <div class="hl-lead-body">
+      <div class="hl-lead-meta">
+        <span class="hl-lead-cat cat-${lead.cat}">${lead.cat}</span>
+        <span class="hl-lead-region">${lead.region}</span>
+        ${lead.breaking?'<span class="hl-lead-breaking">● BREAKING</span>':''}
+        <span class="hl-lead-date">${lead.date}</span>
+      </div>
+      <div class="hl-lead-headline">${lead.headline}</div>
+      <div class="hl-lead-source">SOURCE: ${lead.source}</div>
+      ${leadLnk}
+    </div>`;
+  leadDiv.addEventListener('click',()=>openPinPanel(lead));
+  grid.appendChild(leadDiv);
+
+  // SECONDARY STRIP — next 3
+  if(f.length>1){
+    const strip=document.createElement('div');strip.className='hl-secondary-strip';
+    f.slice(1,4).forEach(ev=>{
+      const lnk=ev.url&&ev.url!=='#'?`<a style="font-size:9px;color:#3a5a7a;letter-spacing:1px;text-decoration:none;display:inline-block;margin-top:6px;border:1px solid #1a3040;padding:2px 8px;" href="${ev.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">READ →</a>`:'';
+      const sec=document.createElement('div');sec.className='hl-secondary';
+      sec.innerHTML=`<div class="hl-secondary-meta"><span class="hl-secondary-cat cat-${ev.cat}">${ev.cat}</span><span class="hl-secondary-region">${ev.region}</span>${ev.breaking?'<span style="font-size:8px;color:#cc2200;letter-spacing:1px;">● BRK</span>':''}</div><div class="hl-secondary-headline">${ev.headline}</div><div class="hl-secondary-source">SOURCE: ${ev.source}</div>${lnk}`;
+      sec.addEventListener('click',()=>openPinPanel(ev));strip.appendChild(sec);
+    });
+    grid.appendChild(strip);
+  }
+
+  // DIVIDER
+  const div=document.createElement('div');div.style.cssText='height:1px;background:#141e28;';grid.appendChild(div);
+
+  // TERTIARY LIST — rest
+  f.slice(4).forEach(ev=>{
+    const lnk=ev.url&&ev.url!=='#'?`<a class="hl-t-read" href="${ev.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">READ →</a>`:'';
+    const row=document.createElement('div');row.className='hl-tertiary'+(ev.breaking?' breaking':'');
+    row.innerHTML=`<div class="hl-t-dot-wrap"><div class="hl-t-dot" style="background:${dotColors[ev.cat]}"></div></div><div class="hl-t-body"><div class="hl-t-meta"><span class="hl-t-region">${ev.region}</span><span class="hl-t-cat cat-${ev.cat}">${ev.cat}</span>${ev.breaking?'<span style="font-size:8px;color:#cc2200;letter-spacing:1px;">● BRK</span>':''}<span class="hl-t-date">${ev.date}</span></div><div class="hl-t-headline">${ev.headline}</div><div style="display:flex;align-items:center;"><span class="hl-t-source">SOURCE: ${ev.source}</span>${lnk}</div></div>`;
+    row.addEventListener('click',()=>openPinPanel(ev));grid.appendChild(row);
   });
 }
 document.querySelectorAll('.hl-filter').forEach(b=>b.addEventListener('click',()=>{
@@ -632,14 +865,7 @@ document.querySelectorAll('.hl-filter').forEach(b=>b.addEventListener('click',()
 renderHeadlines();
 
 // ── ARTICLES ──────────────────────────────────────────────────────────────
-function parseBody(raw){
-  return (raw||'').split(/\n\n+/).map(block=>{
-    block=block.trim();if(!block)return'';
-    if(block.startsWith('## '))return`<h2>${block.slice(3)}</h2>`;
-    if(block.startsWith('> '))return`<blockquote>${block.slice(2)}</blockquote>`;
-    return`<p>${block.replace(/\n/g,'<br/>')}</p>`;
-  }).join('');
-}
+function parseBody(raw){return(raw||'').split(/\n\n+/).map(b=>{b=b.trim();if(!b)return'';if(b.startsWith('## '))return`<h2>${b.slice(3)}</h2>`;if(b.startsWith('> '))return`<blockquote>${b.slice(2)}</blockquote>`;return`<p>${b.replace(/\n/g,'<br/>')}</p>`;}).join('');}
 function renderArticles(){
   const list=document.getElementById('art-list');const empty=document.getElementById('art-empty');list.innerHTML='';
   if(articles.length===0){empty.style.display='block';document.getElementById('art-count').textContent='';return;}
@@ -661,40 +887,85 @@ function openArticleReader(art){
 }
 document.getElementById('art-reader-back').addEventListener('click',()=>document.getElementById('art-reader').classList.remove('open'));
 
+// ── FIELD REPORTS ─────────────────────────────────────────────────────────
+function renderFieldReports(){
+  const grid=document.getElementById('field-grid');const empty=document.getElementById('field-empty');
+  grid.innerHTML='';
+  if(fieldReports.length===0){empty.style.display='block';document.getElementById('field-count').textContent='';return;}
+  empty.style.display='none';document.getElementById('field-count').textContent=fieldReports.length+' REPORTS';
+  [...fieldReports].reverse().forEach(r=>{
+    const card=document.createElement('div');card.className='field-card';
+    const mediaHTML=r.mediaUrl
+      ?`<img class="field-card-media" src="${r.mediaUrl}" alt="${r.caption||'Field report'}" onerror="this.style.display='none';this.nextSibling.style.display='flex';"/><div class="field-card-media-placeholder" style="display:none;"><span class="field-card-media-icon">${r.type==='video'?'🎥':'📷'}</span><span class="field-card-media-type">${r.type}</span></div>`
+      :`<div class="field-card-media-placeholder"><span class="field-card-media-icon">${r.type==='video'?'🎥':r.type==='eyewitness'?'👁':'📷'}</span><span class="field-card-media-type">${r.type}</span></div>`;
+    card.innerHTML=`${mediaHTML}<div class="field-card-body"><div class="field-card-meta"><span class="field-card-type cat-field">${r.type}</span><span class="field-card-location">${r.location}</span><span class="field-card-date">${r.date}</span></div><div class="field-card-caption">${r.caption}</div><div class="field-card-submitter">SUBMITTED BY: ${r.submitter}</div></div>`;
+    card.addEventListener('click',()=>openFieldPanel(r));grid.appendChild(card);
+  });
+}
+renderFieldReports();
+
+function openFieldPanel(r){
+  closeCountryPanel();closePinPanel();
+  document.getElementById('fp-type').textContent=r.type.toUpperCase()+' REPORT';
+  document.getElementById('fp-caption').textContent=r.caption;
+  document.getElementById('fp-submitter').textContent='SUBMITTED BY: '+r.submitter;
+  document.getElementById('fp-location').textContent='LOCATION: '+r.location;
+  document.getElementById('fp-note').textContent=r.note||'';
+  const img=document.getElementById('fp-media');const ph=document.getElementById('fp-media-placeholder');
+  if(r.mediaUrl){img.src=r.mediaUrl;img.style.display='block';ph.style.display='none';}
+  else{img.style.display='none';ph.style.display='flex';}
+  document.getElementById('field-panel').classList.add('open');
+}
+document.getElementById('fp-close').addEventListener('click',()=>document.getElementById('field-panel').classList.remove('open'));
+
+// Field submit form
+document.getElementById('field-submit-btn').addEventListener('click',()=>document.getElementById('field-submit-overlay').classList.add('open'));
+document.getElementById('fs-close').addEventListener('click',()=>document.getElementById('field-submit-overlay').classList.remove('open'));
+document.getElementById('field-submit-overlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+document.getElementById('fr-submit-btn').addEventListener('click',()=>{
+  const loc=(document.getElementById('fr-location').value||'').trim();
+  const type=document.getElementById('fr-type').value;
+  const caption=(document.getElementById('fr-caption').value||'').trim();
+  const submitter=(document.getElementById('fr-submitter').value||'').trim();
+  const date=(document.getElementById('fr-date').value||'').trim();
+  const media=(document.getElementById('fr-media').value||'').trim();
+  const lat=(document.getElementById('fr-lat').value||'').trim();
+  const lng=(document.getElementById('fr-lng').value||'').trim();
+  if(!loc||!caption||!submitter||!date){alert('Please fill in Location, Caption, Submitter, and Date.');return;}
+  const nextId=Math.max(...fieldReports.map(r=>r.id||0),0)+1;
+  const block=`  {id:${nextId},type:'${type}',location:'${loc.replace(/'/g,"\\'")}',lat:${lat||0},lng:${lng||0},caption:'${caption.replace(/'/g,"\\'")}',submitter:'${submitter.replace(/'/g,"\\'")}',date:'${date}'${media?`,mediaUrl:'${media}'`:''}},`;
+  document.getElementById('fr-code').textContent=block;document.getElementById('fr-output').style.display='block';
+});
+document.getElementById('fr-copy-btn').addEventListener('click',()=>{
+  navigator.clipboard.writeText(document.getElementById('fr-code').textContent).then(()=>{const b=document.getElementById('fr-copy-btn');b.textContent='COPIED ✓';setTimeout(()=>b.textContent='COPY TO CLIPBOARD',2000);});
+});
+
 // ── ARCHIVE ───────────────────────────────────────────────────────────────
 let archFilter='all',archSearch='';
 function renderArchive(){
-  const list=document.getElementById('archive-list');
-  const empty=document.getElementById('archive-empty');
-  const noResults=document.getElementById('archive-no-results');
+  const list=document.getElementById('archive-list');const empty=document.getElementById('archive-empty');const noRes=document.getElementById('archive-no-results');
   list.innerHTML='';
-  let f=archFilter==='all'?[...archivedEvents]:archivedEvents.filter(e=>e.cat===archFilter);
-  if(archSearch){
-    const q=archSearch.toLowerCase();
-    f=f.filter(e=>e.headline.toLowerCase().includes(q)||e.region.toLowerCase().includes(q)||e.source.toLowerCase().includes(q)||(e.cat||'').toLowerCase().includes(q));
-  }
-  if(archivedEvents.length===0){empty.style.display='block';noResults.style.display='none';document.getElementById('archive-count').textContent='';return;}
+  if(archivedEvents.length===0){empty.style.display='block';noRes.style.display='none';document.getElementById('archive-count').textContent='';return;}
   empty.style.display='none';
+  let f=archFilter==='all'?[...archivedEvents]:archivedEvents.filter(e=>e.cat===archFilter);
+  if(archSearch){const q=archSearch.toLowerCase();f=f.filter(e=>e.headline.toLowerCase().includes(q)||e.region.toLowerCase().includes(q)||e.source.toLowerCase().includes(q));}
   document.getElementById('archive-count').textContent=f.length+' ITEMS';
-  if(f.length===0){noResults.style.display='block';return;}
-  noResults.style.display='none';
+  if(f.length===0){noRes.style.display='block';return;}noRes.style.display='none';
   f.forEach((ev,i)=>{
     const lnk=ev.url&&ev.url!=='#'?`<a class="archive-item-link" href="${ev.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">READ →</a>`:'';
     const div=document.createElement('div');div.className='archive-item';
-    div.innerHTML=`<div class="archive-item-left"><div class="archive-item-num">${String(i+1).padStart(2,'0')}</div><div class="archive-item-dot" style="background:${dotColors[ev.cat]}"></div></div><div class="archive-item-body"><div class="archive-item-meta"><span class="archive-item-region">${ev.region}</span><span class="archive-item-cat cat-${ev.cat}">${ev.cat}</span><span class="archive-item-date">${ev.date}</span></div><div class="archive-item-headline">${ev.headline}</div><div class="archive-item-source"><span class="archive-item-src">SOURCE: ${ev.source}</span>${lnk}</div></div>`;
+    div.innerHTML=`<div class="archive-item-left"><div class="archive-item-num">${String(i+1).padStart(2,'0')}</div><div class="archive-item-dot" style="background:${dotColors[ev.cat]}"></div></div><div class="archive-item-body"><div class="archive-item-meta"><span class="archive-item-region">${ev.region}</span><span class="archive-item-cat cat-${ev.cat}">${ev.cat}</span><span class="archive-item-date">${ev.date}</span></div><div class="archive-item-headline">${ev.headline}</div><div class="archive-item-src-row"><span class="archive-item-src">SOURCE: ${ev.source}</span>${lnk}</div></div>`;
     list.appendChild(div);
   });
 }
 renderArchive();
 document.getElementById('archive-search').addEventListener('input',function(){archSearch=this.value.trim();renderArchive();});
-document.querySelectorAll('.arch-filter').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('.arch-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');archFilter=b.dataset.acat;renderArchive();
-}));
+document.querySelectorAll('.arch-filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.arch-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');archFilter=b.dataset.acat;renderArchive();}));
 
 // ── SIDE PANEL ────────────────────────────────────────────────────────────
 let currentPinEvent=null;
 function openPinPanel(ev){
-  currentPinEvent=ev;closeCountryPanel();
+  currentPinEvent=ev;closeCountryPanel();document.getElementById('field-panel').classList.remove('open');
   document.getElementById('sp-region').textContent=ev.region;document.getElementById('sp-headline').textContent=ev.headline;
   const tag=document.getElementById('sp-tag');tag.textContent=ev.breaking?'● BREAKING':ev.cat;tag.className=ev.breaking?'cat-conflict':'cat-'+ev.cat;
   document.getElementById('sp-source').textContent='SOURCE: '+ev.source;document.getElementById('sp-date').textContent=ev.date;
@@ -712,7 +983,7 @@ let selectedCountryId=null;
 function clearHighlight(){if(selectedCountryId===null)return;d3.selectAll('.country').filter(d=>parseInt(d.id)===selectedCountryId).style('fill',null);selectedCountryId=null;}
 function openCountryPanel(feature){
   const id=parseInt(feature.id);if(selectedCountryId===id){closeCountryPanel();return;}
-  clearHighlight();closePinPanel();selectedCountryId=id;
+  clearHighlight();closePinPanel();document.getElementById('field-panel').classList.remove('open');selectedCountryId=id;
   const info=COUNTRIES[id];
   d3.selectAll('.country').filter(d=>parseInt(d.id)===id).style('fill',info?info.color:'#1a2a3a');
   document.getElementById('cp-flag').textContent=info?info.flag:'';document.getElementById('cp-name').textContent=info?info.name:('Country '+id);
@@ -738,33 +1009,73 @@ async function init(){
   let world;try{const res=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json');world=await res.json();}catch(e){return;}
   const countries=topojson.feature(world,world.objects.countries);
   [-1,0,1].forEach(copy=>{const g=buildBase(zoomG,copy*worldPxWidth);g.selectAll('.country').data(countries.features).join('path').attr('class','country').attr('d',pathFn).on('click',function(event,d){event.stopPropagation();openCountryPanel(d);});});
-  pinsLayer=zoomG.append('g').attr('id','pins-layer');renderPins();
+  // Region labels on map
+  const labelsLayer=zoomG.append('g').attr('id','region-labels');
+  Object.entries(STRATEGIC_REGIONS).forEach(([name,coords])=>{
+    const[px,py]=projectionFn([coords.lng,coords.lat]);if(!px)return;
+    labelsLayer.append('text').attr('x',px).attr('y',py).attr('class','region-label').text(name.toUpperCase());
+  });
+  pinsLayer=zoomG.append('g').attr('id','pins-layer');
+  renderPins();
   initT=d3.zoomIdentity.translate(W*(1-1.35)/2,H*(1-1.35)/2).scale(1.35);
   const yTop=projectionFn([0,78])[1],yBot=projectionFn([0,-78])[1];
   zoomBehavior=d3.zoom().scaleExtent([0.9,14]).on('zoom',(event)=>{
-    const t=event.transform,k=t.k;
-    const clampedY=Math.max(H-yBot*k,Math.min(-yTop*k,t.y));
+    const t=event.transform,k=t.k;const clampedY=Math.max(H-yBot*k,Math.min(-yTop*k,t.y));
     zoomG.attr('transform',d3.zoomIdentity.translate(t.x,clampedY).scale(k));
     pinsLayer.selectAll('.pin-dot').attr('r',4/Math.sqrt(k));
+    // Scale region labels inversely so they don't get huge
+    labelsLayer.attr('font-size',(7/k)+'px');
   });
   svgSel.call(zoomBehavior).call(zoomBehavior.transform,initT);svgSel.on('dblclick.zoom',null);
-  svgSel.on('click',()=>{closeCountryPanel();closePinPanel();});
+  svgSel.on('click',()=>{closeCountryPanel();closePinPanel();document.getElementById('field-panel').classList.remove('open');});
   document.getElementById('zoom-in').addEventListener('click',()=>svgSel.transition().duration(300).call(zoomBehavior.scaleBy,1.6));
   document.getElementById('zoom-out').addEventListener('click',()=>svgSel.transition().duration(300).call(zoomBehavior.scaleBy,0.625));
   document.getElementById('zoom-reset').addEventListener('click',()=>svgSel.transition().duration(400).call(zoomBehavior.transform,initT));
   document.querySelectorAll('.filter-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');activeFilter=b.dataset.cat;renderPins();}));
 }
+
 function renderPins(){
   if(!pinsLayer)return;pinsLayer.selectAll('*').remove();
   const filtered=activeFilter==='all'?events:events.filter(e=>e.cat===activeFilter);
   const container=document.getElementById('tab-map');const tooltip=document.getElementById('tooltip');
+
+  // Field report pins (purple)
+  fieldReports.forEach(r=>{
+    if(!r.lat&&!r.lng)return;
+    [-1,0,1].forEach(copy=>{
+      const base=projectionFn([r.lng,r.lat]);if(!base)return;
+      const px=base[0]+copy*worldPxWidth,py=base[1];
+      const g=pinsLayer.append('g').attr('class','pin-group');
+      g.append('circle').attr('cx',px).attr('cy',py).attr('r',10).attr('fill','none').attr('stroke','#cc88ff').attr('stroke-width','0.8').style('animation','pulse 2.4s infinite ease-out');
+      g.append('circle').attr('cx',px).attr('cy',py).attr('r',4).attr('fill','#cc88ff').attr('class','pin-dot');
+      g.on('mouseenter',function(event){
+        document.getElementById('tt-region').textContent=r.location;const c=document.getElementById('tt-cat');c.textContent='FIELD REPORT — '+r.type;c.className='cat-field';
+        document.getElementById('tt-headline').textContent=r.caption;document.getElementById('tt-source').textContent='SUBMITTED BY: '+r.submitter;
+        tooltip.classList.add('visible');positionTooltip(event,container);
+      }).on('mousemove',e=>positionTooltip(e,container)).on('mouseleave',()=>tooltip.classList.remove('visible'))
+        .on('click',function(event){event.stopPropagation();tooltip.classList.remove('visible');openFieldPanel(r);});
+    });
+  });
+
   filtered.forEach(ev=>{
     [-1,0,1].forEach(copy=>{
       const base=projectionFn([ev.lng,ev.lat]);if(!base)return;
-      const px=base[0]+copy*worldPxWidth,py=base[1];const g=pinsLayer.append('g').attr('class','pin-group');
-      if(ev.breaking)g.append('circle').attr('cx',px).attr('cy',py).attr('class','pin-ring ring-'+ev.cat).attr('r',10).style('animation-delay',(ev.id*.2)+'s');
-      g.append('circle').attr('cx',px).attr('cy',py).attr('r',4).attr('class','pin-dot dot-'+ev.cat);
-      if(ev.breaking)g.append('circle').attr('cx',px).attr('cy',py-4).attr('r',2.5).attr('fill','#cc2200');
+      const px=base[0]+copy*worldPxWidth,py=base[1];
+      const g=pinsLayer.append('g').attr('class','pin-group');
+      const col=dotColors[ev.cat]||'#aaa';
+
+      if(ev.breaking){
+        // Breaking: animated glow ring (no red cap — clean single element)
+        g.append('circle').attr('cx',px).attr('cy',py).attr('class','pin-breaking-ring').attr('r',10).attr('stroke',col).style('animation-delay',(ev.id*.15)+'s');
+        // Diamond shape via rotated rect
+        g.append('rect').attr('x',px-4).attr('y',py-4).attr('width',8).attr('height',8)
+          .attr('fill',col).attr('stroke','#080808').attr('stroke-width','0.8')
+          .attr('transform',`rotate(45,${px},${py})`).attr('class','pin-dot');
+      } else {
+        g.append('circle').attr('cx',px).attr('cy',py).attr('class','pin-ring ring-'+ev.cat).attr('r',8).style('animation-delay',(ev.id*.2)+'s');
+        g.append('circle').attr('cx',px).attr('cy',py).attr('r',4).attr('class','pin-dot dot-'+ev.cat);
+      }
+
       g.on('mouseenter',function(event){
         document.getElementById('tt-region').textContent=ev.region;const c=document.getElementById('tt-cat');c.textContent=ev.breaking?ev.cat+' — BREAKING':ev.cat;c.className='cat-'+ev.cat;
         document.getElementById('tt-headline').textContent=ev.headline;document.getElementById('tt-source').textContent='SOURCE: '+ev.source+' · '+ev.date;
@@ -774,14 +1085,15 @@ function renderPins(){
     });
   });
 }
+
 function positionTooltip(event,container){
   const rect=container.getBoundingClientRect();let x=event.clientX-rect.left+14,y=event.clientY-rect.top+14;
   const tt=document.getElementById('tooltip');
-  if(x+250>rect.width-330)x=event.clientX-rect.left-255;if(y+130>rect.height)y=event.clientY-rect.top-135;
+  if(x+260>rect.width-330)x=event.clientX-rect.left-265;if(y+130>rect.height)y=event.clientY-rect.top-135;
   tt.style.left=x+'px';tt.style.top=y+'px';
 }
 
-// ── ADMIN AUTH ────────────────────────────────────────────────────────────
+// ── ADMIN ─────────────────────────────────────────────────────────────────
 let adminUnlocked=false;
 function showLogin(){document.getElementById('login-overlay').style.display='flex';document.getElementById('login-pw').value='';document.getElementById('login-err').style.display='none';setTimeout(()=>document.getElementById('login-pw').focus(),100);}
 function hideLogin(){document.getElementById('login-overlay').style.display='none';}
@@ -791,8 +1103,6 @@ document.getElementById('login-btn').addEventListener('click',()=>{
 });
 document.getElementById('login-pw').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('login-btn').click();});
 document.getElementById('login-cancel').addEventListener('click',hideLogin);
-
-// ── ADMIN PANEL ───────────────────────────────────────────────────────────
 function openAdmin(){document.getElementById('admin-overlay').classList.add('open');}
 function closeAdmin(){document.getElementById('admin-overlay').classList.remove('open');}
 document.getElementById('admin-close-btn').addEventListener('click',closeAdmin);
@@ -802,13 +1112,23 @@ document.querySelectorAll('.admin-tab').forEach(b=>b.addEventListener('click',()
   document.querySelectorAll('.admin-pane').forEach(x=>x.classList.remove('active'));document.getElementById('pane-'+b.dataset.pane).classList.add('active');
 }));
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeAdmin();hideLogin();return;}
+  if(e.key==='Escape'){closeAdmin();hideLogin();document.getElementById('field-submit-overlay').classList.remove('open');return;}
   if(e.key==='a'||e.key==='A'){const a=document.activeElement;if(a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT'))return;if(adminUnlocked)openAdmin();else showLogin();}
 });
 
 // Country autocomplete
 const dl=document.getElementById('country-list');
 Object.values(COUNTRIES).sort((a,b)=>a.name.localeCompare(b.name)).forEach(c=>{const opt=document.createElement('option');opt.value=c.name;dl.appendChild(opt);});
+// Also add strategic regions to autocomplete
+Object.keys(STRATEGIC_REGIONS).forEach(name=>{const opt=document.createElement('option');opt.value=name;dl.appendChild(opt);});
+
+// Region lookup table in admin
+const rlDiv=document.getElementById('region-lookup-list');
+Object.entries(STRATEGIC_REGIONS).forEach(([name,coords])=>{
+  const row=document.createElement('div');row.style.cssText='padding:4px 0;border-bottom:1px solid #101820;display:flex;gap:12px;';
+  row.innerHTML=`<span style="flex:1;color:#6a9ab0;">${name}</span><span style="color:#3a5a6a;font-size:10px;">lat: ${coords.lat} &nbsp; lng: ${coords.lng}</span>`;
+  rlDiv.appendChild(row);
+});
 
 // News code gen
 document.getElementById('admin-generate-btn').addEventListener('click',()=>{
@@ -818,48 +1138,37 @@ document.getElementById('admin-generate-btn').addEventListener('click',()=>{
   const source=(document.getElementById('af-source').value||'').trim();
   const url=(document.getElementById('af-url').value||'').trim()||'#';
   const cat=document.getElementById('af-cat').value;const date=(document.getElementById('af-date').value||'').trim();const breaking=document.getElementById('af-breaking').checked;
-  if(!country||!headline||!source||!date){alert('Please fill in Country, Headline, Source, and Date.');return;}
-  if(!coordsForCountry(country)){alert(`"${country}" not found. Check spelling.`);return;}
+  const manLat=document.getElementById('af-lat').value.trim();const manLng=document.getElementById('af-lng').value.trim();
+  if(!headline||!source||!date){alert('Please fill in Headline, Source, and Date.');return;}
+  // Validate country or manual coords
+  if(country&&!coordsForCountry(country)&&!manLat){alert(`"${country}" not found. Check spelling, or leave Country blank and enter manual lat/lng.`);return;}
   const nextId=Math.max(...events.map(e=>e.id),0)+1;
-  const block=`  {id:${nextId},country:'${country}',cat:'${cat}',region:'${region||country.toUpperCase()}',headline:'${headline.replace(/'/g,"\\'")}',source:'${source.replace(/'/g,"\\'")}',url:'${url}',breaking:${breaking},date:'${date}'},`;
+  const latField=manLat?`lat:${manLat},lng:${manLng},`:'';
+  const block=`  {id:${nextId},country:'${country}',${latField}cat:'${cat}',region:'${region||country.toUpperCase()}',headline:'${headline.replace(/'/g,"\\'")}',source:'${source.replace(/'/g,"\\'")}',url:'${url}',breaking:${breaking},date:'${date}'},`;
   document.getElementById('admin-code').textContent=block;document.getElementById('news-output').style.display='block';
 });
-document.getElementById('admin-copy-btn').addEventListener('click',()=>{
-  navigator.clipboard.writeText(document.getElementById('admin-code').textContent).then(()=>{const b=document.getElementById('admin-copy-btn');b.textContent='COPIED ✓';setTimeout(()=>b.textContent='COPY TO CLIPBOARD',2000);});
-});
+document.getElementById('admin-copy-btn').addEventListener('click',()=>{navigator.clipboard.writeText(document.getElementById('admin-code').textContent).then(()=>{const b=document.getElementById('admin-copy-btn');b.textContent='COPIED ✓';setTimeout(()=>b.textContent='COPY',2000);});});
 
 // Archive code gen
 document.getElementById('archive-generate-btn').addEventListener('click',()=>{
-  const region=(document.getElementById('aa-region').value||'').trim().toUpperCase();
-  const headline=(document.getElementById('aa-headline').value||'').trim();
-  const source=(document.getElementById('aa-source').value||'').trim();
-  const url=(document.getElementById('aa-url').value||'').trim()||'#';
-  const cat=document.getElementById('aa-cat').value;const date=(document.getElementById('aa-date').value||'').trim();
-  if(!region||!headline||!source||!date){alert('Please fill in Region, Headline, Source, and Date.');return;}
+  const region=(document.getElementById('aa-region').value||'').trim().toUpperCase();const headline=(document.getElementById('aa-headline').value||'').trim();const source=(document.getElementById('aa-source').value||'').trim();const url=(document.getElementById('aa-url').value||'').trim()||'#';const cat=document.getElementById('aa-cat').value;const date=(document.getElementById('aa-date').value||'').trim();
+  if(!region||!headline||!source||!date){alert('Fill in Region, Headline, Source, Date.');return;}
   const nextId=Math.max(...archivedEvents.map(e=>e.id||0),0)+1;
   const block=`  {id:${nextId},cat:'${cat}',region:'${region}',headline:'${headline.replace(/'/g,"\\'")}',source:'${source.replace(/'/g,"\\'")}',url:'${url}',date:'${date}'},`;
   document.getElementById('archive-code').textContent=block;document.getElementById('archive-output').style.display='block';
 });
-document.getElementById('archive-copy-btn').addEventListener('click',()=>{
-  navigator.clipboard.writeText(document.getElementById('archive-code').textContent).then(()=>{const b=document.getElementById('archive-copy-btn');b.textContent='COPIED ✓';setTimeout(()=>b.textContent='COPY TO CLIPBOARD',2000);});
-});
+document.getElementById('archive-copy-btn').addEventListener('click',()=>{navigator.clipboard.writeText(document.getElementById('archive-code').textContent).then(()=>{const b=document.getElementById('archive-copy-btn');b.textContent='COPIED ✓';setTimeout(()=>b.textContent='COPY',2000);});});
 
 // Article code gen
 document.getElementById('article-generate-btn').addEventListener('click',()=>{
-  const title=(document.getElementById('aw-title').value||'').trim();const cat=document.getElementById('aw-cat').value;
-  const author=(document.getElementById('aw-author').value||'').trim();const date=(document.getElementById('aw-date').value||'').trim();
-  const summary=(document.getElementById('aw-summary').value||'').trim();const body=(document.getElementById('aw-body').value||'').trim();
-  const tagsRaw=(document.getElementById('aw-tags').value||'').trim();
-  if(!title||!author||!date||!summary||!body){alert('Please fill in all required fields.');return;}
-  const tags=tagsRaw?tagsRaw.split(',').map(t=>`'${t.trim()}'`).join(', '):'';
-  const nextId=Math.max(...articles.map(a=>a.id||0),0)+1;
+  const title=(document.getElementById('aw-title').value||'').trim();const cat=document.getElementById('aw-cat').value;const author=(document.getElementById('aw-author').value||'').trim();const date=(document.getElementById('aw-date').value||'').trim();const summary=(document.getElementById('aw-summary').value||'').trim();const body=(document.getElementById('aw-body').value||'').trim();const tagsRaw=(document.getElementById('aw-tags').value||'').trim();
+  if(!title||!author||!date||!summary||!body){alert('Fill in all required fields.');return;}
+  const tags=tagsRaw?tagsRaw.split(',').map(t=>`'${t.trim()}'`).join(', '):'';const nextId=Math.max(...articles.map(a=>a.id||0),0)+1;
   const esc=s=>s.replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');
   const block=`  {id:${nextId},title:'${title.replace(/'/g,"\\'")}',cat:'${cat}',author:'${author.replace(/'/g,"\\'")}',date:'${date}',summary:'${summary.replace(/'/g,"\\'")}',tags:[${tags}],body:\`${esc(body)}\`},`;
   document.getElementById('article-code').textContent=block;document.getElementById('article-output').style.display='block';
 });
-document.getElementById('article-copy-btn').addEventListener('click',()=>{
-  navigator.clipboard.writeText(document.getElementById('article-code').textContent).then(()=>{const b=document.getElementById('article-copy-btn');b.textContent='COPIED ✓';setTimeout(()=>b.textContent='COPY TO CLIPBOARD',2000);});
-});
+document.getElementById('article-copy-btn').addEventListener('click',()=>{navigator.clipboard.writeText(document.getElementById('article-code').textContent).then(()=>{const b=document.getElementById('article-copy-btn');b.textContent='COPIED ✓';setTimeout(()=>b.textContent='COPY',2000);});});
 
 function updateClock(){const n=new Date(),p=v=>String(v).padStart(2,'0');document.getElementById('sr-time').textContent=p(n.getUTCHours())+':'+p(n.getUTCMinutes())+':'+p(n.getUTCSeconds())+' UTC';}
 setInterval(updateClock,1000);updateClock();
