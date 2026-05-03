@@ -4,15 +4,19 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Global Strategic Post</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;background:#040408;}
 #sr-root{background:#080808;color:#c8c8c8;font-family:'Share Tech Mono',monospace;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
-#sr-header{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-bottom:1px solid #1e1e1e;background:#0c0c0c;flex-shrink:0;z-index:30;}
+
+/* HEADER */
+#sr-header{display:flex;align-items:center;justify-content:space-between;padding:11px 22px;border-bottom:1px solid #1e1e1e;background:#0c0c0c;flex-shrink:0;z-index:30;}
 #sr-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:3px;color:#e8e8e8;}
 #sr-status{font-size:9px;color:#555;letter-spacing:1px;}
 #sr-time{font-size:10px;color:#777;letter-spacing:2px;min-width:120px;text-align:right;}
+
+/* BREAKING TICKER */
 #breaking-bar{background:#0e0e0e;border-bottom:1px solid #1e1e1e;display:flex;align-items:stretch;flex-shrink:0;height:27px;overflow:hidden;z-index:30;}
 #breaking-label{background:#cc2200;color:#fff;font-size:8px;letter-spacing:2px;padding:0 12px;display:flex;align-items:center;flex-shrink:0;font-weight:700;}
 #ticker-track{flex:1;overflow:hidden;}
@@ -21,16 +25,17 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 @keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-200%)}}
 .ticker-item{font-size:10px;color:#aaa;padding:0 28px;letter-spacing:.5px;}
 .ticker-sep{color:#333;font-size:12px;}
+
+/* TAB BAR */
 #tab-bar{display:flex;border-bottom:1px solid #1e1e1e;background:#0a0a0a;flex-shrink:0;z-index:30;}
-.tab-btn{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:8px 20px;cursor:pointer;background:none;border:none;color:#444;border-bottom:2px solid transparent;transition:all .15s;text-transform:uppercase;}
+.tab-btn{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:9px 20px;cursor:pointer;background:none;border:none;color:#444;border-bottom:2px solid transparent;transition:all .15s;text-transform:uppercase;white-space:nowrap;}
 .tab-btn:hover{color:#aaa;}
 .tab-btn.active{color:#e0e0e0;border-bottom:2px solid #e0e0e0;}
+
+/* MAP WRAPPER */
 #map-wrapper{flex:1;position:relative;overflow:hidden;min-height:0;}
 #tab-map{position:absolute;inset:0;overflow:hidden;background:#060c18;cursor:grab;}
 #tab-map:active{cursor:grabbing;}
-#tab-headlines{position:absolute;inset:0;overflow-y:auto;background:#080808;display:none;}
-#tab-headlines::-webkit-scrollbar{width:4px;}
-#tab-headlines::-webkit-scrollbar-thumb{background:#2a2a2a;}
 #map-svg{position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible;}
 .country{fill:#131820;stroke:#d8e8f0;stroke-width:0.45;cursor:pointer;transition:fill .2s;}
 .country:hover{fill:#1e2c3a;}
@@ -41,6 +46,8 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 .pin-group:hover .pin-dot{r:7;}
 .pin-ring{animation:pulse 2.2s infinite ease-out;fill:none;stroke-width:1;}
 @keyframes pulse{0%{r:7;opacity:.7}80%{r:18;opacity:0}100%{r:7;opacity:0}}
+
+/* MAP CONTROLS */
 #zoom-controls{position:absolute;top:14px;left:14px;display:flex;flex-direction:column;gap:2px;z-index:20;}
 .zoom-btn{background:rgba(6,12,24,0.92);border:1px solid #2a3040;color:#667788;font-family:'Share Tech Mono',monospace;font-size:15px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .zoom-btn:hover{color:#cce;border-color:#556688;}
@@ -50,12 +57,16 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 #legend{position:absolute;bottom:14px;left:14px;background:rgba(5,9,18,0.92);border:1px solid #182030;padding:8px 12px;z-index:10;font-size:9px;letter-spacing:1px;}
 .legend-row{display:flex;align-items:center;gap:7px;margin:3px 0;color:#55667788;}
 .legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-#tooltip{position:absolute;background:#060c18;border:1px solid #2a3a50;padding:11px 15px;max-width:230px;pointer-events:none;opacity:0;transition:opacity .12s;z-index:50;}
+
+/* TOOLTIP */
+#tooltip{position:absolute;background:#060c18;border:1px solid #2a3a50;padding:11px 15px;max-width:240px;pointer-events:none;opacity:0;transition:opacity .12s;z-index:50;}
 #tooltip.visible{opacity:1;}
-#tt-region{font-size:9px;color:#44607a;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
-#tt-cat{display:inline-block;font-size:8px;padding:2px 6px;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase;}
-#tt-headline{font-size:10px;color:#d0d8e0;line-height:1.5;margin-bottom:4px;}
+#tt-region{font-size:10px;color:#44607a;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+#tt-cat{display:inline-block;font-size:9px;padding:2px 7px;margin-bottom:7px;letter-spacing:1px;text-transform:uppercase;}
+#tt-headline{font-size:11px;color:#d0d8e0;line-height:1.55;margin-bottom:5px;}
 #tt-source{font-size:9px;color:#384858;}
+
+/* CATEGORY BADGES */
 .cat-conflict{background:#2e1010;color:#ff7070;border:1px solid #4e1a1a;}
 .cat-economy{background:#102010;color:#70ff70;border:1px solid #1a3a1a;}
 .cat-politics{background:#10102e;color:#7090ff;border:1px solid #1a1a4e;}
@@ -65,101 +76,184 @@ html,body{height:100%;overflow:hidden;background:#040408;}
 .ring-conflict{stroke:#ff7070;}.ring-economy{stroke:#70ff70;}.ring-politics{stroke:#7090ff;}.ring-climate{stroke:#70ffff;}.ring-crisis{stroke:#ffaa40;}
 
 /* SIDE PANEL */
-#side-panel{position:absolute;top:0;right:0;width:300px;height:100%;background:#080e18;border-left:1px solid #1e2e40;z-index:40;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
+#side-panel{position:absolute;top:0;right:0;width:320px;height:100%;background:#080e18;border-left:1px solid #1e2e40;z-index:40;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
 #side-panel.open{transform:translateX(0);}
-#sp-header{padding:14px 16px 10px;border-bottom:1px solid #1a2a38;flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+#sp-header{padding:16px 18px 12px;border-bottom:1px solid #1a2a38;flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
 #sp-close{font-size:11px;color:#3a5a6a;cursor:pointer;letter-spacing:1px;flex-shrink:0;}
 #sp-close:hover{color:#aaccdd;}
-#sp-region{font-size:9px;color:#3a5a7a;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
-#sp-headline{font-size:13px;color:#d8e8f0;line-height:1.6;}
-#sp-body{padding:14px 16px;overflow-y:auto;flex:1;}
+#sp-region{font-size:10px;color:#3a5a7a;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;}
+#sp-headline{font-size:14px;color:#d8e8f0;line-height:1.6;}
+#sp-body{padding:16px 18px;overflow-y:auto;flex:1;}
 #sp-body::-webkit-scrollbar{width:3px;}
 #sp-body::-webkit-scrollbar-thumb{background:#1e3040;}
-#sp-source-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-#sp-source{font-size:9px;color:#2e4858;letter-spacing:1px;}
-#sp-date{font-size:9px;color:#2a3a4a;letter-spacing:1px;margin-bottom:16px;}
-#sp-divider{border:none;border-top:1px solid #142030;margin:0 0 14px;}
-#sp-related-label{font-size:8px;color:#2a4a5a;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
-.sp-related-item{padding:10px 0;border-bottom:1px solid #0e1c28;cursor:pointer;}
-.sp-rel-meta{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
-.sp-rel-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.sp-rel-region{font-size:8px;color:#2a4a5a;letter-spacing:1.5px;text-transform:uppercase;}
-.sp-rel-headline{font-size:11px;color:#8aabb8;line-height:1.45;transition:color .12s;}
+#sp-source{font-size:10px;color:#2e4858;letter-spacing:1px;margin-bottom:5px;}
+#sp-date{font-size:10px;color:#2a3a4a;letter-spacing:1px;margin-bottom:18px;}
+#sp-divider{border:none;border-top:1px solid #142030;margin:0 0 16px;}
+#sp-related-label{font-size:9px;color:#2a4a5a;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.sp-related-item{padding:11px 0;border-bottom:1px solid #0e1c28;cursor:pointer;}
+.sp-rel-meta{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.sp-rel-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sp-rel-region{font-size:9px;color:#2a4a5a;letter-spacing:1.5px;text-transform:uppercase;}
+.sp-rel-headline{font-size:12px;color:#8aabb8;line-height:1.5;transition:color .12s;}
 .sp-related-item:hover .sp-rel-headline{color:#d8e8f0;}
-#sp-read-link{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:9px;color:#3a6a8a;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:1px solid #1e3a50;padding:7px 14px;transition:all .15s;text-decoration:none;}
+#sp-read-link{display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-size:10px;color:#3a6a8a;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:1px solid #1e3a50;padding:8px 16px;transition:all .15s;text-decoration:none;}
 #sp-read-link:hover{color:#80c0e0;border-color:#3a6a8a;background:rgba(15,40,60,0.5);}
 
 /* COUNTRY PANEL */
-#country-panel{position:absolute;top:0;left:0;width:260px;height:100%;background:#080e18;border-right:1px solid #1e2e40;z-index:40;transform:translateX(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
+#country-panel{position:absolute;top:0;left:0;width:270px;height:100%;background:#080e18;border-right:1px solid #1e2e40;z-index:40;transform:translateX(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
 #country-panel.open{transform:translateX(0);}
-#cp-header{padding:14px 16px 10px;border-bottom:1px solid #1a2a38;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:8px;}
-#cp-flag{font-size:20px;flex-shrink:0;}
-#cp-name{font-size:11px;color:#c8d8e8;letter-spacing:2px;text-transform:uppercase;flex:1;}
+#cp-header{padding:16px 18px 12px;border-bottom:1px solid #1a2a38;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+#cp-flag{font-size:22px;flex-shrink:0;}
+#cp-name{font-size:12px;color:#c8d8e8;letter-spacing:2px;text-transform:uppercase;flex:1;line-height:1.3;}
 #cp-close{font-size:11px;color:#3a5a6a;cursor:pointer;letter-spacing:1px;flex-shrink:0;}
 #cp-close:hover{color:#aaccdd;}
-#cp-body{padding:12px 16px;overflow-y:auto;flex:1;}
+#cp-body{padding:14px 18px;overflow-y:auto;flex:1;}
 #cp-body::-webkit-scrollbar{width:3px;}
 #cp-body::-webkit-scrollbar-thumb{background:#1e3040;}
-#cp-no-news{font-size:10px;color:#2a3a4a;letter-spacing:1px;padding:10px 0;}
-.cp-item{padding:10px 0;border-bottom:1px solid #0e1c28;cursor:pointer;}
+#cp-no-news{font-size:11px;color:#2a3a4a;letter-spacing:1px;padding:12px 0;}
+.cp-item{padding:12px 0;border-bottom:1px solid #0e1c28;cursor:pointer;}
 .cp-item:hover .cp-item-headline{color:#d8e8f0;}
-.cp-item-meta{display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap;}
-.cp-item-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.cp-item-cat{font-size:7px;padding:1px 5px;letter-spacing:1px;text-transform:uppercase;}
-.cp-item-headline{font-size:11px;color:#8aabb8;line-height:1.45;transition:color .12s;}
-.cp-item-source{font-size:8px;color:#2a3a4a;margin-top:3px;}
+.cp-item-meta{display:flex;align-items:center;gap:7px;margin-bottom:5px;flex-wrap:wrap;}
+.cp-item-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.cp-item-cat{font-size:8px;padding:1px 6px;letter-spacing:1px;text-transform:uppercase;}
+.cp-item-headline{font-size:12px;color:#8aabb8;line-height:1.5;transition:color .12s;}
+.cp-item-source{font-size:9px;color:#2a3a4a;margin-top:4px;}
+#admin-key-hint{position:absolute;bottom:14px;right:14px;font-size:8px;color:#1a2a38;letter-spacing:1px;z-index:10;}
+
+/* ── SCROLLABLE CONTENT TABS ── */
+.content-tab{position:absolute;inset:0;overflow-y:auto;display:none;background:#080808;}
+.content-tab::-webkit-scrollbar{width:5px;}
+.content-tab::-webkit-scrollbar-thumb{background:#1e2a38;}
 
 /* HEADLINES TAB */
-#hl-toolbar{display:flex;align-items:center;gap:8px;padding:12px 20px;border-bottom:1px solid #141e28;flex-shrink:0;flex-wrap:wrap;}
-.hl-filter{background:none;border:1px solid #1e2a38;color:#445566;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1.5px;padding:4px 10px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
+#tab-headlines{}
+#hl-toolbar{display:flex;align-items:center;gap:8px;padding:14px 22px;border-bottom:1px solid #141e28;flex-shrink:0;flex-wrap:wrap;position:sticky;top:0;background:#080808;z-index:5;}
+.hl-filter{background:none;border:1px solid #1e2a38;color:#445566;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1.5px;padding:5px 11px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
 .hl-filter:hover,.hl-filter.active{color:#ddeeff;border-color:#5577aa;}
-#hl-count{font-size:9px;color:#2a3a4a;margin-left:auto;letter-spacing:1px;}
-.hl-item{display:flex;align-items:flex-start;gap:14px;padding:13px 20px;border-bottom:1px solid #0c1620;cursor:pointer;transition:background .12s;}
+#hl-count{font-size:10px;color:#2a3a4a;margin-left:auto;letter-spacing:1px;}
+.hl-item{display:flex;align-items:flex-start;gap:16px;padding:16px 22px;border-bottom:1px solid #0c1620;cursor:pointer;transition:background .12s;}
 .hl-item:hover{background:#0a1520;}
-.hl-item.breaking{border-left:2px solid #cc2200;}
-.hl-left{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding-top:2px;}
-.hl-num{font-size:8px;color:#253545;width:22px;text-align:center;}
-.hl-dot{width:8px;height:8px;border-radius:50%;}
-.hl-break-badge{font-size:7px;color:#cc2200;letter-spacing:1px;}
+.hl-item.breaking{border-left:3px solid #cc2200;}
+.hl-left{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:3px;}
+.hl-num{font-size:9px;color:#253545;width:24px;text-align:center;}
+.hl-dot{width:9px;height:9px;border-radius:50%;}
+.hl-break-badge{font-size:8px;color:#cc2200;letter-spacing:1px;}
 .hl-body{flex:1;min-width:0;}
-.hl-meta{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap;}
-.hl-region{font-size:8px;color:#3a5268;letter-spacing:1.5px;text-transform:uppercase;}
-.hl-cat-badge{font-size:7px;padding:1px 5px;letter-spacing:1px;text-transform:uppercase;}
-.hl-headline{font-size:12px;color:#c8d0d8;line-height:1.55;margin-bottom:3px;}
-.hl-source{font-size:9px;color:#2a3e50;display:flex;align-items:center;gap:8px;}
-.hl-read-link{font-size:8px;color:#3a5a7a;letter-spacing:1px;text-decoration:none;border:1px solid #1a3040;padding:1px 6px;transition:all .12s;margin-left:auto;}
+.hl-meta{display:flex;align-items:center;gap:9px;margin-bottom:6px;flex-wrap:wrap;}
+.hl-region{font-size:9px;color:#3a5268;letter-spacing:1.5px;text-transform:uppercase;}
+.hl-cat-badge{font-size:8px;padding:2px 7px;letter-spacing:1px;text-transform:uppercase;}
+.hl-date{font-size:9px;color:#2a3a4a;margin-left:auto;}
+.hl-headline{font-size:14px;color:#c8d0d8;line-height:1.6;margin-bottom:5px;}
+.hl-source-row{display:flex;align-items:center;gap:10px;}
+.hl-source{font-size:10px;color:#2a3e50;}
+.hl-read-link{font-size:9px;color:#3a5a7a;letter-spacing:1px;text-decoration:none;border:1px solid #1a3040;padding:2px 8px;transition:all .12s;margin-left:auto;white-space:nowrap;}
 .hl-read-link:hover{color:#7ab0d0;border-color:#3a6080;}
 
-/* ADMIN PANEL */
-#admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:none;align-items:center;justify-content:center;}
+/* OUR ARTICLES TAB */
+#tab-articles{}
+#art-toolbar{display:flex;align-items:center;gap:8px;padding:14px 22px;border-bottom:1px solid #141e28;flex-wrap:wrap;position:sticky;top:0;background:#080808;z-index:5;}
+#art-toolbar-title{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;color:#8aabb8;}
+#art-count{font-size:10px;color:#2a3a4a;margin-left:auto;letter-spacing:1px;}
+#art-list{padding:0;}
+.art-card{padding:22px 22px 20px;border-bottom:1px solid #0c1620;cursor:pointer;transition:background .12s;}
+.art-card:hover{background:#0a1520;}
+.art-card-meta{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.art-card-cat{font-size:8px;padding:2px 7px;letter-spacing:1px;text-transform:uppercase;}
+.art-card-date{font-size:9px;color:#2a3a4a;letter-spacing:1px;}
+.art-card-author{font-size:9px;color:#3a5268;letter-spacing:1px;}
+.art-card-title{font-family:'EB Garamond',serif;font-size:20px;color:#d8e8f0;line-height:1.4;margin-bottom:8px;}
+.art-card-summary{font-size:12px;color:#6a8098;line-height:1.65;margin-bottom:10px;}
+.art-card-footer{display:flex;align-items:center;gap:10px;}
+.art-read-more{font-size:9px;color:#3a6a8a;letter-spacing:1.5px;text-transform:uppercase;border:1px solid #1e3a50;padding:4px 10px;}
+.art-tag{font-size:8px;color:#2a3a4a;letter-spacing:1px;border:1px solid #182030;padding:2px 7px;}
+#art-empty{padding:30px 22px;font-size:12px;color:#2a3a4a;letter-spacing:1px;line-height:1.8;}
+
+/* ARTICLE READER (full article view) */
+#art-reader{position:absolute;inset:0;background:#080808;z-index:60;display:none;flex-direction:column;overflow:hidden;}
+#art-reader.open{display:flex;}
+#art-reader-bar{padding:12px 22px;border-bottom:1px solid #141e28;display:flex;align-items:center;gap:14px;flex-shrink:0;background:#0c0c0c;}
+#art-reader-back{font-size:10px;color:#3a5a6a;cursor:pointer;letter-spacing:1px;}
+#art-reader-back:hover{color:#aaccdd;}
+#art-reader-label{font-size:9px;color:#2a3a4a;letter-spacing:2px;text-transform:uppercase;}
+#art-reader-body{flex:1;overflow-y:auto;padding:40px 60px;max-width:780px;margin:0 auto;width:100%;}
+#art-reader-body::-webkit-scrollbar{width:4px;}
+#art-reader-body::-webkit-scrollbar-thumb{background:#1e2a38;}
+#ar-cat{display:inline-block;font-size:9px;padding:3px 8px;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;}
+#ar-title{font-family:'EB Garamond',serif;font-size:32px;color:#e0eaf4;line-height:1.3;margin-bottom:14px;}
+#ar-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid #142030;}
+#ar-author{font-size:11px;color:#4a6a8a;letter-spacing:1px;}
+#ar-date{font-size:11px;color:#2a3a4a;letter-spacing:1px;}
+#ar-body{font-family:'EB Garamond',serif;font-size:18px;color:#b0c8d8;line-height:1.85;}
+#ar-body p{margin-bottom:1.4em;}
+#ar-body h2{font-size:22px;color:#d8e8f0;margin:2em 0 0.8em;font-weight:600;}
+#ar-body h3{font-size:18px;color:#c0d8e8;margin:1.6em 0 0.6em;font-weight:600;}
+#ar-body blockquote{border-left:2px solid #2a4a6a;padding-left:20px;color:#7a9ab0;font-style:italic;margin:1.5em 0;}
+
+/* ABOUT TAB */
+#tab-about{background:#080808;}
+#about-body{padding:50px 60px;max-width:780px;margin:0 auto;width:100%;}
+#about-masthead{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:4px;color:#3a6a8a;text-transform:uppercase;margin-bottom:18px;}
+#about-title{font-family:'EB Garamond',serif;font-size:36px;color:#d8e8f0;line-height:1.3;margin-bottom:24px;}
+#about-divider{border:none;border-top:1px solid #1a2a38;margin:0 0 28px;}
+#about-text{font-family:'EB Garamond',serif;font-size:18px;color:#8aabb8;line-height:1.9;}
+#about-text p{margin-bottom:1.5em;}
+#about-text h2{font-size:22px;color:#c8d8e8;margin:2em 0 0.8em;font-weight:600;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;}
+#about-text strong{color:#c0d8e8;}
+#about-meta{margin-top:40px;padding-top:22px;border-top:1px solid #142030;font-size:10px;color:#2a3a4a;letter-spacing:1px;line-height:1.8;}
+
+/* ADMIN OVERLAY */
+#admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;display:none;align-items:center;justify-content:center;}
 #admin-overlay.open{display:flex;}
-#admin-box{background:#080e18;border:1px solid #2a3a50;width:560px;max-width:95vw;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
-#admin-header{padding:14px 18px;border-bottom:1px solid #1a2a38;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+#admin-box{background:#080e18;border:1px solid #2a3a50;width:580px;max-width:95vw;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+#admin-header{padding:14px 18px;border-bottom:1px solid #1a2a38;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:16px;}
 #admin-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:#a0c8e0;}
-#admin-close-btn{font-size:10px;color:#3a5a6a;cursor:pointer;letter-spacing:1px;}
+#admin-tabs{display:flex;gap:0;border:1px solid #1a2a38;}
+.admin-tab{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1.5px;padding:5px 12px;cursor:pointer;color:#446677;background:none;border:none;text-transform:uppercase;transition:all .15s;}
+.admin-tab.active{color:#a0d0f0;background:#0c1828;}
+#admin-close-btn{font-size:10px;color:#3a5a6a;cursor:pointer;letter-spacing:1px;flex-shrink:0;}
 #admin-close-btn:hover{color:#aaccdd;}
 #admin-body{padding:18px;overflow-y:auto;flex:1;}
 #admin-body::-webkit-scrollbar{width:3px;}
 #admin-body::-webkit-scrollbar-thumb{background:#1e3040;}
+.admin-pane{display:none;}
+.admin-pane.active{display:block;}
 .admin-row{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start;}
 .admin-field{display:flex;flex-direction:column;gap:5px;flex:1;}
 .admin-label{font-size:8px;color:#3a5a7a;letter-spacing:2px;text-transform:uppercase;}
 .admin-input,.admin-select,.admin-textarea{background:#0c1828;border:1px solid #1e3040;color:#c8d8e8;font-family:'Share Tech Mono',monospace;font-size:11px;padding:7px 10px;outline:none;transition:border .15s;width:100%;}
 .admin-input:focus,.admin-select:focus,.admin-textarea:focus{border-color:#3a6a8a;}
 .admin-select option{background:#0c1828;}
-.admin-textarea{resize:vertical;min-height:60px;line-height:1.5;}
+.admin-textarea{resize:vertical;min-height:80px;line-height:1.6;}
 .admin-checkbox-row{display:flex;align-items:center;gap:8px;}
 .admin-checkbox-row input{width:14px;height:14px;accent-color:#cc2200;}
 .admin-checkbox-row label{font-size:10px;color:#8aabb8;}
-#admin-generate-btn{background:#0c2030;border:1px solid #2a5a7a;color:#70b0d0;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:9px 18px;cursor:pointer;text-transform:uppercase;transition:all .15s;width:100%;margin-top:6px;}
-#admin-generate-btn:hover{background:#0e2a3a;border-color:#4a8aaa;color:#a0d0f0;}
-#admin-output{margin-top:14px;display:none;}
-#admin-output-label{font-size:8px;color:#3a5a7a;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
-#admin-code{background:#040c14;border:1px solid #1a2a38;color:#70c0a0;font-family:'Share Tech Mono',monospace;font-size:10px;padding:12px;line-height:1.7;white-space:pre;overflow-x:auto;}
-#admin-copy-btn{background:#0c2030;border:1px solid #1a4030;color:#50a080;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:7px 14px;cursor:pointer;text-transform:uppercase;transition:all .15s;margin-top:8px;}
-#admin-copy-btn:hover{background:#0e2a20;color:#80d0b0;}
-#admin-hint{font-size:9px;color:#2a4a5a;margin-top:10px;line-height:1.6;}
-#admin-key-hint{position:absolute;bottom:14px;right:14px;font-size:8px;color:#1e2e3a;letter-spacing:1px;z-index:10;}
+.admin-btn{background:#0c2030;border:1px solid #2a5a7a;color:#70b0d0;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:9px 18px;cursor:pointer;text-transform:uppercase;transition:all .15s;width:100%;margin-top:6px;}
+.admin-btn:hover{background:#0e2a3a;border-color:#4a8aaa;color:#a0d0f0;}
+.admin-output{margin-top:14px;display:none;}
+.admin-output-label{font-size:8px;color:#3a5a7a;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.admin-code{background:#040c14;border:1px solid #1a2a38;color:#70c0a0;font-family:'Share Tech Mono',monospace;font-size:10px;padding:12px;line-height:1.7;white-space:pre-wrap;overflow-x:auto;max-height:180px;overflow-y:auto;}
+.admin-copy-btn{background:#0c2030;border:1px solid #1a4030;color:#50a080;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:7px 14px;cursor:pointer;text-transform:uppercase;transition:all .15s;margin-top:8px;}
+.admin-copy-btn:hover{background:#0e2a20;color:#80d0b0;}
+.admin-hint{font-size:9px;color:#2a4a5a;margin-top:10px;line-height:1.7;}
+/* Article writer */
+#aw-body-area{font-family:'EB Garamond',serif;font-size:14px;min-height:200px;}
+.admin-article-preview{background:#040c14;border:1px solid #1a2a38;padding:16px;margin-top:14px;display:none;}
+.ap-title{font-family:'EB Garamond',serif;font-size:20px;color:#d8e8f0;margin-bottom:8px;}
+.ap-meta{font-size:9px;color:#2a4a5a;margin-bottom:12px;letter-spacing:1px;}
+.ap-body{font-family:'EB Garamond',serif;font-size:14px;color:#8aabb8;line-height:1.7;}
+
+/* LOGIN */
+#login-overlay{position:fixed;inset:0;background:rgba(4,4,8,0.97);z-index:300;display:flex;align-items:center;justify-content:center;}
+#login-box{background:#080e18;border:1px solid #2a3a50;width:320px;padding:28px;}
+#login-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:#a0c8e0;margin-bottom:6px;}
+#login-sub{font-size:9px;color:#2a4a5a;letter-spacing:1px;margin-bottom:20px;}
+#login-pw{background:#0c1828;border:1px solid #1e3040;color:#c8d8e8;font-family:'Share Tech Mono',monospace;font-size:13px;padding:9px 12px;outline:none;width:100%;margin-bottom:10px;transition:border .15s;}
+#login-pw:focus{border-color:#3a6a8a;}
+#login-btn{background:#0c2030;border:1px solid #2a5a7a;color:#70b0d0;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:9px;cursor:pointer;text-transform:uppercase;transition:all .15s;width:100%;}
+#login-btn:hover{background:#0e2a3a;color:#a0d0f0;}
+#login-err{font-size:9px;color:#cc4444;letter-spacing:1px;margin-top:8px;display:none;}
+#login-cancel{font-size:9px;color:#2a4a5a;cursor:pointer;margin-top:12px;display:block;text-align:center;letter-spacing:1px;}
+#login-cancel:hover{color:#6a8aaa;}
 </style>
 </head>
 <body>
@@ -176,8 +270,13 @@ html,body{height:100%;overflow:hidden;background:#040408;}
   <div id="tab-bar">
     <button class="tab-btn active" data-tab="map">MAP VIEW</button>
     <button class="tab-btn" data-tab="headlines">HEADLINES</button>
+    <button class="tab-btn" data-tab="articles">OUR ANALYSIS</button>
+    <button class="tab-btn" data-tab="about">ABOUT</button>
   </div>
+
   <div id="map-wrapper">
+
+    <!-- MAP -->
     <div id="tab-map">
       <svg id="map-svg" xmlns="http://www.w3.org/2000/svg"></svg>
       <div id="tooltip"><div id="tt-region"></div><div id="tt-cat"></div><div id="tt-headline"></div><div id="tt-source"></div></div>
@@ -201,8 +300,7 @@ html,body{height:100%;overflow:hidden;background:#040408;}
         <div class="legend-row"><div class="legend-dot" style="background:#70ffff"></div>CLIMATE</div>
         <div class="legend-row"><div class="legend-dot" style="background:#ffaa40"></div>CRISIS</div>
       </div>
-      <div id="admin-key-hint">PRESS [ A ] TO ADD NEWS</div>
-      <!-- SIDE PANEL -->
+      <div id="admin-key-hint">PRESS [ A ] TO MANAGE CONTENT</div>
       <div id="side-panel">
         <div id="sp-header">
           <div style="flex:1;min-width:0;"><div id="sp-region"></div><div id="sp-headline"></div></div>
@@ -211,15 +309,13 @@ html,body{height:100%;overflow:hidden;background:#040408;}
           </div>
         </div>
         <div id="sp-body">
-          <div id="sp-source-row"><div id="sp-source"></div></div>
-          <div id="sp-date"></div>
+          <div id="sp-source"></div><div id="sp-date"></div>
           <hr id="sp-divider"/>
           <div id="sp-related-label">RELATED EVENTS</div>
           <div id="sp-related-list"></div>
           <a id="sp-read-link" target="_blank" rel="noopener">READ FULL STORY →</a>
         </div>
       </div>
-      <!-- COUNTRY PANEL -->
       <div id="country-panel">
         <div id="cp-header">
           <div id="cp-flag"></div><div id="cp-name"></div><div id="cp-close">[ CLOSE ]</div>
@@ -227,8 +323,9 @@ html,body{height:100%;overflow:hidden;background:#040408;}
         <div id="cp-body"><div id="cp-no-news"></div><div id="cp-list"></div></div>
       </div>
     </div>
-    <!-- HEADLINES TAB -->
-    <div id="tab-headlines">
+
+    <!-- HEADLINES -->
+    <div id="tab-headlines" class="content-tab">
       <div id="hl-toolbar">
         <button class="hl-filter active" data-hcat="all">ALL</button>
         <button class="hl-filter" data-hcat="conflict">CONFLICT</button>
@@ -241,87 +338,237 @@ html,body{height:100%;overflow:hidden;background:#040408;}
       </div>
       <div id="hl-list"></div>
     </div>
-  </div>
-</div>
 
-<!-- ADMIN OVERLAY -->
+    <!-- OUR ARTICLES -->
+    <div id="tab-articles" class="content-tab">
+      <div id="art-toolbar">
+        <div id="art-toolbar-title">OUR ANALYSIS</div>
+        <span id="art-count"></span>
+      </div>
+      <div id="art-list">
+        <div id="art-empty">No articles published yet. Use the admin panel to write and publish your first piece.</div>
+      </div>
+      <!-- Full article reader -->
+      <div id="art-reader">
+        <div id="art-reader-bar">
+          <div id="art-reader-back">← BACK TO ANALYSIS</div>
+          <div id="art-reader-label">GLOBAL STRATEGIC POST</div>
+        </div>
+        <div id="art-reader-body">
+          <div id="ar-cat"></div>
+          <div id="ar-title"></div>
+          <div id="ar-meta">
+            <span id="ar-author"></span>
+            <span id="ar-date"></span>
+          </div>
+          <div id="ar-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div id="tab-about" class="content-tab">
+      <div id="about-body">
+        <div id="about-masthead">Global Strategic Post</div>
+        <div id="about-title">Understanding the World,<br>Geographically.</div>
+        <hr id="about-divider"/>
+        <div id="about-text">
+
+          <!-- ============================================================
+               EDIT YOUR ABOUT PAGE TEXT BELOW
+               Use <p> for paragraphs, <h2> for section headings,
+               <strong> for bold text, <em> for italic text.
+               ============================================================ -->
+
+          <p>Welcome to the <strong>Global Strategic Post</strong> — an interactive intelligence platform designed to make global geopolitics legible at a glance.</p>
+
+          <h2>What We Do</h2>
+          <p>We monitor news from credible local and international outlets across every region of the world and place each story geographically on a live map. Our goal is simple: to give you a clear, uncluttered picture of where events are happening and how they connect.</p>
+
+          <h2>How It Works</h2>
+          <p>Every pin on the map represents a monitored event — conflict, economic development, political shift, climate crisis, or humanitarian emergency. Pins are color-coded by category and updated regularly by our editorial team. Click any pin to read the headline, or click a country to see all monitored events within its borders.</p>
+
+          <h2>Our Analysis</h2>
+          <p>In addition to curated headlines from third-party outlets, our team publishes original analysis under the <strong>Our Analysis</strong> tab. These pieces are written by our editorial staff and represent our independent assessment of global events.</p>
+
+          <h2>Editorial Standards</h2>
+          <p>We source only from credible, established news organizations. We do not amplify misinformation or unverified claims. Our editorial team reviews every entry before it is published on the map.</p>
+
+          <!-- ============================================================
+               END OF ABOUT TEXT
+               ============================================================ -->
+
+        </div>
+        <div id="about-meta">
+          Global Strategic Post &nbsp;·&nbsp; Est. 2026 &nbsp;·&nbsp; All rights reserved
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end map-wrapper -->
+</div><!-- end sr-root -->
+
+<!-- ADMIN PANEL -->
 <div id="admin-overlay">
   <div id="admin-box">
     <div id="admin-header">
-      <div id="admin-title">ADD NEWS EVENT</div>
+      <div id="admin-title">ADMIN PANEL</div>
+      <div id="admin-tabs">
+        <button class="admin-tab active" data-pane="news">ADD NEWS</button>
+        <button class="admin-tab" data-pane="article">WRITE ARTICLE</button>
+      </div>
       <div id="admin-close-btn">[ ESC ]</div>
     </div>
     <div id="admin-body">
-      <div class="admin-row">
-        <div class="admin-field">
-          <div class="admin-label">Country *</div>
-          <input class="admin-input" id="af-country" placeholder="e.g. France" list="country-list"/>
-          <datalist id="country-list"></datalist>
+
+      <!-- NEWS PANE -->
+      <div class="admin-pane active" id="pane-news">
+        <div class="admin-row">
+          <div class="admin-field">
+            <div class="admin-label">Country *</div>
+            <input class="admin-input" id="af-country" placeholder="e.g. France" list="country-list"/>
+            <datalist id="country-list"></datalist>
+          </div>
+          <div class="admin-field">
+            <div class="admin-label">Region Label *</div>
+            <input class="admin-input" id="af-region" placeholder="e.g. WESTERN EUROPE"/>
+          </div>
         </div>
-        <div class="admin-field">
-          <div class="admin-label">Region Label *</div>
-          <input class="admin-input" id="af-region" placeholder="e.g. WESTERN EUROPE"/>
+        <div class="admin-row">
+          <div class="admin-field">
+            <div class="admin-label">Headline *</div>
+            <textarea class="admin-textarea" id="af-headline" placeholder="Full news headline..."></textarea>
+          </div>
         </div>
-      </div>
-      <div class="admin-row">
-        <div class="admin-field" style="flex:2;">
-          <div class="admin-label">Headline *</div>
-          <textarea class="admin-textarea" id="af-headline" placeholder="Full news headline here..."></textarea>
+        <div class="admin-row">
+          <div class="admin-field">
+            <div class="admin-label">Source *</div>
+            <input class="admin-input" id="af-source" placeholder="e.g. Le Monde"/>
+          </div>
+          <div class="admin-field">
+            <div class="admin-label">Article URL</div>
+            <input class="admin-input" id="af-url" placeholder="https://..."/>
+          </div>
         </div>
-      </div>
-      <div class="admin-row">
-        <div class="admin-field">
-          <div class="admin-label">Source *</div>
-          <input class="admin-input" id="af-source" placeholder="e.g. Le Monde"/>
+        <div class="admin-row">
+          <div class="admin-field">
+            <div class="admin-label">Category *</div>
+            <select class="admin-select" id="af-cat">
+              <option value="conflict">Conflict</option>
+              <option value="economy">Economy</option>
+              <option value="politics" selected>Politics</option>
+              <option value="climate">Climate</option>
+              <option value="crisis">Crisis</option>
+            </select>
+          </div>
+          <div class="admin-field">
+            <div class="admin-label">Date *</div>
+            <input class="admin-input" id="af-date" placeholder="e.g. May 2, 2026"/>
+          </div>
+          <div class="admin-field" style="justify-content:flex-end;">
+            <div class="admin-label">Breaking</div>
+            <div class="admin-checkbox-row"><input type="checkbox" id="af-breaking"/><label for="af-breaking">Mark as BREAKING</label></div>
+          </div>
         </div>
-        <div class="admin-field">
-          <div class="admin-label">Article URL</div>
-          <input class="admin-input" id="af-url" placeholder="https://..."/>
-        </div>
-      </div>
-      <div class="admin-row">
-        <div class="admin-field">
-          <div class="admin-label">Category *</div>
-          <select class="admin-select" id="af-cat">
-            <option value="conflict">Conflict</option>
-            <option value="economy">Economy</option>
-            <option value="politics">Politics</option>
-            <option value="climate">Climate</option>
-            <option value="crisis">Crisis</option>
-          </select>
-        </div>
-        <div class="admin-field">
-          <div class="admin-label">Date *</div>
-          <input class="admin-input" id="af-date" placeholder="e.g. May 2, 2026"/>
-        </div>
-        <div class="admin-field" style="justify-content:flex-end;padding-bottom:2px;">
-          <div class="admin-label">Breaking News</div>
-          <div class="admin-checkbox-row">
-            <input type="checkbox" id="af-breaking"/>
-            <label for="af-breaking">Mark as BREAKING</label>
+        <button class="admin-btn" id="admin-generate-btn">GENERATE CODE BLOCK →</button>
+        <div class="admin-output" id="news-output">
+          <div class="admin-output-label">PASTE THIS INTO index.html — AFTER THE LAST EVENT:</div>
+          <div class="admin-code" id="admin-code"></div>
+          <button class="admin-copy-btn" id="admin-copy-btn">COPY TO CLIPBOARD</button>
+          <div class="admin-hint">
+            On GitHub: open index.html → pencil ✏️ → find <span style="color:#70c0a0;">/* ---- ADD NEW STORIES BELOW THIS LINE ---- */</span> → paste above that line → Commit Changes.
           </div>
         </div>
       </div>
-      <button class="admin-generate-btn" id="admin-generate-btn">GENERATE CODE BLOCK →</button>
-      <div id="admin-output">
-        <div id="admin-output-label">PASTE THIS INTO index.html AFTER THE LAST EVENT:</div>
-        <div id="admin-code"></div>
-        <button id="admin-copy-btn">COPY TO CLIPBOARD</button>
-        <div id="admin-hint">
-          Open your index.html on GitHub → click the pencil ✏️ icon → find the line that says<br>
-          <span style="color:#70c0a0;">/* ---- ADD NEW STORIES BELOW ---- */</span><br>
-          and paste the block above it. Then click Commit Changes.
+
+      <!-- ARTICLE WRITER PANE -->
+      <div class="admin-pane" id="pane-article">
+        <div class="admin-row">
+          <div class="admin-field" style="flex:2;">
+            <div class="admin-label">Article Title *</div>
+            <input class="admin-input" id="aw-title" placeholder="Your article title..."/>
+          </div>
+          <div class="admin-field">
+            <div class="admin-label">Category *</div>
+            <select class="admin-select" id="aw-cat">
+              <option value="conflict">Conflict</option>
+              <option value="economy">Economy</option>
+              <option value="politics" selected>Politics</option>
+              <option value="climate">Climate</option>
+              <option value="crisis">Crisis</option>
+            </select>
+          </div>
+        </div>
+        <div class="admin-row">
+          <div class="admin-field">
+            <div class="admin-label">Author *</div>
+            <input class="admin-input" id="aw-author" placeholder="e.g. GSP Editorial Team"/>
+          </div>
+          <div class="admin-field">
+            <div class="admin-label">Date *</div>
+            <input class="admin-input" id="aw-date" placeholder="e.g. May 2, 2026"/>
+          </div>
+        </div>
+        <div class="admin-row">
+          <div class="admin-field">
+            <div class="admin-label">Summary (shown on card) *</div>
+            <textarea class="admin-textarea" id="aw-summary" placeholder="One or two sentence summary of the article..."></textarea>
+          </div>
+        </div>
+        <div class="admin-row">
+          <div class="admin-field">
+            <div class="admin-label">Article Body * — use blank lines between paragraphs, ## for headings</div>
+            <textarea class="admin-textarea admin-textarea" id="aw-body" style="min-height:160px;" placeholder="Write your full article here...&#10;&#10;Use blank lines between paragraphs.&#10;Start a line with ## for a heading.&#10;Start a line with > for a blockquote."></textarea>
+          </div>
+        </div>
+        <div class="admin-row">
+          <div class="admin-field">
+            <div class="admin-label">Tags (comma separated)</div>
+            <input class="admin-input" id="aw-tags" placeholder="e.g. NATO, Europe, Security"/>
+          </div>
+        </div>
+        <button class="admin-btn" id="article-generate-btn">GENERATE ARTICLE CODE →</button>
+        <div class="admin-output" id="article-output">
+          <div class="admin-output-label">PASTE THIS INTO index.html — INSIDE THE articles ARRAY:</div>
+          <div class="admin-code" id="article-code"></div>
+          <button class="admin-copy-btn" id="article-copy-btn">COPY TO CLIPBOARD</button>
+          <div class="admin-hint">
+            On GitHub: open index.html → pencil ✏️ → find <span style="color:#70c0a0;">/* ---- ADD ARTICLES BELOW ---- */</span> → paste above that line → Commit Changes.
+          </div>
         </div>
       </div>
+
     </div>
+  </div>
+</div>
+
+<!-- LOGIN OVERLAY -->
+<div id="login-overlay" style="display:none;">
+  <div id="login-box">
+    <div id="login-title">ADMIN ACCESS</div>
+    <div id="login-sub">GLOBAL STRATEGIC POST — SECURE PANEL</div>
+    <input type="password" id="login-pw" placeholder="Enter admin password" autocomplete="off"/>
+    <button id="login-btn">AUTHENTICATE →</button>
+    <div id="login-err">Incorrect password. Access denied.</div>
+    <span id="login-cancel">CANCEL</span>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 <script>
+
 /* ============================================================
-   COUNTRY DATABASE  —  name, flag, highlight color, center coords
+   ADMIN PASSWORD
+   Change 'gsp-admin-2026' to whatever you want.
+   This is stored in the page source, so treat it as a
+   light deterrent — not bank-level security. For stronger
+   protection, move to a server-side login later.
+   ============================================================ */
+const ADMIN_PASSWORD = 'gsp-admin-2026';
+
+/* ============================================================
+   COUNTRY DATABASE
    ============================================================ */
 const COUNTRIES = {
   4:  {name:'Afghanistan',          flag:'🇦🇫',color:'#3a2a1a',lat:33.93, lng:67.71},
@@ -423,83 +670,54 @@ const COUNTRIES = {
   646:{name:'Rwanda',               flag:'🇷🇼',color:'#1a2a1a',lat:-1.94, lng:29.87},
 };
 
-// Name→ID lookup
-const NAME_TO_ID = {};
-Object.entries(COUNTRIES).forEach(([id,c])=>{ NAME_TO_ID[c.name.toLowerCase()]=parseInt(id); });
-function coordsForCountry(name){
-  const id=NAME_TO_ID[(name||'').toLowerCase()];
-  if(!id) return null;
-  const c=COUNTRIES[id];
-  return c?{lat:c.lat,lng:c.lng,id}:null;
-}
-
+const NAME_TO_ID={};
+Object.entries(COUNTRIES).forEach(([id,c])=>{NAME_TO_ID[c.name.toLowerCase()]=parseInt(id);});
+function coordsForCountry(n){const id=NAME_TO_ID[(n||'').toLowerCase()];if(!id)return null;const c=COUNTRIES[id];return c?{lat:c.lat,lng:c.lng,id}:null;}
 const dotColors={conflict:'#ff7070',economy:'#70ff70',politics:'#7090ff',climate:'#70ffff',crisis:'#ffaa40'};
 
 /* ============================================================
-   NEWS DATA — EDIT THIS SECTION TO UPDATE YOUR HEADLINES
-   Use  country: 'Country Name'  — coordinates are auto-set.
+   NEWS EVENTS — country: 'Name' auto-sets coordinates
    ============================================================ */
 const rawEvents = [
-  {id:1,  country:'Ukraine',      cat:'conflict', region:'EASTERN EUROPE',    headline:'Ceasefire negotiations stall as shelling reported near disputed border region',    source:'Reuters / Kyiv Independent', url:'https://kyivindependent.com',   breaking:true,  date:'May 2, 2026'},
-  {id:2,  country:'Israel',       cat:'conflict', region:'MIDDLE EAST',       headline:'Humanitarian corridor agreement reached after weeks of diplomatic pressure',       source:'Al Jazeera / Haaretz',       url:'https://aljazeera.com',          breaking:false, date:'May 2, 2026'},
-  {id:3,  country:'Kazakhstan',   cat:'politics', region:'CENTRAL ASIA',      headline:'Presidential election results disputed by opposition coalition',                    source:'RFE/RL',                     url:'https://rferl.org',              breaking:false, date:'May 1, 2026'},
-  {id:4,  country:'India',        cat:'economy',  region:'SOUTH ASIA',        headline:'Central bank raises rates amid record inflation surge',                            source:'The Hindu',                  url:'https://thehindu.com',           breaking:false, date:'May 1, 2026'},
-  {id:5,  country:'China',        cat:'politics', region:'EAST ASIA',         headline:'Trade delegation talks resume following six-month diplomatic freeze',               source:'South China Morning Post',   url:'https://scmp.com',               breaking:false, date:'May 2, 2026'},
-  {id:6,  country:'South Korea',  cat:'economy',  region:'NORTHEAST ASIA',    headline:'Chipmaker announces $40B expansion amid global semiconductor race',                source:'Nikkei Asia',                url:'https://asia.nikkei.com',        breaking:false, date:'Apr 30, 2026'},
-  {id:7,  country:'Germany',      cat:'politics', region:'WESTERN EUROPE',    headline:'Coalition government collapses ahead of snap election announcement',               source:'Le Monde / Der Spiegel',     url:'https://lemonde.fr',             breaking:true,  date:'May 2, 2026'},
-  {id:8,  country:'Egypt',        cat:'economy',  region:'NORTH AFRICA',      headline:'IMF reaches preliminary debt restructuring deal with government',                  source:'Reuters Africa',             url:'https://reuters.com',            breaking:false, date:'May 1, 2026'},
-  {id:9,  country:'Ethiopia',     cat:'crisis',   region:'EAST AFRICA',       headline:'UN declares famine emergency as drought enters third consecutive year',             source:'The East African',           url:'https://theeastafrican.co.ke',   breaking:true,  date:'May 2, 2026'},
-  {id:10, country:'DR Congo',     cat:'conflict', region:'CENTRAL AFRICA',    headline:'Rebel advance halted; peacekeeping force mandate extended by Security Council',    source:'AFP / RFI',                  url:'https://rfi.fr',                 breaking:false, date:'Apr 29, 2026'},
-  {id:11, country:'Nigeria',      cat:'crisis',   region:'WEST AFRICA',       headline:'Flooding displaces 200,000 in coastal regions after Category 4 storm',             source:'The Guardian Nigeria',       url:'https://guardian.ng',            breaking:true,  date:'May 2, 2026'},
-  {id:12, country:'South Africa', cat:'politics', region:'SOUTHERN AFRICA',   headline:'Constitutional court ruling challenges executive branch authority',                 source:'Daily Maverick',             url:'https://dailymaverick.co.za',    breaking:false, date:'May 1, 2026'},
-  {id:13, country:'Bolivia',      cat:'economy',  region:'SOUTH AMERICA',     headline:'Lithium nationalization bill passes; foreign investors signal concern',             source:'El País América',            url:'https://elpais.com',             breaking:false, date:'Apr 30, 2026'},
-  {id:14, country:'Brazil',       cat:'climate',  region:'SOUTH AMERICA',     headline:'Amazon deforestation rate drops 42% under new environmental enforcement',          source:'Folha de S.Paulo',           url:'https://folha.uol.com.br',       breaking:false, date:'May 1, 2026'},
-  {id:15, country:'Mexico',       cat:'conflict', region:'CENTRAL AMERICA',   headline:'Cartel violence prompts emergency security summit of regional leaders',             source:'El Universal',               url:'https://eluniversal.com.mx',     breaking:false, date:'Apr 30, 2026'},
-  {id:16, country:'United States',cat:'politics', region:'NORTH AMERICA',     headline:'Senate vote on border security bill delayed amid party negotiations',               source:'AP / Washington Post',       url:'https://washingtonpost.com',     breaking:false, date:'May 2, 2026'},
-  {id:17, country:'Thailand',     cat:'economy',  region:'SOUTHEAST ASIA',    headline:'ASEAN free trade zone expansion ratified by seven member states',                  source:'Bangkok Post',               url:'https://bangkokpost.com',        breaking:false, date:'Apr 29, 2026'},
-  {id:18, country:'Indonesia',    cat:'climate',  region:'INDONESIA',         headline:'Peatland fire season declared; satellite data shows record smoke plumes',          source:'Jakarta Post',               url:'https://thejakartapost.com',     breaking:false, date:'May 1, 2026'},
-  {id:19, country:'Saudi Arabia', cat:'crisis',   region:'ARABIAN PENINSULA', headline:'Water scarcity crisis deepens; desalination capacity falls short of demand',       source:'Arab News',                  url:'https://arabnews.com',           breaking:true,  date:'May 2, 2026'},
-  {id:20, country:'Senegal',      cat:'climate',  region:'SAHEL REGION',      headline:'Solar mega-project breaks ground; to power 10 million homes by 2028',              source:'AllAfrica',                  url:'https://allafrica.com',          breaking:false, date:'Apr 28, 2026'},
-  {id:21, country:'Russia',       cat:'economy',  region:'RUSSIA / CIS',      headline:'Energy revenues prop up budget despite western sanctions pressure',                 source:'Moscow Times / Meduza',      url:'https://meduza.io',              breaking:false, date:'Apr 30, 2026'},
-  {id:22, country:'Australia',    cat:'climate',  region:'AUSTRALIA',         headline:'Coral bleaching event declared across 65% of Great Barrier Reef',                  source:'The Australian',             url:'https://theaustralian.com.au',   breaking:true,  date:'May 2, 2026'},
-  {id:23, country:'Sweden',       cat:'politics', region:'SCANDINAVIA',       headline:'NATO northern flank strategy reviewed after Baltic sea incident',                   source:'Aftenposten / Yle',          url:'https://aftenposten.no',         breaking:false, date:'May 1, 2026'},
-  {id:24, country:'Georgia',      cat:'conflict', region:'CAUCASUS',          headline:'Border demarcation dispute reignites weeks after peace agreement signed',           source:'OC Media / Caucasian Knot',  url:'https://oc-media.org',           breaking:true,  date:'May 2, 2026'},
-
-  /* ---- ADD NEW STORIES BELOW THIS LINE ----
-  
-  {
-    id: 25,
-    country: 'France',
-    cat: 'politics',
-    region: 'WESTERN EUROPE',
-    headline: 'Your headline here',
-    source: 'Le Monde',
-    url: 'https://lemonde.fr/your-article',
-    breaking: false,
-    date: 'May 2, 2026'
-  },
-  ---- END EXAMPLE ---- */
-
-    {
-    id: 25,
-    country: 'Cuba',
-    cat: 'economy',
-    region: 'CARIBBEAN',
-    headline: 'Cuba says Trump’s fresh sanctions on its economy amount to ‘collective punishment\'',
-    source: 'The Guardian',
-    url: 'https://www.theguardian.com/world/2026/may/02/cuba-trump-new-sanctions-economy',
-    breaking: false,
-    date: 'May 1 2026'
-  },
+  {id:1,  country:'Ukraine',      cat:'conflict', region:'EASTERN EUROPE',    headline:'Ceasefire negotiations stall as shelling reported near disputed border region',    source:'Reuters / Kyiv Independent', url:'https://kyivindependent.com',  breaking:true,  date:'May 2, 2026'},
+  {id:2,  country:'Israel',       cat:'conflict', region:'MIDDLE EAST',       headline:'Humanitarian corridor agreement reached after weeks of diplomatic pressure',       source:'Al Jazeera / Haaretz',       url:'https://aljazeera.com',         breaking:false, date:'May 2, 2026'},
+  {id:3,  country:'Kazakhstan',   cat:'politics', region:'CENTRAL ASIA',      headline:'Presidential election results disputed by opposition coalition',                    source:'RFE/RL',                     url:'https://rferl.org',             breaking:false, date:'May 1, 2026'},
+  {id:4,  country:'India',        cat:'economy',  region:'SOUTH ASIA',        headline:'Central bank raises rates amid record inflation surge',                            source:'The Hindu',                  url:'https://thehindu.com',          breaking:false, date:'May 1, 2026'},
+  {id:5,  country:'China',        cat:'politics', region:'EAST ASIA',         headline:'Trade delegation talks resume following six-month diplomatic freeze',               source:'South China Morning Post',   url:'https://scmp.com',              breaking:false, date:'May 2, 2026'},
+  {id:6,  country:'South Korea',  cat:'economy',  region:'NORTHEAST ASIA',    headline:'Chipmaker announces $40B expansion amid global semiconductor race',                source:'Nikkei Asia',                url:'https://asia.nikkei.com',       breaking:false, date:'Apr 30, 2026'},
+  {id:7,  country:'Germany',      cat:'politics', region:'WESTERN EUROPE',    headline:'Coalition government collapses ahead of snap election announcement',               source:'Le Monde / Der Spiegel',     url:'https://lemonde.fr',            breaking:true,  date:'May 2, 2026'},
+  {id:8,  country:'Egypt',        cat:'economy',  region:'NORTH AFRICA',      headline:'IMF reaches preliminary debt restructuring deal with government',                  source:'Reuters Africa',             url:'https://reuters.com',           breaking:false, date:'May 1, 2026'},
+  {id:9,  country:'Ethiopia',     cat:'crisis',   region:'EAST AFRICA',       headline:'UN declares famine emergency as drought enters third consecutive year',             source:'The East African',           url:'https://theeastafrican.co.ke',  breaking:true,  date:'May 2, 2026'},
+  {id:10, country:'DR Congo',     cat:'conflict', region:'CENTRAL AFRICA',    headline:'Rebel advance halted; peacekeeping force mandate extended by Security Council',    source:'AFP / RFI',                  url:'https://rfi.fr',                breaking:false, date:'Apr 29, 2026'},
+  {id:11, country:'Nigeria',      cat:'crisis',   region:'WEST AFRICA',       headline:'Flooding displaces 200,000 in coastal regions after Category 4 storm',             source:'The Guardian Nigeria',       url:'https://guardian.ng',           breaking:true,  date:'May 2, 2026'},
+  {id:12, country:'South Africa', cat:'politics', region:'SOUTHERN AFRICA',   headline:'Constitutional court ruling challenges executive branch authority',                 source:'Daily Maverick',             url:'https://dailymaverick.co.za',   breaking:false, date:'May 1, 2026'},
+  {id:13, country:'Bolivia',      cat:'economy',  region:'SOUTH AMERICA',     headline:'Lithium nationalization bill passes; foreign investors signal concern',             source:'El País América',            url:'https://elpais.com',            breaking:false, date:'Apr 30, 2026'},
+  {id:14, country:'Brazil',       cat:'climate',  region:'SOUTH AMERICA',     headline:'Amazon deforestation rate drops 42% under new environmental enforcement',          source:'Folha de S.Paulo',           url:'https://folha.uol.com.br',      breaking:false, date:'May 1, 2026'},
+  {id:15, country:'Mexico',       cat:'conflict', region:'CENTRAL AMERICA',   headline:'Cartel violence prompts emergency security summit of regional leaders',             source:'El Universal',               url:'https://eluniversal.com.mx',    breaking:false, date:'Apr 30, 2026'},
+  {id:16, country:'United States',cat:'politics', region:'NORTH AMERICA',     headline:'Senate vote on border security bill delayed amid party negotiations',               source:'AP / Washington Post',       url:'https://washingtonpost.com',    breaking:false, date:'May 2, 2026'},
+  {id:17, country:'Thailand',     cat:'economy',  region:'SOUTHEAST ASIA',    headline:'ASEAN free trade zone expansion ratified by seven member states',                  source:'Bangkok Post',               url:'https://bangkokpost.com',       breaking:false, date:'Apr 29, 2026'},
+  {id:18, country:'Indonesia',    cat:'climate',  region:'INDONESIA',         headline:'Peatland fire season declared; satellite data shows record smoke plumes',          source:'Jakarta Post',               url:'https://thejakartapost.com',    breaking:false, date:'May 1, 2026'},
+  {id:19, country:'Saudi Arabia', cat:'crisis',   region:'ARABIAN PENINSULA', headline:'Water scarcity crisis deepens; desalination capacity falls short of demand',       source:'Arab News',                  url:'https://arabnews.com',          breaking:true,  date:'May 2, 2026'},
+  {id:20, country:'Senegal',      cat:'climate',  region:'SAHEL REGION',      headline:'Solar mega-project breaks ground; to power 10 million homes by 2028',              source:'AllAfrica',                  url:'https://allafrica.com',         breaking:false, date:'Apr 28, 2026'},
+  {id:21, country:'Russia',       cat:'economy',  region:'RUSSIA / CIS',      headline:'Energy revenues prop up budget despite western sanctions pressure',                 source:'Moscow Times / Meduza',      url:'https://meduza.io',             breaking:false, date:'Apr 30, 2026'},
+  {id:22, country:'Australia',    cat:'climate',  region:'AUSTRALIA',         headline:'Coral bleaching event declared across 65% of Great Barrier Reef',                  source:'The Australian',             url:'https://theaustralian.com.au',  breaking:true,  date:'May 2, 2026'},
+  {id:23, country:'Sweden',       cat:'politics', region:'SCANDINAVIA',       headline:'NATO northern flank strategy reviewed after Baltic sea incident',                   source:'Aftenposten / Yle',          url:'https://aftenposten.no',        breaking:false, date:'May 1, 2026'},
+  {id:24, country:'Georgia',      cat:'conflict', region:'CAUCASUS',          headline:'Border demarcation dispute reignites weeks after peace agreement signed',           source:'OC Media / Caucasian Knot',  url:'https://oc-media.org',          breaking:true,  date:'May 2, 2026'},
+  /* ---- ADD NEW STORIES BELOW THIS LINE ---- */
 ];
 
-// Auto-resolve coordinates
-const events = rawEvents.map(ev=>{
-  const r=coordsForCountry(ev.country);
-  return {...ev, lat:r?r.lat:0, lng:r?r.lng:0, countryId:r?r.id:null};
-});
+/* ============================================================
+   OUR ARTICLES — written by your editorial team
+   Fields: id, title, cat, author, date, summary, body, tags
+   body: blank lines = new paragraph, ## = heading, > = blockquote
+   ============================================================ */
+const articles = [
+  /* ---- ADD ARTICLES BELOW ---- */
+];
 
-// Update header
+// Resolve coordinates
+const events=rawEvents.map(ev=>{const r=coordsForCountry(ev.country);return{...ev,lat:r?r.lat:0,lng:r?r.lng:0,countryId:r?r.id:null};});
+
 document.getElementById('sr-status').textContent='LIVE FEED — '+events.length+' INCIDENTS MONITORED';
 
 // Ticker
@@ -509,7 +727,18 @@ events.filter(e=>e.breaking).forEach(ev=>{
   const sep=document.createElement('span');sep.className='ticker-sep';sep.textContent='◆';ti.appendChild(sep);
 });
 
-// Headlines tab
+// ── TABS ──────────────────────────────────────────────────────────────────
+const tabMap={'map':'tab-map','headlines':'tab-headlines','articles':'tab-articles','about':'tab-about'};
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  const t=b.dataset.tab;
+  document.getElementById('tab-map').style.display=t==='map'?'block':'none';
+  ['tab-headlines','tab-articles','tab-about'].forEach(id=>{
+    document.getElementById(id).style.display=(id===tabMap[t]&&t!=='map')?'block':'none';
+  });
+}));
+
+// ── HEADLINES ─────────────────────────────────────────────────────────────
 let hlFilter='all';
 function renderHeadlines(){
   const list=document.getElementById('hl-list');list.innerHTML='';
@@ -519,9 +748,8 @@ function renderHeadlines(){
   f.forEach((ev,i)=>{
     const div=document.createElement('div');div.className='hl-item'+(ev.breaking?' breaking':'');
     const linkHTML=ev.url&&ev.url!=='#'?`<a class="hl-read-link" href="${ev.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">READ →</a>`:'';
-    div.innerHTML=`<div class="hl-left"><div class="hl-num">${String(i+1).padStart(2,'0')}</div><div class="hl-dot" style="background:${dotColors[ev.cat]}"></div>${ev.breaking?'<div class="hl-break-badge">BRK</div>':''}</div><div class="hl-body"><div class="hl-meta"><span class="hl-region">${ev.region}</span><span class="hl-cat-badge cat-${ev.cat}">${ev.cat}</span><span style="font-size:8px;color:#2a3a4a;margin-left:auto;">${ev.date}</span></div><div class="hl-headline">${ev.headline}</div><div class="hl-source">SOURCE: ${ev.source}${linkHTML}</div></div>`;
-    div.addEventListener('click',()=>openPinPanel(ev));
-    list.appendChild(div);
+    div.innerHTML=`<div class="hl-left"><div class="hl-num">${String(i+1).padStart(2,'0')}</div><div class="hl-dot" style="background:${dotColors[ev.cat]}"></div>${ev.breaking?'<div class="hl-break-badge">BRK</div>':''}</div><div class="hl-body"><div class="hl-meta"><span class="hl-region">${ev.region}</span><span class="hl-cat-badge cat-${ev.cat}">${ev.cat}</span><span class="hl-date">${ev.date}</span></div><div class="hl-headline">${ev.headline}</div><div class="hl-source-row"><span class="hl-source">SOURCE: ${ev.source}</span>${linkHTML}</div></div>`;
+    div.addEventListener('click',()=>openPinPanel(ev));list.appendChild(div);
   });
 }
 document.querySelectorAll('.hl-filter').forEach(b=>b.addEventListener('click',()=>{
@@ -529,193 +757,155 @@ document.querySelectorAll('.hl-filter').forEach(b=>b.addEventListener('click',()
 }));
 renderHeadlines();
 
-// Tabs
-document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
-  const t=b.dataset.tab;
-  document.getElementById('tab-map').style.display=t==='map'?'block':'none';
-  document.getElementById('tab-headlines').style.display=t==='headlines'?'block':'none';
-}));
+// ── OUR ARTICLES ──────────────────────────────────────────────────────────
+function parseBody(raw){
+  return raw.split(/\n\n+/).map(block=>{
+    block=block.trim();
+    if(!block) return '';
+    if(block.startsWith('## ')) return `<h2>${block.slice(3)}</h2>`;
+    if(block.startsWith('> ')) return `<blockquote>${block.slice(2)}</blockquote>`;
+    return `<p>${block.replace(/\n/g,'<br/>')}</p>`;
+  }).join('');
+}
 
-// Side panel
+function renderArticles(){
+  const list=document.getElementById('art-list');
+  const empty=document.getElementById('art-empty');
+  list.innerHTML='';
+  if(articles.length===0){empty.style.display='block';document.getElementById('art-count').textContent='';return;}
+  empty.style.display='none';
+  document.getElementById('art-count').textContent=articles.length+' PIECES';
+  [...articles].reverse().forEach(art=>{
+    const tags=(art.tags||[]).map(t=>`<span class="art-tag">${t}</span>`).join('');
+    const card=document.createElement('div');card.className='art-card';
+    card.innerHTML=`<div class="art-card-meta"><span class="art-card-cat cat-${art.cat}">${art.cat}</span><span class="art-card-date">${art.date}</span><span class="art-card-author">By ${art.author}</span></div><div class="art-card-title">${art.title}</div><div class="art-card-summary">${art.summary}</div><div class="art-card-footer"><span class="art-read-more">READ MORE →</span>${tags}</div>`;
+    card.addEventListener('click',()=>openArticleReader(art));
+    list.appendChild(card);
+  });
+}
+renderArticles();
+
+function openArticleReader(art){
+  document.getElementById('ar-cat').textContent=art.cat;
+  document.getElementById('ar-cat').className='cat-'+art.cat;
+  document.getElementById('ar-cat').style.cssText='display:inline-block;font-size:9px;padding:3px 8px;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;';
+  document.getElementById('ar-title').textContent=art.title;
+  document.getElementById('ar-author').textContent='By '+art.author;
+  document.getElementById('ar-date').textContent=art.date;
+  document.getElementById('ar-body').innerHTML=parseBody(art.body||'');
+  document.getElementById('art-reader').classList.add('open');
+}
+document.getElementById('art-reader-back').addEventListener('click',()=>{
+  document.getElementById('art-reader').classList.remove('open');
+});
+
+// ── SIDE PANEL ────────────────────────────────────────────────────────────
 let currentPinEvent=null;
 function openPinPanel(ev){
-  currentPinEvent=ev; closeCountryPanel();
+  currentPinEvent=ev;closeCountryPanel();
   document.getElementById('sp-region').textContent=ev.region;
   document.getElementById('sp-headline').textContent=ev.headline;
   const tag=document.getElementById('sp-tag');tag.textContent=ev.breaking?'● BREAKING':ev.cat;tag.className=ev.breaking?'cat-conflict':'cat-'+ev.cat;
   document.getElementById('sp-source').textContent='SOURCE: '+ev.source;
   document.getElementById('sp-date').textContent=ev.date;
   const link=document.getElementById('sp-read-link');
-  if(ev.url&&ev.url!=='#'){link.href=ev.url;link.style.display='inline-flex';}
-  else{link.href='#';link.style.display='none';}
+  if(ev.url&&ev.url!=='#'){link.href=ev.url;link.style.display='inline-flex';}else{link.href='#';link.style.display='none';}
   const rel=events.filter(e=>e.id!==ev.id&&e.cat===ev.cat).slice(0,3);
   const rl=document.getElementById('sp-related-list');rl.innerHTML='';
-  rel.forEach(r=>{
-    const d=document.createElement('div');d.className='sp-related-item';
-    d.innerHTML=`<div class="sp-rel-meta"><div class="sp-rel-dot" style="background:${dotColors[r.cat]}"></div><span class="sp-rel-region">${r.region}</span></div><div class="sp-rel-headline">${r.headline}</div>`;
-    d.addEventListener('click',()=>openPinPanel(r));rl.appendChild(d);
-  });
+  rel.forEach(r=>{const d=document.createElement('div');d.className='sp-related-item';d.innerHTML=`<div class="sp-rel-meta"><div class="sp-rel-dot" style="background:${dotColors[r.cat]}"></div><span class="sp-rel-region">${r.region}</span></div><div class="sp-rel-headline">${r.headline}</div>`;d.addEventListener('click',()=>openPinPanel(r));rl.appendChild(d);});
   document.getElementById('side-panel').classList.add('open');
 }
-document.getElementById('sp-close').addEventListener('click',()=>{
-  document.getElementById('side-panel').classList.remove('open');currentPinEvent=null;
-});
+document.getElementById('sp-close').addEventListener('click',()=>{document.getElementById('side-panel').classList.remove('open');currentPinEvent=null;});
 
-// Country panel — highlight management using D3 datum id
+// ── COUNTRY PANEL ─────────────────────────────────────────────────────────
 let selectedCountryId=null;
-
 function clearHighlight(){
-  if(selectedCountryId===null) return;
-  // Reset ALL copies of this country across tiled map groups
+  if(selectedCountryId===null)return;
   d3.selectAll('.country').filter(d=>parseInt(d.id)===selectedCountryId).style('fill',null);
   selectedCountryId=null;
 }
-
 function openCountryPanel(feature){
   const id=parseInt(feature.id);
-  // If same country clicked again → close
-  if(selectedCountryId===id){ closeCountryPanel(); return; }
-  // Clear previous
-  clearHighlight();
-  closePinPanel();
+  if(selectedCountryId===id){closeCountryPanel();return;}
+  clearHighlight();closePinPanel();
   selectedCountryId=id;
-  // Highlight all copies
   const info=COUNTRIES[id];
   d3.selectAll('.country').filter(d=>parseInt(d.id)===id).style('fill',info?info.color:'#1a2a3a');
-
   document.getElementById('cp-flag').textContent=info?info.flag:'';
   document.getElementById('cp-name').textContent=info?info.name:('Country '+id);
   const related=events.filter(e=>e.countryId===id);
   const list=document.getElementById('cp-list');list.innerHTML='';
   document.getElementById('cp-no-news').textContent=related.length===0?'NO MONITORED EVENTS':'';
-  related.forEach(ev=>{
-    const d=document.createElement('div');d.className='cp-item';
-    d.innerHTML=`<div class="cp-item-meta"><div class="cp-item-dot" style="background:${dotColors[ev.cat]}"></div><span class="cp-item-cat cat-${ev.cat}">${ev.cat}</span>${ev.breaking?'<span style="font-size:7px;color:#cc2200;margin-left:4px;">● BRK</span>':''}</div><div class="cp-item-headline">${ev.headline}</div><div class="cp-item-source">${ev.source} · ${ev.date}</div>`;
-    d.addEventListener('click',()=>openPinPanel(ev));list.appendChild(d);
-  });
+  related.forEach(ev=>{const d=document.createElement('div');d.className='cp-item';d.innerHTML=`<div class="cp-item-meta"><div class="cp-item-dot" style="background:${dotColors[ev.cat]}"></div><span class="cp-item-cat cat-${ev.cat}">${ev.cat}</span>${ev.breaking?'<span style="font-size:7px;color:#cc2200;margin-left:4px;">● BRK</span>':''}</div><div class="cp-item-headline">${ev.headline}</div><div class="cp-item-source">${ev.source} · ${ev.date}</div>`;d.addEventListener('click',()=>openPinPanel(ev));list.appendChild(d);});
   document.getElementById('country-panel').classList.add('open');
 }
-
-function closeCountryPanel(){
-  clearHighlight();
-  document.getElementById('country-panel').classList.remove('open');
-}
-function closePinPanel(){
-  document.getElementById('side-panel').classList.remove('open');currentPinEvent=null;
-}
+function closeCountryPanel(){clearHighlight();document.getElementById('country-panel').classList.remove('open');}
+function closePinPanel(){document.getElementById('side-panel').classList.remove('open');currentPinEvent=null;}
 document.getElementById('cp-close').addEventListener('click',closeCountryPanel);
 
-// MAP
-let activeFilter='all', projectionFn, pathFn, pinsLayer, svgSel, zoomBehavior;
-let worldPxWidth=0;
-let initT;
-
+// ── MAP ───────────────────────────────────────────────────────────────────
+let activeFilter='all',projectionFn,pathFn,pinsLayer,svgSel,zoomBehavior,worldPxWidth=0,initT;
 async function init(){
   const container=document.getElementById('tab-map');
-  const W=container.clientWidth||900, H=container.clientHeight||520;
-
+  const W=container.clientWidth||900,H=container.clientHeight||520;
   svgSel=d3.select('#map-svg').attr('viewBox',`0 0 ${W} ${H}`).attr('preserveAspectRatio','xMidYMid meet');
-
-  // Clip to viewport
-  svgSel.append('defs').append('clipPath').attr('id','vp-clip')
-    .append('rect').attr('width',W).attr('height',H);
-
+  svgSel.append('defs').append('clipPath').attr('id','vp-clip').append('rect').attr('width',W).attr('height',H);
   const clippedG=svgSel.append('g').attr('clip-path','url(#vp-clip)');
   const zoomG=clippedG.append('g').attr('id','zoom-g');
-
   projectionFn=d3.geoNaturalEarth1().scale(W/4.9).translate([W/2,H/2]);
   pathFn=d3.geoPath().projection(projectionFn);
   worldPxWidth=projectionFn([180,0])[0]-projectionFn([-180,0])[0];
-
   function buildBase(parent,offsetX){
     const g=parent.append('g').attr('transform',`translate(${offsetX},0)`);
     g.append('path').datum({type:'Sphere'}).attr('class','sphere').attr('d',pathFn);
     g.append('path').datum(d3.geoGraticule().step([20,20])()).attr('class','graticule').attr('d',pathFn);
     return g;
   }
-
   let world;
-  try{
-    const res=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json');
-    world=await res.json();
-  }catch(e){return;}
-
+  try{const res=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json');world=await res.json();}catch(e){return;}
   const countries=topojson.feature(world,world.objects.countries);
-
-  // Draw 3 tiled copies
   [-1,0,1].forEach(copy=>{
     const g=buildBase(zoomG,copy*worldPxWidth);
-    g.selectAll('.country')
-      .data(countries.features)
-      .join('path')
-      .attr('class','country')
-      .attr('d',pathFn)
-      .on('click',function(event,d){
-        event.stopPropagation();
-        openCountryPanel(d);
-      });
+    g.selectAll('.country').data(countries.features).join('path').attr('class','country').attr('d',pathFn)
+      .on('click',function(event,d){event.stopPropagation();openCountryPanel(d);});
   });
-
   pinsLayer=zoomG.append('g').attr('id','pins-layer');
   renderPins();
-
-  // Initial zoom: 1.35× centred
-  initT=d3.zoomIdentity.translate(W*(1-1.35)/2, H*(1-1.35)/2).scale(1.35);
-
-  // North-south clamp values (in un-zoomed projection space)
-  const yTop = projectionFn([0,78])[1];   // ~top of map
-  const yBot = projectionFn([0,-78])[1];  // ~bottom of map
-
-  zoomBehavior=d3.zoom()
-    .scaleExtent([0.9,14])
-    .on('zoom',(event)=>{
-      let t=event.transform;
-      const k=t.k;
-      // Clamp vertical pan so poles stay on screen
-      const mapH = (yBot - yTop) * k;
-      const minY = H - yBot*k;
-      const maxY = -yTop*k;
-      const clampedY = Math.max(minY, Math.min(maxY, t.y));
-      if(clampedY !== t.y){
-        t = d3.zoomIdentity.translate(t.x, clampedY).scale(k);
-        // Silently update stored transform without re-triggering
-      }
-      zoomG.attr('transform',t);
-      pinsLayer.selectAll('.pin-dot').attr('r',4/Math.sqrt(k));
-    });
-
+  initT=d3.zoomIdentity.translate(W*(1-1.35)/2,H*(1-1.35)/2).scale(1.35);
+  const yTop=projectionFn([0,78])[1],yBot=projectionFn([0,-78])[1];
+  zoomBehavior=d3.zoom().scaleExtent([0.9,14]).on('zoom',(event)=>{
+    let t=event.transform;
+    const k=t.k;
+    const minY=H-yBot*k,maxY=-yTop*k;
+    const clampedY=Math.max(minY,Math.min(maxY,t.y));
+    const finalT=d3.zoomIdentity.translate(t.x,clampedY).scale(k);
+    zoomG.attr('transform',finalT);
+    pinsLayer.selectAll('.pin-dot').attr('r',4/Math.sqrt(k));
+  });
   svgSel.call(zoomBehavior).call(zoomBehavior.transform,initT);
   svgSel.on('dblclick.zoom',null);
-
-  // Click ocean → close all panels
-  svgSel.on('click',()=>{ closeCountryPanel(); closePinPanel(); });
-
+  svgSel.on('click',()=>{closeCountryPanel();closePinPanel();});
   document.getElementById('zoom-in').addEventListener('click',()=>svgSel.transition().duration(300).call(zoomBehavior.scaleBy,1.6));
   document.getElementById('zoom-out').addEventListener('click',()=>svgSel.transition().duration(300).call(zoomBehavior.scaleBy,0.625));
   document.getElementById('zoom-reset').addEventListener('click',()=>svgSel.transition().duration(400).call(zoomBehavior.transform,initT));
-
   document.querySelectorAll('.filter-btn').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');activeFilter=b.dataset.cat;renderPins();
   }));
 }
-
 function renderPins(){
-  if(!pinsLayer) return;
+  if(!pinsLayer)return;
   pinsLayer.selectAll('*').remove();
   const filtered=activeFilter==='all'?events:events.filter(e=>e.cat===activeFilter);
   const container=document.getElementById('tab-map');
   const tooltip=document.getElementById('tooltip');
-
   filtered.forEach(ev=>{
     [-1,0,1].forEach(copy=>{
-      const base=projectionFn([ev.lng,ev.lat]);
-      if(!base) return;
-      const px=base[0]+copy*worldPxWidth, py=base[1];
+      const base=projectionFn([ev.lng,ev.lat]);if(!base)return;
+      const px=base[0]+copy*worldPxWidth,py=base[1];
       const g=pinsLayer.append('g').attr('class','pin-group');
-      if(ev.breaking) g.append('circle').attr('cx',px).attr('cy',py).attr('class','pin-ring ring-'+ev.cat).attr('r',10).style('animation-delay',(ev.id*.2)+'s');
+      if(ev.breaking)g.append('circle').attr('cx',px).attr('cy',py).attr('class','pin-ring ring-'+ev.cat).attr('r',10).style('animation-delay',(ev.id*.2)+'s');
       g.append('circle').attr('cx',px).attr('cy',py).attr('r',4).attr('class','pin-dot dot-'+ev.cat);
-      if(ev.breaking) g.append('circle').attr('cx',px).attr('cy',py-4).attr('r',2.5).attr('fill','#cc2200');
+      if(ev.breaking)g.append('circle').attr('cx',px).attr('cy',py-4).attr('r',2.5).attr('fill','#cc2200');
       g.on('mouseenter',function(event){
         document.getElementById('tt-region').textContent=ev.region;
         const c=document.getElementById('tt-cat');c.textContent=ev.breaking?ev.cat+' — BREAKING':ev.cat;c.className='cat-'+ev.cat;
@@ -728,39 +918,62 @@ function renderPins(){
     });
   });
 }
-
 function positionTooltip(event,container){
   const rect=container.getBoundingClientRect();
-  let x=event.clientX-rect.left+14, y=event.clientY-rect.top+14;
+  let x=event.clientX-rect.left+14,y=event.clientY-rect.top+14;
   const tt=document.getElementById('tooltip');
-  if(x+230>rect.width-310) x=event.clientX-rect.left-235;
-  if(y+130>rect.height) y=event.clientY-rect.top-135;
-  tt.style.left=x+'px'; tt.style.top=y+'px';
+  if(x+235>rect.width-330)x=event.clientX-rect.left-240;
+  if(y+130>rect.height)y=event.clientY-rect.top-135;
+  tt.style.left=x+'px';tt.style.top=y+'px';
 }
 
-/* ============================================================
-   ADMIN PANEL
-   ============================================================ */
-// Populate datalist for country autocomplete
+// ── ADMIN LOGIN ───────────────────────────────────────────────────────────
+let adminUnlocked=false;
+function showLogin(){
+  document.getElementById('login-overlay').style.display='flex';
+  document.getElementById('login-pw').value='';
+  document.getElementById('login-err').style.display='none';
+  setTimeout(()=>document.getElementById('login-pw').focus(),100);
+}
+function hideLogin(){document.getElementById('login-overlay').style.display='none';}
+document.getElementById('login-btn').addEventListener('click',()=>{
+  const pw=document.getElementById('login-pw').value;
+  if(pw===ADMIN_PASSWORD){adminUnlocked=true;hideLogin();openAdmin();}
+  else{document.getElementById('login-err').style.display='block';document.getElementById('login-pw').value='';}
+});
+document.getElementById('login-pw').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('login-btn').click();});
+document.getElementById('login-cancel').addEventListener('click',hideLogin);
+
+// ── ADMIN PANEL ───────────────────────────────────────────────────────────
+function openAdmin(){document.getElementById('admin-overlay').classList.add('open');}
+function closeAdmin(){document.getElementById('admin-overlay').classList.remove('open');}
+document.getElementById('admin-close-btn').addEventListener('click',closeAdmin);
+document.getElementById('admin-overlay').addEventListener('click',function(e){if(e.target===this)closeAdmin();});
+
+// Admin tabs
+document.querySelectorAll('.admin-tab').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.admin-tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  document.querySelectorAll('.admin-pane').forEach(x=>x.classList.remove('active'));
+  document.getElementById('pane-'+b.dataset.pane).classList.add('active');
+}));
+
+// Keyboard shortcut — A key requires password
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeAdmin();hideLogin();return;}
+  if(e.key==='a'||e.key==='A'){
+    const active=document.activeElement;
+    if(active&&(active.tagName==='INPUT'||active.tagName==='TEXTAREA'||active.tagName==='SELECT'))return;
+    if(adminUnlocked) openAdmin(); else showLogin();
+  }
+});
+
+// Country autocomplete
 const dl=document.getElementById('country-list');
 Object.values(COUNTRIES).sort((a,b)=>a.name.localeCompare(b.name)).forEach(c=>{
   const opt=document.createElement('option');opt.value=c.name;dl.appendChild(opt);
 });
 
-function openAdmin(){ document.getElementById('admin-overlay').classList.add('open'); }
-function closeAdmin(){ document.getElementById('admin-overlay').classList.remove('open'); }
-document.getElementById('admin-close-btn').addEventListener('click',closeAdmin);
-document.getElementById('admin-overlay').addEventListener('click',function(e){ if(e.target===this) closeAdmin(); });
-
-document.addEventListener('keydown',e=>{
-  if(e.key==='a'||e.key==='A'){
-    const active=document.activeElement;
-    if(active&&(active.tagName==='INPUT'||active.tagName==='TEXTAREA'||active.tagName==='SELECT')) return;
-    openAdmin();
-  }
-  if(e.key==='Escape') closeAdmin();
-});
-
+// Generate news code
 document.getElementById('admin-generate-btn').addEventListener('click',()=>{
   const country=(document.getElementById('af-country').value||'').trim();
   const region=(document.getElementById('af-region').value||'').trim().toUpperCase();
@@ -770,18 +983,9 @@ document.getElementById('admin-generate-btn').addEventListener('click',()=>{
   const cat=document.getElementById('af-cat').value;
   const date=(document.getElementById('af-date').value||'').trim();
   const breaking=document.getElementById('af-breaking').checked;
-
-  if(!country||!headline||!source||!date){
-    alert('Please fill in Country, Headline, Source, and Date.');return;
-  }
-  if(!coordsForCountry(country)){
-    alert(`"${country}" not found in the country database. Check the spelling matches exactly.`);return;
-  }
-
-  // Find next id
-  const maxId=Math.max(...events.map(e=>e.id),0);
-  const nextId=maxId+1;
-
+  if(!country||!headline||!source||!date){alert('Please fill in Country, Headline, Source, and Date.');return;}
+  if(!coordsForCountry(country)){alert(`"${country}" not found. Check spelling matches the country database.`);return;}
+  const nextId=Math.max(...events.map(e=>e.id),0)+1;
   const block=`  {
     id: ${nextId},
     country: '${country}',
@@ -793,17 +997,44 @@ document.getElementById('admin-generate-btn').addEventListener('click',()=>{
     breaking: ${breaking},
     date: '${date}'
   },`;
-
   document.getElementById('admin-code').textContent=block;
-  document.getElementById('admin-output').style.display='block';
+  document.getElementById('news-output').style.display='block';
+});
+document.getElementById('admin-copy-btn').addEventListener('click',()=>{
+  navigator.clipboard.writeText(document.getElementById('admin-code').textContent).then(()=>{
+    const btn=document.getElementById('admin-copy-btn');btn.textContent='COPIED ✓';setTimeout(()=>btn.textContent='COPY TO CLIPBOARD',2000);
+  });
 });
 
-document.getElementById('admin-copy-btn').addEventListener('click',()=>{
-  const code=document.getElementById('admin-code').textContent;
-  navigator.clipboard.writeText(code).then(()=>{
-    const btn=document.getElementById('admin-copy-btn');
-    btn.textContent='COPIED ✓';
-    setTimeout(()=>btn.textContent='COPY TO CLIPBOARD',2000);
+// Generate article code
+document.getElementById('article-generate-btn').addEventListener('click',()=>{
+  const title=(document.getElementById('aw-title').value||'').trim();
+  const cat=document.getElementById('aw-cat').value;
+  const author=(document.getElementById('aw-author').value||'').trim();
+  const date=(document.getElementById('aw-date').value||'').trim();
+  const summary=(document.getElementById('aw-summary').value||'').trim();
+  const body=(document.getElementById('aw-body').value||'').trim();
+  const tagsRaw=(document.getElementById('aw-tags').value||'').trim();
+  if(!title||!author||!date||!summary||!body){alert('Please fill in all required fields.');return;}
+  const tags=tagsRaw?tagsRaw.split(',').map(t=>`'${t.trim()}'`).join(', '):'';
+  const nextId=Math.max(...articles.map(a=>a.id||0),0)+1;
+  const esc=s=>s.replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');
+  const block=`  {
+    id: ${nextId},
+    title: '${title.replace(/'/g,"\\'")}',
+    cat: '${cat}',
+    author: '${author.replace(/'/g,"\\'")}',
+    date: '${date}',
+    summary: '${summary.replace(/'/g,"\\'")}',
+    tags: [${tags}],
+    body: \`${esc(body)}\`
+  },`;
+  document.getElementById('article-code').textContent=block;
+  document.getElementById('article-output').style.display='block';
+});
+document.getElementById('article-copy-btn').addEventListener('click',()=>{
+  navigator.clipboard.writeText(document.getElementById('article-code').textContent).then(()=>{
+    const btn=document.getElementById('article-copy-btn');btn.textContent='COPIED ✓';setTimeout(()=>btn.textContent='COPY TO CLIPBOARD',2000);
   });
 });
 
