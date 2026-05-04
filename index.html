@@ -725,25 +725,16 @@ const dotColors={conflict:'#ff7070',economy:'#70ff70',politics:'#7090ff',climate
    NEWS EVENTS
    ============================================================ */
 const rawEvents=[
-  {id:1,country:'Ukraine',cat:'conflict',region:'EASTERN EUROPE',headline:'Ceasefire negotiations stall as shelling reported near disputed border region',source:'Reuters / Kyiv Independent',url:'https://kyivindependent.com',breaking:true,date:'May 2, 2026'},
-  {id:2,country:'Israel',cat:'conflict',region:'MIDDLE EAST',headline:'Humanitarian corridor agreement reached after weeks of diplomatic pressure',source:'Al Jazeera / Haaretz',url:'https://aljazeera.com',breaking:false,date:'May 2, 2026'},
+
+ 
   {id:3,country:'Kazakhstan',cat:'politics',region:'CENTRAL ASIA',headline:'Presidential election results disputed by opposition coalition',source:'RFE/RL',url:'https://rferl.org',breaking:false,date:'May 1, 2026'},
   {id:4,country:'India',cat:'economy',region:'SOUTH ASIA',headline:'Central bank raises rates amid record inflation surge',source:'The Hindu',url:'https://thehindu.com',breaking:false,date:'May 1, 2026'},
-  {id:5,country:'China',cat:'politics',region:'EAST ASIA',headline:'Trade delegation talks resume following six-month diplomatic freeze',source:'South China Morning Post',url:'https://scmp.com',breaking:false,date:'May 2, 2026'},
-  {id:6,country:'South Korea',cat:'economy',region:'NORTHEAST ASIA',headline:'Chipmaker announces $40B expansion amid global semiconductor race',source:'Nikkei Asia',url:'https://asia.nikkei.com',breaking:false,date:'Apr 30, 2026'},
-  {id:7,country:'Germany',cat:'politics',region:'WESTERN EUROPE',headline:'Coalition government collapses ahead of snap election announcement',source:'Le Monde / Der Spiegel',url:'https://lemonde.fr',breaking:true,date:'May 2, 2026'},
   {id:8,country:'Egypt',cat:'economy',region:'NORTH AFRICA',headline:'IMF reaches preliminary debt restructuring deal with government',source:'Reuters Africa',url:'https://reuters.com',breaking:false,date:'May 1, 2026'},
   {id:9,country:'Ethiopia',cat:'crisis',region:'EAST AFRICA',headline:'UN declares famine emergency as drought enters third consecutive year',source:'The East African',url:'https://theeastafrican.co.ke',breaking:true,date:'May 2, 2026'},
-  {id:10,country:'DR Congo',cat:'conflict',region:'CENTRAL AFRICA',headline:'Rebel advance halted; peacekeeping force mandate extended by Security Council',source:'AFP / RFI',url:'https://rfi.fr',breaking:false,date:'Apr 29, 2026'},
   {id:11,country:'Nigeria',cat:'crisis',region:'WEST AFRICA',headline:'Flooding displaces 200,000 in coastal regions after Category 4 storm',source:'The Guardian Nigeria',url:'https://guardian.ng',breaking:true,date:'May 2, 2026'},
   {id:12,country:'South Africa',cat:'politics',region:'SOUTHERN AFRICA',headline:'Constitutional court ruling challenges executive branch authority',source:'Daily Maverick',url:'https://dailymaverick.co.za',breaking:false,date:'May 1, 2026'},
-  {id:13,country:'Bolivia',cat:'economy',region:'SOUTH AMERICA',headline:'Lithium nationalization bill passes; foreign investors signal concern',source:'El País América',url:'https://elpais.com',breaking:false,date:'Apr 30, 2026'},
-  {id:14,country:'Brazil',cat:'climate',region:'SOUTH AMERICA',headline:'Amazon deforestation rate drops 42% under new environmental enforcement',source:'Folha de S.Paulo',url:'https://folha.uol.com.br',breaking:false,date:'May 1, 2026'},
   {id:15,country:'Mexico',cat:'conflict',region:'CENTRAL AMERICA',headline:'Cartel violence prompts emergency security summit of regional leaders',source:'El Universal',url:'https://eluniversal.com.mx',breaking:false,date:'Apr 30, 2026'},
-  {id:16,country:'United States',cat:'politics',region:'NORTH AMERICA',headline:'Senate vote on border security bill delayed amid party negotiations',source:'AP / Washington Post',url:'https://washingtonpost.com',breaking:false,date:'May 2, 2026'},
   {id:17,country:'Thailand',cat:'economy',region:'SOUTHEAST ASIA',headline:'ASEAN free trade zone expansion ratified by seven member states',source:'Bangkok Post',url:'https://bangkokpost.com',breaking:false,date:'Apr 29, 2026'},
-  {id:18,country:'Indonesia',cat:'climate',region:'INDONESIA',headline:'Peatland fire season declared; satellite data shows record smoke plumes',source:'Jakarta Post',url:'https://thejakartapost.com',breaking:false,date:'May 1, 2026'},
-  {id:19,country:'Strait of Hormuz',cat:'crisis',region:'STRAIT OF HORMUZ',headline:'Naval vessels from multiple nations shadow Iranian patrol boats near critical shipping lane',source:'Reuters / AP',url:'https://reuters.com',breaking:true,date:'May 2, 2026'},
   {id:20,country:'Senegal',cat:'climate',region:'SAHEL REGION',headline:'Solar mega-project breaks ground; to power 10 million homes by 2028',source:'AllAfrica',url:'https://allafrica.com',breaking:false,date:'Apr 28, 2026'},
   {id:21,country:'Russia',cat:'economy',region:'RUSSIA / CIS',headline:'Energy revenues prop up budget despite western sanctions pressure',source:'Moscow Times / Meduza',url:'https://meduza.io',breaking:false,date:'Apr 30, 2026'},
   {id:22,country:'Australia',cat:'climate',region:'AUSTRALIA',headline:'Coral bleaching event declared across 65% of Great Barrier Reef',source:'The Australian',url:'https://theaustralian.com.au',breaking:true,date:'May 2, 2026'},
@@ -753,7 +744,22 @@ const rawEvents=[
   /* ---- ADD NEW STORIES BELOW THIS LINE ---- */
 
     {id:26,country:'Iran',lat:26.5,lng:56.5,cat:'politics',region:'STRAIT OF HORMUZ',headline:'Trump says US will ‘help free up’ ships stuck in Hormuz Strait',source:'Al Jazeera',url:'https://www.aljazeera.com/news/2026/5/3/trump-says-us-will-help-free-up-ships-stuck-in-hormuz-strait',breaking:false,date:'May 2nd, 2026'},
-
+    {id:27,country:'Ukraine',lat:49.5,lng:36.5,cat:'conflict',region:'UKRAINE–RUSSIA BORDER',headline:'Russia fires nearly 400 drones at Ukraine with signs its spring offensive has started',source:'APnews',url:'https://apnews.com/article/russia-ukraine-war-offensive-civilian-attacks-48a46d2503513c903bc3e4de31b96e00',breaking:false,date:'March 24, 2026'},
+    {id:27,country:'Ukraine',lat:43,lng:34,cat:'conflict',region:'BLACK SEA',headline:'Ukrainian drone strike sparks fires at Russian Black Sea port ahead of US-brokered peace talks',source:'The Independent',url:'https://www.independent.co.uk/news/moscow-black-sea-jeanne-shaheen-kaja-kallas-kyiv-b2920696.html',breaking:false,date:'February 15, 2026'},
+    {id:27,country:'Lebanon',cat:'conflict',region:'MIDDLE EAST',headline:'Israeli air strikes on Lebanon kill 41 people in 24-hours',source:'Al Jazeera',url:'https://www.aljazeera.com/news/2026/5/2/israeli-air-strikes-kill-10-people-in-southern-lebanon',breaking:false,date:'May 2, 2026'},
+    {id:27,country:'Afghanistan',cat:'conflict',region:'MIDDLE EAST',headline:'‘War crime’: Afghan-Pakistan truce under strain after university strike',source:'Al Jazeera',url:'https://www.aljazeera.com/news/2026/4/28/war-crime-afghan-pakistan-truce-under-strain-after-university-strike',breaking:false,date:'April 26, 2026'},
+    {id:27,country:'Brazil',cat:'climate',region:'SOUTH AMERICA',headline:'Illegal Miners Loot Amazon Rainforest for Critical Minerals',source:'New York Times',url:'https://www.nytimes.com/2026/05/03/world/americas/illegal-miners-amazon-rainforest-critical-minerals.html',breaking:false,date:'May 3, 2026'},
+    {id:27,country:'Germany',cat:'politics',region:'CENTRAL EUROPE',headline:'U.S. to Pull 5,000 Troops From Germany. But Plenty More Will Remain.',source:'New York Times',url:'https://www.nytimes.com/2026/05/02/world/europe/us-troops-germany-trump.html',breaking:false,date:'May 3, 2026'},
+    {id:27,country:'China',cat:'economy',region:'EAST ASIA',headline:'The Iran war has the world buying more clean energy. China stands to benefit the most',source:'CNN',url:'https://www.cnn.com/2026/04/26/energy/china-clean-energy-exports-intl-hnk',breaking:false,date:'April 26, 2026'},
+    {id:27,country:'Indonesia',lat:2.5,lng:101.5,cat:'economy',region:'STRAIT OF MALACCA',headline:'Indonesia suggests charging a toll to transit the Malacca Strait',source:'The Economist',url:'https://www.economist.com/asia/2026/04/23/indonesia-suggests-charging-a-toll-to-transit-the-malacca-strait',breaking:false,date:'April 23, 2026'},
+    {id:27,country:'United States',cat:'politics',region:'NORTH AMERICA',headline:'Senate rejects attempt to end Trump’s blockade of Cuba',source:'AP news',url:'https://apnews.com/article/cuba-trump-senate-war-powers-90beeb508b258df5a1f355c45c343550',breaking:false,date:'April 28, 2026'},
+    {id:27,country:'Colombia',cat:'climate',region:'SOUTH AMERICA',headline:'Could Santa Marta climate talks mark ground zero in push to ditch fossil fuels?',source:'The Gaurdian',url:'https://www.theguardian.com/environment/2026/may/01/could-key-climate-talks-mark-ground-zero-in-global-push-to-ditch-fossil-fuels',breaking:false,date:'May 1, 2026'},
+    {id:27,country:'Iran',cat:'economy',region:'MIDDLE EAST',headline:'IMF chief warns that Iran war will slow global economic growth',source:'AP News',url:'https://apnews.com/article/imf-global-economy-downgrade-war-tariff-f70405a5ef0526371bd7b577b13c4796',breaking:false,date:'April 9, 2026'},
+    {id:27,country:'Morocco',cat:'conflict',region:'NORTH AFRICA',headline:'2 U.S. Service Members Are Missing in Morocco, Africa Command Says',source:'New York Times',url:'https://www.nytimes.com/2026/05/03/us/politics/us-army-missing-service-members-morocco-african-lion.html',breaking:true,date:'May 3, 2026'},
+    {id:27,country:'DR Congo',cat:'conflict',region:'CENTRAL AFRICA',headline:'At least 43 people killed in ADF attack in northeast DR Congo, army says',source:'Al Jazeera',url:'https://www.aljazeera.com/news/2026/4/2/at-least-43-people-killed-in-adf-attack-in-northeast-dr-congo-army-says',breaking:false,date:'April 2, 2026'},
+    {id:27,country:'Japan',cat:'politics',region:'EAST ASIA',headline:'Japan and China Are Edging Dangerously Close to Conflict',source:'Foreign Policy',url:'https://foreignpolicy.com/2026/04/28/japan-china-taiwan-okinawa-history/',breaking:false,date:'April 28, 2026'},
+  
+  
 
 ];
 
