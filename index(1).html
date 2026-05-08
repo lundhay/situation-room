@@ -823,10 +823,10 @@ const situations = [
     countries: ['Ukraine','Russia','NATO','Poland','Belarus'],
     breaking: true,
     stories: [
-      {id:'1-3',headline:'Ceasefire negotiations stall as shelling reported near disputed border region',source:'Reuters / Kyiv Independent',url:'https://kyivindependent.com',date:'May 2, 2026',breaking:true},
-      {id:'1-2',headline:'US announces additional $2.4B military aid package for Ukraine defense',source:'AP / Politico',url:'https://politico.com',date:'Apr 28, 2026',breaking:false},
-      {id:'1-1',headline:'UN Security Council emergency session called after escalation near Kharkiv',source:'Reuters',url:'https://reuters.com',date:'Apr 20, 2026',breaking:false},
-    ]
+          {id:27,country:'Ukraine',lat:49.5,lng:36.5,cat:'conflict',region:'UKRAINE–RUSSIA BORDER',headline:'Russia fires nearly 400 drones at Ukraine with signs its spring offensive has started',source:'APnews',url:'https://apnews.com/article/russia-ukraine-war-offensive-civilian-attacks-48a46d2503513c903bc3e4de31b96e00',breaking:false,date:'March 24, 2026'},
+    {id:27,country:'Ukraine',lat:43,lng:34,cat:'conflict',region:'BLACK SEA',headline:'Ukrainian drone strike sparks fires at Russian Black Sea port ahead of US-brokered peace talks',source:'The Independent',url:'https://www.independent.co.uk/news/moscow-black-sea-jeanne-shaheen-kaja-kallas-kyiv-b2920696.html',breaking:false,date:'February 15, 2026'},
+    
+       ]
   },
   {
     id: 2,
@@ -837,10 +837,9 @@ const situations = [
     countries: ['Israel','Palestine','Iran','Lebanon','United States','Egypt'],
     breaking: true,
     stories: [
-      {id:'2-3',headline:'Humanitarian corridor agreement reached after weeks of diplomatic pressure',source:'Al Jazeera / Haaretz',url:'https://aljazeera.com',date:'May 2, 2026',breaking:false},
-      {id:'2-2',headline:'IDF confirms ground operation suspended pending hostage negotiations',source:'Times of Israel',url:'https://timesofisrael.com',date:'Apr 30, 2026',breaking:false},
-      {id:'2-1',headline:'Red Cross granted access to northern Gaza for first time in three months',source:'Reuters',url:'https://reuters.com',date:'Apr 22, 2026',breaking:false},
-    ]
+      {id:27,country:'Lebanon',cat:'conflict',region:'MIDDLE EAST',headline:'Israeli air strikes on Lebanon kill 41 people in 24-hours',source:'Al Jazeera',url:'https://www.aljazeera.com/news/2026/5/2/israeli-air-strikes-kill-10-people-in-southern-lebanon',breaking:false,date:'May 2, 2026'},
+
+      ]
   },
   {
     id: 3,
@@ -890,9 +889,10 @@ const situations = [
     countries: ['Iran','United States','Saudi Arabia','UAE','Oman'],
     breaking: true,
     stories: [
-      {id:'6-2',headline:'Naval vessels from multiple nations shadow Iranian patrol boats near critical shipping lane',source:'Reuters / AP',url:'https://reuters.com',date:'May 2, 2026',breaking:true},
-      {id:'6-1',headline:'Oil prices spike 4% as Hormuz passage disruption fears mount',source:'Bloomberg',url:'https://bloomberg.com',date:'Apr 29, 2026',breaking:false},
-    ]
+      
+    {id:26,country:'Iran',lat:26.5,lng:56.5,cat:'crisis',region:'STRAIT OF HORMUZ',headline:'Trump says US will ‘help free up’ ships stuck in Hormuz Strait',source:'Al Jazeera',url:'https://www.aljazeera.com/news/2026/5/3/trump-says-us-will-help-free-up-ships-stuck-in-hormuz-strait',breaking:false,date:'May 2nd, 2026'},
+ 
+   ]
   },
   {
     id: 7,
@@ -947,6 +947,20 @@ const situations = [
     ]
   },
   /* ---- ADD SITUATIONS BELOW ---- */
+
+  /* {id:27,country:'Afghanistan',cat:'conflict',region:'MIDDLE EAST',headline:'‘War crime’: Afghan-Pakistan truce under strain after university strike',source:'Al Jazeera',url:'https://www.aljazeera.com/news/2026/4/28/war-crime-afghan-pakistan-truce-under-strain-after-university-strike',breaking:false,date:'April 26, 2026'},
+    {id:27,country:'Brazil',cat:'climate',region:'SOUTH AMERICA',headline:'Illegal Miners Loot Amazon Rainforest for Critical Minerals',source:'New York Times',url:'https://www.nytimes.com/2026/05/03/world/americas/illegal-miners-amazon-rainforest-critical-minerals.html',breaking:false,date:'May 3, 2026'},
+    {id:27,country:'Germany',cat:'politics',region:'CENTRAL EUROPE',headline:'U.S. to Pull 5,000 Troops From Germany. But Plenty More Will Remain.',source:'New York Times',url:'https://www.nytimes.com/2026/05/02/world/europe/us-troops-germany-trump.html',breaking:false,date:'May 3, 2026'},
+    {id:27,country:'China',cat:'economy',region:'EAST ASIA',headline:'The Iran war has the world buying more clean energy. China stands to benefit the most',source:'CNN',url:'https://www.cnn.com/2026/04/26/energy/china-clean-energy-exports-intl-hnk',breaking:false,date:'April 26, 2026'},
+    {id:27,country:'Indonesia',lat:2.5,lng:101.5,cat:'economy',region:'STRAIT OF MALACCA',headline:'Indonesia suggests charging a toll to transit the Malacca Strait',source:'The Economist',url:'https://www.economist.com/asia/2026/04/23/indonesia-suggests-charging-a-toll-to-transit-the-malacca-strait',breaking:false,date:'April 23, 2026'},
+    {id:27,country:'United States',cat:'politics',region:'NORTH AMERICA',headline:'Senate rejects attempt to end Trump’s blockade of Cuba',source:'AP news',url:'https://apnews.com/article/cuba-trump-senate-war-powers-90beeb508b258df5a1f355c45c343550',breaking:false,date:'April 28, 2026'},
+    {id:27,country:'Colombia',cat:'climate',region:'SOUTH AMERICA',headline:'Could Santa Marta climate talks mark ground zero in push to ditch fossil fuels?',source:'The Gaurdian',url:'https://www.theguardian.com/environment/2026/may/01/could-key-climate-talks-mark-ground-zero-in-global-push-to-ditch-fossil-fuels',breaking:false,date:'May 1, 2026'},
+    {id:27,country:'Iran',cat:'economy',region:'MIDDLE EAST',headline:'IMF chief warns that Iran war will slow global economic growth',source:'AP News',url:'https://apnews.com/article/imf-global-economy-downgrade-war-tariff-f70405a5ef0526371bd7b577b13c4796',breaking:false,date:'April 9, 2026'},
+    {id:27,country:'Morocco',cat:'conflict',region:'NORTH AFRICA',headline:'2 U.S. Service Members Are Missing in Morocco, Africa Command Says',source:'New York Times',url:'https://www.nytimes.com/2026/05/03/us/politics/us-army-missing-service-members-morocco-african-lion.html',breaking:true,date:'May 3, 2026'},
+    {id:27,country:'DR Congo',cat:'conflict',region:'CENTRAL AFRICA',headline:'At least 43 people killed in ADF attack in northeast DR Congo, army says',source:'Al Jazeera',url:'https://www.aljazeera.com/news/2026/4/2/at-least-43-people-killed-in-adf-attack-in-northeast-dr-congo-army-says',breaking:false,date:'April 2, 2026'},
+    {id:27,country:'Japan',cat:'politics',region:'EAST ASIA',headline:'Japan and China Are Edging Dangerously Close to Conflict',source:'Foreign Policy',url:'https://foreignpolicy.com/2026/04/28/japan-china-taiwan-okinawa-history/',breaking:false,date:'April 28, 2026'},
+    {id:28,country:'Cuba',cat:'crisis',region:'CARIBBEAN',headline:'Cuba energy crisis: Humanitarian needs remain despite fuel supplies',source:'UN',url:'https://news.un.org/en/story/2026/04/1167254',breaking:true,date:'April 6, 2026'},
+*/  
 ];
 
 /* ============================================================
